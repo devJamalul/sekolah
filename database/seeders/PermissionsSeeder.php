@@ -8,6 +8,7 @@ use Database\Seeders\Permissions\SchoolSeeder;
 use Database\Seeders\Permissions\StudentSeeder;
 use Database\Seeders\Permissions\TuitionSeeder;
 use Database\Seeders\Permissions\ClassroomSeeder;
+use Database\Seeders\Permissions\PaymentTypeSeeder;
 use Database\Seeders\Permissions\TransactionSeeder;
 use Database\Seeders\Permissions\TuitionTypeSeeder;
 use Database\Seeders\Permissions\AcademicYearSeeder;
@@ -48,6 +49,7 @@ class PermissionsSeeder extends Seeder
             TransactionSeeder::class,
             AssignClassroomStudentSeeder::class,
             TuitionSeeder::class,
+            PaymentTypeSeeder::class
         ]);
     }
 }
