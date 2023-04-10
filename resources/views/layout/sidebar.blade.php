@@ -1,5 +1,5 @@
 @php
-  $menuAdministrasi = navIsResource('schools') ? 'show' : '';
+  $menuAdministrasi = navIsResource('schools') || navIsResource('users') ? 'show' : '';
   $menuKeuangan = navIsResource('tuition-type') ? 'show' : '';
   $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') ? 'show' : '';
   $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
@@ -43,7 +43,11 @@
             Sekolah
           </a>
         @endcan
-        <a href="{{ route('home') }}" class="collapse-item">Pengguna</a>
+        @can('users.index')
+          <a href="{{ route('users.index') }}" class="collapse-item {{ navIsResource('users') }}">
+            Pengguna
+          </a>
+        @endcan
       </div>
     </div>
   </li>

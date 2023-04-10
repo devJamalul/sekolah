@@ -36,10 +36,10 @@ Berikut adalah permissions untuk level manajemen **Sekolah**.
 | Fitur             | | | | | | | |
 | ---               | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | **Users**         | **SA** | **OA** | **AS** | **AY** | **KS** | **TU** | **BH** |
-| Create            | ✓ | ✓ | ✓ |   |   | ✓ |
+| Create            | ✓ | ✓ | ✓ | ✓ |   | ✓ |
 | Read              | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Update            | ✓ | ✓ | ✓ |   |   | ✓ |
-| Delete            | ✓ | ✓ | ✓ |
+| Update            | ✓ | ✓ | ✓ | ✓ |   | ✓ |
+| Delete            | ✓ | ✓ | ✓ | ✓ |
 | **Academic Years** | **SA** | **OA** | **AS** | **AY** | **KS** | **TU** | **BH** |
 | Create            | ✓ | ✓ |   |   |   | ✓ |
 | Read              | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
