@@ -16,7 +16,6 @@
                 <div class="card-body">
                     <x-datatable :tableId="'schools'" :tableHeaders="[
                         'Nama',
-                        'Yayasan',
                         'Provinsi',
                         'Kota',
                         'Alamat',
@@ -29,7 +28,6 @@
                         'Aksi',
                     ]" :tableColumns="[
                         ['data' => 'school_name'],
-                        ['data' => 'induk'],
                         ['data' => 'province'],
                         ['data' => 'city'],
                         ['data' => 'address'],
