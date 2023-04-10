@@ -14,6 +14,7 @@ use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\PaymentTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,9 @@ Route::group([], function () {
     // Tuition
     Route::resource('tuition', TuitionController::class)->except(['show']);
     Route::resource('publish-tuition', PublishTuitionController::class)->except(['show']);
+
+    // Payment Type
+    Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
 });
 
 Route::group([], function () {
@@ -83,4 +87,3 @@ Route::group(['prefix' => 'config', 'as' => 'config.'], function () {
 Route::fallback(function () {
     abort(404);
 });
-
