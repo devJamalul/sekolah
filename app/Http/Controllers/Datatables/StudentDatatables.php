@@ -21,7 +21,7 @@ class StudentDatatables extends Controller
                                 'edit_url'     => route('students.edit', ['student' => $row->id]),
                                 'delete_url'   => route('students.destroy', ['student' => $row->id]),
                                 'redirect_url' => route('students.index'),
-
+                                'resource'     => 'students',
                                 'custom_links' => [
                                     [
                                         'label' => 'Biaya Khusus',

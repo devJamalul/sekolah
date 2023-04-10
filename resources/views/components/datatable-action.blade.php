@@ -24,15 +24,16 @@
       @else
         {!! $tombolHapus !!}
       @endif
-
+      
       @if ($custom_links)
             @foreach ($custom_links as $link)
             <a class="dropdown-item" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
             @endforeach
       @endif
-
+      
       @stack('item')
+      
     </div>
   </div>
-    @stack('opsi')
+  @stack('opsi')
 </div>
