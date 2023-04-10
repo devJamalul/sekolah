@@ -13,7 +13,7 @@ class TuitionTypeDatatables extends Controller
 
     public function index()
     {
-        $academyYear = TuitionType::with('school')->get();
+        $academyYear = TuitionType::with('school')->orderBy('created_at')->get();
         return DataTables::of($academyYear)
             ->editColumn('recurring', fn ($item) => $item->recurring == 1 ? 'yes' : 'no')
             ->addColumn('action', function ($row) {
