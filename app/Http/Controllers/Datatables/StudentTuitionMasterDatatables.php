@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Datatables;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
+use App\Models\StudentTuitionMaster;
 use App\Models\TuitionType;
 
 class StudentDatatables extends Controller
 {
     public function index()
     {
-        $students = Student::with('school')->latest('created_at');
-        return DataTables::of($students)
+        $studentTuitionMaster = StudentTuitionMaster::latest('created_at');
+        return DataTables::of($studentTuitionMaster)
                         ->editColumn('gender', function ($data) {
                             return strtolower($data->gender) == Student::GENDER_LAKI ? 'Laki-Laki' : 'Perempuan';
                         })
@@ -25,7 +26,7 @@ class StudentDatatables extends Controller
                                 'custom_links' => [
                                     [
                                         'label' => 'Biaya Khusus',
-                                        'url' => route('students.tuition-master.index', ['student' => $row->id]),
+                                        'url' => route('students.tuition-master', ['student' => $row->id]),
                                     ]
                                 ]
                             ];

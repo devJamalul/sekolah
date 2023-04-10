@@ -49,10 +49,14 @@ Route::group([], function () {
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
     // Student
-    Route::resource('students', StudentsController::class)->except(['show']);
-    Route::get('students/tuition-master', [StudentsController::class, 'tuitionMaster'])->name('students.tuition-master');
-    Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
-    Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
+    Route::group(['prefix' => 'students', 'as' => 'students.'], function () {
+        Route::get('import', [StudentsController::class, 'importStudent'])->name('students.import');
+        Route::post('import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
+        
+        Route::resource('tuition-master', StudentsController::class);
+    });
+    Route::resource('students', StudentsController::class);
+    
 
     // Tuition Type
     Route::resource("tuition-type", TuitionTypeController::class)->except(['show']);
