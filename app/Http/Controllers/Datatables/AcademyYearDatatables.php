@@ -35,7 +35,8 @@ class AcademyYearDatatables extends Controller
                 $data = [
                     'edit_url'     => route('academy-year.edit', ['academy_year' => $row->id]),
                     'delete_url'   => route('academy-year.destroy', ['academy_year' => $row->id]),
-                    'redirect_url' => route('academy-year.index')
+                    'redirect_url' => route('academy-year.index'),
+                    'resource'     => 'academy-year',
                 ];
                 return view('components.datatable-action', $data);
             })

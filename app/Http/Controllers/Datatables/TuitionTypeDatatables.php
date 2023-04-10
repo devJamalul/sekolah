@@ -20,7 +20,8 @@ class TuitionTypeDatatables extends Controller
                 $data = [
                     'edit_url'     => route('tuition-type.edit', ['tuition_type' => $row->id]),
                     'delete_url'   => route('tuition-type.destroy', ['tuition_type' => $row->id]),
-                    'redirect_url' => route('tuition-type.index')
+                    'redirect_url' => route('tuition-type.index'),
+                    'resource'     => 'tuition-type',
                 ];
                 return view('components.datatable-action', $data);
             })->toJson();

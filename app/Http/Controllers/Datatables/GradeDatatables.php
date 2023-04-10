@@ -18,7 +18,8 @@ class GradeDatatables extends Controller
                 $data = [
                     'edit_url'     => route('grade.edit', ['grade' => $row->id]),
                     'delete_url'   => route('grade.destroy', ['grade' => $row->id]),
-                    'redirect_url' => route('grade.index')
+                    'redirect_url' => route('grade.index'),
+                    'resource'     => 'grade',
                 ];
                 return view('components.datatable-action', $data);
             })->toJson();
