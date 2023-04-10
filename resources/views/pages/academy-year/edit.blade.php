@@ -9,6 +9,13 @@
 
         {{-- start table academy years --}}
         <div class="col-lg-6">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
+                <a href="{{ route('academy-year.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-default shadow-sm">
+                    Kembali
+                </a>
+            </div>
+
             @error('school_id')
                 <div class="alert alert-danger" role="alert">
                     {{ $message }}
@@ -16,10 +23,6 @@
             @enderror
 
             <div class="card">
-                <div class="card-header d-flex">
-                    <h6 class="mr-auto font-weight-bold text-primary">{{ $title }}</h6>
-
-                </div>
                 <div class="card-body">
 
                     <form action="{{ route('academy-year.update', ['academy_year' => $academyYear->id]) }}" method="post">

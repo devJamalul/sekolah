@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\School;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Models\Tuition;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -59,12 +60,30 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $append = [
+        'role'
+    ];
+
+    protected function jabatan(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $user = User::find($this->id);
+                return $user->getRoleNames()[0];
+            }
+        );
+    }
 
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
     }
-    
+
+    public function staff(): HasOne
+    {
+        return $this->hasOne(Staff::class);
+    }
+
     public function tuition(): HasMany
     {
         return $this->hasMany(Tuition::class);

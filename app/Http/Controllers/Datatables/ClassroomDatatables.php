@@ -18,7 +18,8 @@ class ClassroomDatatables extends Controller
                 $data = [
                     'edit_url'     => route('classroom.edit', ['classroom' => $row->id]),
                     'delete_url'   => route('classroom.destroy', ['classroom' => $row->id]),
-                    'redirect_url' => route('classroom.index')
+                    'redirect_url' => route('classroom.index'),
+                    'resource'     => 'classroom',
                 ];
                 return view('components.datatable-action', $data);
             })->toJson();

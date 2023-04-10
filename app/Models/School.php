@@ -27,7 +27,11 @@ class School extends Model
     const TYPE_YAYASAN = "yayasan";
     const TYPE_SEKOLAH = "sekolah";
 
+    const GRADE_SCHOOL  = ["TK", "SD", "SMP", "SMA", "SMK"];
+
     protected $guarded = [];
+
+
 
     public function academic_years(): HasMany
     {
@@ -97,6 +101,11 @@ class School extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(School::class, 'school_id');
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function scopeInduk($query)

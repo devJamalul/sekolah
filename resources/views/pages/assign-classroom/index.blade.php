@@ -16,12 +16,14 @@
 
 
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
-
     <div class="row">
 
         {{-- START MENU FILTER CLASSROOM --}}
         <div class="col-lg-12">
+
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
+            </div>
             {{-- START VALIDATION ID STUDENTS --}}
             @error('id.*')
                 <div class="alert alert-danger">

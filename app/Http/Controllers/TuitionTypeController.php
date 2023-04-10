@@ -47,7 +47,6 @@ class TuitionTypeController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollback();
             return redirect()->route('tuition-type.create')->withToastError("Ops Gagal Tambah {$this->title}!");
         }

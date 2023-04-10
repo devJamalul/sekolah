@@ -9,11 +9,13 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\PaymentTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,9 +69,14 @@ Route::group([], function () {
     // Transactions
     Route::resource("transactions", TransactionController::class);
 
+    // Users
+    Route::resource("users", UsersController::class);
     // Tuition
     Route::resource('tuition', TuitionController::class)->except(['show']);
     Route::resource('publish-tuition', PublishTuitionController::class)->except(['show']);
+
+    // Payment Type
+    Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
 });
 
 Route::group([], function () {
@@ -84,4 +91,3 @@ Route::group(['prefix' => 'config', 'as' => 'config.'], function () {
 Route::fallback(function () {
     abort(404);
 });
-

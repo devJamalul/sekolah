@@ -14,12 +14,13 @@ use Illuminate\Support\Facades\Log;
 
 class SchoolsController extends Controller
 {
+    protected $title = "Sekolah";
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $title = "Sekolah";
+        $title = $this->title;
         return view('pages.school.index', compact('title'));
     }
 
@@ -30,7 +31,8 @@ class SchoolsController extends Controller
     {
         $title = "Tambah Sekolah";
         $schools = School::induk()->get();
-        return view('pages.school.create', compact('schools', 'title'));
+        $grade_school =  School::GRADE_SCHOOL;
+        return view('pages.school.create', compact('schools', 'title', 'grade_school'));
     }
 
     /**
@@ -38,42 +40,35 @@ class SchoolsController extends Controller
      */
     public function store(SchoolRequest $request)
     {
-        $type = School::TYPE_SEKOLAH;
-        $school_id = $request->school_id;
-        $role = User::ROLE_ADMIN_SEKOLAH;
-        if ($request->school_id == "") {
-            $type = School::TYPE_YAYASAN;
-            $school_id = null;
-            $role = User::ROLE_ADMIN_YAYASAN;
-        }
+
+        $role = $request->has('school_id') ? User::ROLE_ADMIN_SEKOLAH : $role = User::ROLE_ADMIN_YAYASAN;
 
         DB::beginTransaction();
         try {
             // sekolah
             $school = new School();
-            $school->name = $request->name;
-            $school->school_id = $school_id;
-            $school->type = $type;
+            $school->school_name = $request->school_name;
+            $school->school_id = $request->school_id;
+            $school->province = $request->province;
+            $school->city = $request->city;
+            $school->postal_code = $request->postal_code;
+            $school->address = $request->address;
+            $school->grade = $request->grade;
+            $school->email = $request->email;
+            $school->phone = $request->phone;
             $school->save();
 
             // PIC
             $user = new User();
             $user->school_id = $school->getKey();
-            $user->name = $request->pic_name;
-            $user->email = $request->pic_email;
+            $user->name = $request->name_pic;
+            $user->email = $request->email_pic;
             $user->password = bcrypt($user->email);
             $user->save();
 
 
-            // Staff
-            $staff = new Staff();
-            $staff->school_id = $school->getKey();
-            $staff->user_id = $user->getKey();
-            $staff->name = $user->name;
-            $staff->save();
-
             // assign PIC
-            $school->staff_id = $staff->getKey();
+            $school->owner_id = $user->getKey();
             $school->save();
 
             // assign role
@@ -87,7 +82,7 @@ class SchoolsController extends Controller
                 'sekolah' => $school->name
             ]);
             DB::rollback();
-            return redirect()->route('schools.index')->withToastError('Ups, terjadi kesalahan saat menambah data!');
+            return redirect()->route('schools.create')->withToastError('Ups, terjadi kesalahan saat menambah data!');
         }
 
         return redirect()->route('schools.index')->withToastSuccess('Berhasil menambah data!');
@@ -98,9 +93,12 @@ class SchoolsController extends Controller
      */
     public function edit(School $school)
     {
-        $schools = School::whereNotIn('id', [$school->getKey()])->get();
+
+        $school->load('owner');
+        $schools = School::induk()->whereNotIn('id', [$school->getKey()])->get();
         $title = "Ubah Sekolah";
-        return view('pages.school.edit', compact('schools', 'school', 'title'));
+        $grade_school =  School::GRADE_SCHOOL;
+        return view('pages.school.edit', compact('schools', 'school', 'title', 'grade_school'));
     }
 
     /**
@@ -108,19 +106,19 @@ class SchoolsController extends Controller
      */
     public function update(SchoolRequest $request, School $school)
     {
-        $type = School::TYPE_SEKOLAH;
-        $school_id = $request->school_id;
-        if ($request->school_id == "") {
-            $type = School::TYPE_YAYASAN;
-            $school_id = null;
-        }
+        $role = $request->has('school_id') ? User::ROLE_ADMIN_SEKOLAH : $role = User::ROLE_ADMIN_YAYASAN;
 
         DB::beginTransaction();
         try {
-            $school->name = $request->name;
-            $school->school_id = $school_id;
-            $school->type = $type;
-            $school->staff_id = $request->user_id;
+            $school->school_name = $request->school_name;
+            $school->school_id = $request->school_id;
+            $school->province = $request->province;
+            $school->city = $request->city;
+            $school->postal_code = $request->postal_code;
+            $school->address = $request->address;
+            $school->grade = $request->grade;
+            $school->email = $request->email;
+            $school->phone = $request->phone;
             $school->save();
 
             DB::commit();
