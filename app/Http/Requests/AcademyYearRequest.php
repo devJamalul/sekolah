@@ -36,8 +36,11 @@ class AcademyYearRequest extends FormRequest
             'school_id' => 'required',
             'academic_year_name'      => [
                 Rule::unique('academic_years')->where(function ($q) {
-                    $q->where('academic_year_name', $this->name);
-                    $q->where('school_id', $this->school_id);
+
+                    $q->where([
+                        'academic_year_name' => $this->academic_year_name,
+                        'school_id' => $this->school_id,
+                    ]);
                 }),
                 'years_formatted',
                 'valid_year'
@@ -53,8 +56,10 @@ class AcademyYearRequest extends FormRequest
             'school_id' => 'required',
             'academic_year_name'      => [
                 Rule::unique('academic_years')->where(function ($q) {
-                    $q->where('academic_year_name', $this->name);
-                    $q->where('school_id', $this->school_id);
+                    $q->where([
+                        'academic_year_name' => $this->academic_year_name,
+                        'school_id' => $this->school_id,
+                    ]);
                 })->ignore($this->academy_year->id),
                 'years_formatted',
                 'valid_year'

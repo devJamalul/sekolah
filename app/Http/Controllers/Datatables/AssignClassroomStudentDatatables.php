@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 
-class AssignClassroomStudenDatatables extends Controller
+class AssignClassroomStudentDatatables extends Controller
 {
     /**
      * Handle the incoming request.
