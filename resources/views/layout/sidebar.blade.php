@@ -1,7 +1,7 @@
 @php
   $menuAdministrasi = navIsResource('schools') || navIsResource('users') ? 'show' : '';
-  $menuKeuangan = navIsResource('tuition-type') ? 'show' : '';
-  $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') ? 'show' : '';
+  $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') ? 'show' : '';
+  $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') || navIsResource('assign-classroom-student') ? 'show' : '';
   $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
 @endphp
 
@@ -68,6 +68,11 @@
             Tipe Biaya
           </a>
         @endcan
+        @can('tuition.index')
+          <a href="{{ route('tuition.index') }}" class="collapse-item {{ navIsResource('tuition') }}">
+            Biaya
+          </a>
+        @endcan
       </div>
     </div>
   </li>
@@ -101,6 +106,11 @@
         @can('classroom.index')
           <a href="{{ route('classroom.index') }}" class="collapse-item {{ navIsResource('classroom') }}">
             Ruang Kelas
+          </a>
+        @endcan
+        @can('assign-classroom-student.index')
+          <a href="{{ route('assign-classroom-student.index') }}" class="collapse-item {{ navIsResource('assign-classroom-student') }}">
+            Rombongan Belajar
           </a>
         @endcan
       </div>

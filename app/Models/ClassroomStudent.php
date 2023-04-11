@@ -13,4 +13,9 @@ class ClassroomStudent extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = "classroom_student";
+
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
 }
