@@ -93,7 +93,6 @@ class AcademyYearController extends Controller
             $academyYear->academic_year_name = $request->academic_year_name;
             $academyYear->status_years = $request->status_years ?? AcademicYear::STATUS_CLOSED;
             $academyYear->save();
-
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
