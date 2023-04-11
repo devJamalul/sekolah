@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Student;
+use App\Models\Tuition;
 use Illuminate\Http\Request;
 
 class StudentTuitionMaster extends Controller
@@ -9,21 +11,31 @@ class StudentTuitionMaster extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index(Request $req)
+    {   
+        $student = Student::findOrFail($req->id);
         $data = [
-            'title' => "Biaya Khusus Siswa"
+            'id' => $req->id,
+            'title' => "Biaya Khusus $student->name"
         ];
 
-        return view('pages.students.index', $data);
+        return view('pages.students.tuition-master.index', $data);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $req)
     {
-        //
+        $student = Student::findOrFail($req->id);
+        $tuitions = Tuition::with('tuition_type')->where('school_id', $student->school_id)->get();
+        $data = [
+            'id' => $req->id,
+            'title' => "Biaya Khusus $student->name",
+            'tuitions' => $tuitions,
+        ];
+
+        return view('pages.students.tuition-master.create', $data);
     }
 
     /**

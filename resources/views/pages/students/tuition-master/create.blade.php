@@ -22,10 +22,17 @@
           @csrf
 
           <div class="form-group">
-            <label for="name-input">Nama Sekolah</label>
-            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-              id="name-input" autocomplete="off">
-            @error('name')
+            <label for="tuition_id">Biaya Sekolah<span class="text-small text-danger">*</span></label>
+            <select id="tuition_id" name="tuition_id"
+                class="form-control select2 @error('tuition_id') is-invalid @enderror" required>
+                <option value="">--- Pilih Biaya Sekolah ---</option>
+                @foreach ($tuitions as $tuition)
+                    <option value="{{ $tuition->getKey() }}">
+                        {{ $tuition->tuition_type->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('tuition_id')
               <div class="invalid-feedback">
                 {{ $message }}
               </div>
@@ -33,23 +40,21 @@
           </div>
 
           <div class="form-group">
-            <label for="pic_name-input">Nama PIC</label>
-            <input type="text" class="form-control @error('pic_name') is-invalid @enderror" name="pic_name"
-              id="pic_name-input" autocomplete="off">
-            @error('pic_name')
+            <label for="price">Harga<span class="text-small text-danger">*</span></label>
+            <input type="text" name="price" value="{{ old('price') }}" id="price" class="form-control @error('price') is-invalid @enderror">
+            @error('price')
               <div class="invalid-feedback">
-                {{ $message }}
+                  {{ $message }}
               </div>
             @enderror
           </div>
 
           <div class="form-group">
-            <label for="pic_email-input">Email PIC</label>
-            <input type="email" class="form-control @error('pic_email') is-invalid @enderror" name="pic_email"
-              id="pic_email-input" autocomplete="off">
-            @error('pic_email')
+            <label for="note">Catatan<span class="text-small text-danger">*</span></label>
+            <textarea name="note" id="note" rows="4" class="form-control @error('note') is-invalid @enderror" required>{{ old('note') }}</textarea>
+            @error('note')
               <div class="invalid-feedback">
-                {{ $message }}
+                  {{ $message }}
               </div>
             @enderror
           </div>

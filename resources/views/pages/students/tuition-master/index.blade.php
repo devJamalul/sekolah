@@ -10,25 +10,22 @@
         <div class="d-sm-flex align-items-center justify-content-between">
             <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
             <div>
-                <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
-                {{-- <a href="{{ route('students.import') }}" class="btn btn-success btn-sm">Impor Excel</a> --}}
+                <a href="{{ route('tuition-master.create', [$id => $id]) }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
             </div>
         </div>
         
         <div class="card">
             <div class="card-body">
-                <x-datatable 
-                    :tableId="'students'" 
-                    :tableHeaders="['NIK', 'Nama', 'Jenis Kelamin', 'Alamat', 'Tanggal lahir', 'Action']" 
+                <x-datatable
+                    :tableId="'students-tuition-master'" 
+                    :tableHeaders="['Nama Biaya', 'Harga', 'Catatan', 'Aksi']" 
                     :tableColumns="[
-                        ['data' => 'nik'], 
-                        ['data' => 'name'], 
-                        ['data' => 'gender'],
-                        ['data' => 'address'],
-                        ['data' => 'dob'],
+                        ['data' => 'tuition_type', 'name' => 'tuition_id'],
+                        ['data' => 'price'], 
+                        ['data' => 'note'],
                         ['data' => 'action']
                     ]" 
-                    :getDataUrl="route('datatable.students')" 
+                    :getDataUrl="route('datatable.students.tuition-master')" 
                 />
             </div>
         </div>

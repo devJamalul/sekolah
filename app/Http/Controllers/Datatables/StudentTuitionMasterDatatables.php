@@ -6,29 +6,22 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
 use App\Models\StudentTuitionMaster;
-use App\Models\TuitionType;
 
-class StudentDatatables extends Controller
+class StudentTuitionMasterDatatables extends Controller
 {
     public function index()
     {
-        $studentTuitionMaster = StudentTuitionMaster::latest('created_at');
+        $studentTuitionMaster = StudentTuitionMaster::with('tuition.tuition_type')->latest('created_at');
         return DataTables::of($studentTuitionMaster)
-                        ->editColumn('gender', function ($data) {
-                            return strtolower($data->gender) == Student::GENDER_LAKI ? 'Laki-Laki' : 'Perempuan';
+                        ->editColumn('tuition_id', function ($data) {
+                            return "test";
                         })
                         ->addColumn('action', function (Student $row) {
                             $data = [
-                                'edit_url'     => route('students.edit', ['student' => $row->id]),
-                                'delete_url'   => route('students.destroy', ['student' => $row->id]),
-                                'redirect_url' => route('students.index'),
-                                'resource'     => 'students',
-                                'custom_links' => [
-                                    [
-                                        'label' => 'Biaya Khusus',
-                                        'url' => route('students.tuition-master', ['student' => $row->id]),
-                                    ]
-                                ]
+                                'edit_url'     => route('tuition-master.edit', ['student' => $row->id]),
+                                'delete_url'   => route('tuition-master.destroy', ['student' => $row->id]),
+                                'redirect_url' => route('tuition-master.index'),
+                                'resource'     => 'tuition-master',
                             ];
                             return view('components.datatable-action', $data);
                         })->toJson();

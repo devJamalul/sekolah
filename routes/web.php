@@ -16,6 +16,7 @@ use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\StudentTuitionMaster;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,13 +50,11 @@ Route::group([], function () {
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
     // Student
-    Route::group(['prefix' => 'students', 'as' => 'students.'], function () {
-        Route::get('import', [StudentsController::class, 'importStudent'])->name('students.import');
-        Route::post('import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
-        
-        Route::resource('tuition-master', StudentsController::class);
-    });
+    Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
+    Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
     Route::resource('students', StudentsController::class);
+    Route::resource('students/{id}/tuition-master', StudentTuitionMaster::class);
+    
     
 
     // Tuition Type
