@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\AcademicYear;
 use App\Rules\AcademicYearRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -36,7 +37,6 @@ class AcademyYearRequest extends FormRequest
             'school_id' => 'required',
             'academic_year_name'      => [
                 Rule::unique('academic_years')->where(function ($q) {
-
                     $q->where([
                         'academic_year_name' => $this->academic_year_name,
                         'school_id' => $this->school_id,
@@ -44,7 +44,18 @@ class AcademyYearRequest extends FormRequest
                 }),
                 'years_formatted',
                 'valid_year'
-            ]
+            ],
+            'status_years'      => [
+                Rule::unique('academic_years')->where(function ($q) {
+                    if (in_array($this->status_years, [AcademicYear::STATUS_CLOSED]) == false) {
+                        $q->where([
+                            'status_years' => $this->status_years,
+                            'school_id' => $this->school_id,
+                        ]);
+                    }
+                }),
+            ],
+
         ];
     }
 
@@ -60,10 +71,10 @@ class AcademyYearRequest extends FormRequest
                         'academic_year_name' => $this->academic_year_name,
                         'school_id' => $this->school_id,
                     ]);
-                })->ignore($this->academy_year->id),
+                })->ignore($this->academy_year->id, 'id'),
                 'years_formatted',
                 'valid_year'
-            ]
+            ],
         ];
     }
 
