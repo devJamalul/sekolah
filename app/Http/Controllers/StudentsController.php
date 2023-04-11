@@ -229,46 +229,26 @@ class StudentsController extends Controller
             ], 400);
         }
     }
+    
+    public function tuitionMaster(Student $student)
+    {
+        $data = [
+            'student' => $student,
+            'title' => "Biaya Khusus Siswa",
+        ];
+
+        return view('pages.students.tuition-master', $data);
+    }
 
     public function importStudent()
     {
-        try {
-            $excel = Excel::import(new StudentsImport(1, 1), public_path('excel_import_template/students_import.xlsx'));
-            return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures = $e->failures();
-
-            if (count($failures) > 0) {
-                $row = $failures[0]->row(); // row that went wrong
-                $column = $failures[0]->attribute(); // either heading key (if using heading row concern) or column index
-                $error = $failures[0]->errors(); // Actual error messages from Laravel validator
-                // $value = $failures[0]->values(); // The values of the row that has failed.
-                
-                return redirect()->route('students.index')->withToastError("Terjadi kesalahan pada Baris $row, Kolom $column, dengan pesan $error[0]");
-            }
-        } catch (\Throwable $th) {
-            return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
-        }
+        $excel = Excel::import(new StudentsImport(1), public_path('excel_import_template/students_import.xlsx'));
+        return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
     }
 
     public function importStudentByExcel(Request $request)
     {
-        try {
-            $excel = Excel::import(new StudentsImport(session('school_id'), $request->academic_year_id), $request->file('excel'));
-            return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            $failures = $e->failures();
-
-            if (count($failures) > 0) {
-                $row = $failures[0]->row(); // row that went wrong
-                $column = $failures[0]->attribute(); // either heading key (if using heading row concern) or column index
-                $error = $failures[0]->errors(); // Actual error messages from Laravel validator
-                // $value = $failures[0]->values(); // The values of the row that has failed.
-                
-                return redirect()->route('students.index')->withToastError("Terjadi kesalahan pada Baris $row, Kolom $column, dengan pesan $error[0]");
-            }
-        } catch (\Throwable $th) {
-            return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
-        }
+        $excel = Excel::import(new StudentsImport(session('school_id')), $request->file('excel'));
+        return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
     }
 }

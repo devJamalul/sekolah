@@ -11,7 +11,7 @@
             <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
             <div>
                 <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
-                <a href="{{ route('students.import') }}" class="btn btn-success btn-sm">Impor Excel</a>
+                {{-- <a href="{{ route('students.import') }}" class="btn btn-success btn-sm">Impor Excel</a> --}}
             </div>
         </div>
         
