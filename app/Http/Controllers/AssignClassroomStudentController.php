@@ -20,8 +20,7 @@ class AssignClassroomStudentController extends Controller
     {
         $data['title'] = "Tetapkan Kelas";
         $data['academy_year'] = AcademicYear::active()->first();
-        $data['classroom'] = Classroom::with('grade')->where('academic_year_id', $data['academy_year']?->getKey())->orderBy('name')->get();
-        $data['students'] = Student::where('status', Student::STATUS_ACTIVE)->get();
+        $data['classroom'] = Classroom::with('grade')->where('academic_year_id', $data['academy_year']?->id)->get();
         return view('pages.assign-classroom.index', $data);
     }
 
@@ -35,7 +34,6 @@ class AssignClassroomStudentController extends Controller
             $classroom->save();
             DB::commit();
         } catch (\Throwable $th) {
-            DB::rollback();
             return redirect()
                 ->route('assign-classroom-student.index')
                 ->with('classroom_id', $request->classroom_id)

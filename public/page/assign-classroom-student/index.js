@@ -112,7 +112,7 @@
 
     var datatableStudents = datatableStudent(
         tableStudents,
-        route('datatable.students'),
+        route('datatable.assign-students'),
         selectedStudentStore,
         'selectedStore'
         )

@@ -62,12 +62,18 @@
 
                         <div class="form-group">
                             <label for="year-academy-input">Status Tahun Ajaran</label>
-                            <select name="status_years" id="" class="form-control">
+                            <select name="status_years" id=""
+                                class="form-control  @error('status_years') is-invalid @enderror">
                                 <option value="">-</option>
                                 @foreach ($academyYearStatus as $key => $status)
                                     <option value="{{ $key }}">{{ $status }}</option>
                                 @endforeach
                             </select>
+                            @error('status_years')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
                         </div>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </form>
