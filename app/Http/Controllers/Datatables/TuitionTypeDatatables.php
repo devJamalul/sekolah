@@ -15,7 +15,7 @@ class TuitionTypeDatatables extends Controller
     {
         $academyYear = TuitionType::with('school')->orderBy('created_at')->get();
         return DataTables::of($academyYear)
-            ->editColumn('recurring', fn ($item) => $item->recurring == 1 ? 'yes' : 'no')
+            ->editColumn('recurring', fn ($item) => $item->recurring == 1 ? 'Ya' : 'Tidak')
             ->addColumn('action', function ($row) {
                 $data = [
                     'edit_url'     => route('tuition-type.edit', ['tuition_type' => $row->id]),

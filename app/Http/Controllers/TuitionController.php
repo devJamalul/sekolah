@@ -31,12 +31,18 @@ class TuitionController extends Controller
     {
         //
         $title = "Tambah Biaya";
-        $tuitionTypes = TuitionType::all();
-        $academicYears = AcademicYear::all();
-        $grades = Grade::all();
-        $users =User::where('school_id', session('school_id'))->whereHas('roles', function($q){
-             $q->whereIn('name',['admin sekolah','admin yayasan','tata usaha','bendahara','kepala sekolah']);
-         })->get();
+        $tuitionTypes = TuitionType::orderBy('name')->get();
+        $academicYears = AcademicYear::orderByDesc('academic_year_name')->get();
+        $grades = Grade::orderBy('grade_name')->get();
+        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+            $q->whereIn('name', [
+                User::ROLE_ADMIN_SEKOLAH,
+                User::ROLE_ADMIN_YAYASAN,
+                User::ROLE_TATA_USAHA,
+                User::ROLE_BENDAHARA,
+                User::ROLE_KEPALA_SEKOLAH,
+            ]);
+        })->get();
         return view('pages.tuition.create', compact('tuitionTypes', 'academicYears', 'grades', 'title', 'users'));
     }
 
@@ -47,7 +53,7 @@ class TuitionController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $tuition                    = new Tuition();
             $tuition->school_id         = session('school_id');
             $tuition->tuition_type_id   = $request->tuition_type_id;
@@ -59,12 +65,11 @@ class TuitionController extends Controller
             $tuition->save();
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('tuition.index')->withToastError('Eror Simpan Biaya!');
         }
-        
+
         return redirect()->route('tuition.index')->withToastSuccess('Berhasil Simpan Biaya!');
     }
 
@@ -82,12 +87,18 @@ class TuitionController extends Controller
     public function edit(Tuition $tuition)
     {
         $title = 'Ubah Biaya';
-        $tuitionTypes = TuitionType::all();
-        $academicYears = AcademicYear::all();
-        $grades = Grade::all();
-        $users =User::where('school_id', session('school_id'))->whereHas('roles', function($q){
-             $q->whereIn('name',['admin sekolah','admin yayasan','tata usaha','bendahara','kepala sekolah']);
-         })->get();
+        $tuitionTypes = TuitionType::orderBy('name')->get();
+        $academicYears = AcademicYear::orderByDesc('academic_year_name')->get();
+        $grades = Grade::orderBy('grade_name')->get();
+        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+            $q->whereIn('name', [
+                User::ROLE_ADMIN_SEKOLAH,
+                User::ROLE_ADMIN_YAYASAN,
+                User::ROLE_TATA_USAHA,
+                User::ROLE_BENDAHARA,
+                User::ROLE_KEPALA_SEKOLAH,
+            ]);
+        })->get();
         return view('pages.tuition.edit', compact('tuitionTypes', 'tuition', 'academicYears', 'grades', 'title', 'users'));
     }
 
@@ -99,7 +110,7 @@ class TuitionController extends Controller
         //
         DB::beginTransaction();
         try {
-            
+
             $tuition->school_id             = session('school_id');
             $tuition->tuition_type_id       = $request->tuition_type_id;
             $tuition->academic_year_id      = $request->academic_year_id;
@@ -110,12 +121,11 @@ class TuitionController extends Controller
             $tuition->save();
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('tuition.index')->withToastError('Eror Simpan Biaya!');
         }
-        
+
         return redirect()->route('tuition.index')->withToastSuccess('Berhasil Simpan Biaya!');
     }
 
@@ -126,14 +136,13 @@ class TuitionController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $tuition->delete();
             DB::commit();
 
             return response()->json([
                 'msg' => 'Berhasil Hapus Biaya!'
             ], 200);
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
