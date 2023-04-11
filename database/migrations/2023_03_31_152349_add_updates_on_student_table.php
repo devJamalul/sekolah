@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('file_birth_certificate')->nullable()->after('nis');
             $table->string('file_family_card')->nullable()->after('nis');
 
-            $table->string('phone_number', 20)->change();
+            $table->string('phone_number', 20)->nullable()->change();
 
             $table->string('father_phone_number')->nullable()->after('father_name');
             $table->text('father_address')->nullable()->after('father_name');
