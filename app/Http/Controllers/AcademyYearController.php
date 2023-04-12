@@ -46,6 +46,8 @@ class AcademyYearController extends Controller
         DB::beginTransaction();
         try {
 
+            $this->updateStatus($request->status_years);
+
             $academyYear                     = new AcademicYear();
             $academyYear->year_start         = $request->year_start;
             $academyYear->year_end           = $request->year_end;
@@ -54,8 +56,11 @@ class AcademyYearController extends Controller
             $academyYear->status_years       = $request->status_years ?? AcademicYear::STATUS_CLOSED;
             $academyYear->save();
 
+
+
             DB::commit();
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollback();
             return redirect()->route('academy-year.index')->withToastError("Ops Gagal Tambah  {$this->title} !");
         }
@@ -86,6 +91,8 @@ class AcademyYearController extends Controller
 
         DB::beginTransaction();
         try {
+
+            $this->updateStatus($request->status_years);
 
             $academyYear->school_id = $request->school_id;
             $academyYear->year_start         = $request->year_start;
@@ -124,5 +131,10 @@ class AcademyYearController extends Controller
                 'msg' => "Ops Gagal Hapus {$this->title}!"
             ], 400);
         }
+    }
+
+    private function updateStatus($status)
+    {
+        return AcademicYear::where('status_years', $status)->update(['status_years' => AcademicYear::STATUS_CLOSED]);
     }
 }
