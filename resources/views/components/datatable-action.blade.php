@@ -1,6 +1,5 @@
 @php
     $tombolUbah = "<a class=\"dropdown-item\" href=\"$edit_url\">Ubah</a>";
-
     $tombolHapus = "<a class=\"dropdown-item\" data-url=\"$delete_url\" data-redirect=$redirect_url onclick=\"softDelete(this)\">Hapus</a>";
 @endphp
 <div class="btn-group">

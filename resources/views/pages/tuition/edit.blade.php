@@ -60,7 +60,7 @@
                             <select class="form-control  @error('grade_id') is-invalid @enderror" name="grade_id"
                                 id="grade-select">
                                 <option value="">-</option>
-                                @foreach ($grades as $grade)
+                                @foreach ($grades as $rade)
                                     <option value="{{ $grade->id }}" @if ($tuition->grade_id === $grade->id) selected @endif>
                                         {{ $grade->grade_name }}
                                     </option>

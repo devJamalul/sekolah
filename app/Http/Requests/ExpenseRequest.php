@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GradeRequest extends FormRequest
+class ExpenseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,16 @@ class GradeRequest extends FormRequest
     public function postMethod(): array
     {
         return [
-            'grade_name'      => 'required|unique:grades,grade_name',
+            'expense_number'      => [
+                'required',
+                Rule::unique('expenses')->where(function ($q) {
+                    $q->where('expense_number', $this->expense_number);
+                    $q->where('school_id',$this->school_id);
+                })
+            ],
+            'expense_date' => 'required|date',
+            'requested_by' => 'required|exists:users,id',
+            'approved_by' => 'required|exists:users,id',
         ];
     }
 
@@ -40,7 +49,9 @@ class GradeRequest extends FormRequest
     {
 
         return [
-            'grade_name'      => 'required|unique:grades,grade_name',
+            'expense_date' => 'required|date',
+            'requested_by' => 'required|exists:users,id',
+            'approved_by' => 'required|exists:users,id',
         ];
     }
 }

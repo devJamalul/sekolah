@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GradeRequest extends FormRequest
+class ExpenseDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,15 +32,21 @@ class GradeRequest extends FormRequest
     public function postMethod(): array
     {
         return [
-            'grade_name'      => 'required|unique:grades,grade_name',
+            'expense_id' => 'required|exists:expenses,id',
+            'wallet_id' => 'required|exists:wallets,id',
+            'item_name' => 'required',
+            'quantity' => 'required|numeric|gt:0',
+            'price' => 'required|numeric|gt:0',
         ];
     }
 
     public function putMethod(): array
     {
-
         return [
-            'grade_name'      => 'required|unique:grades,grade_name',
+            'wallet_id' => 'required|exists:wallets,id',
+            'item_name' => 'required',
+            'quantity' => 'required|numeric|gt:0',
+            'price' => 'required|numeric|gt:0',
         ];
     }
 }
