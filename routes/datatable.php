@@ -33,4 +33,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('payment-type', App\Http\Controllers\Datatables\PaymentTypeDatatables::class)->name('payment-type');
 
     Route::get('assign-students', [App\Http\Controllers\Datatables\AssignClassroomStudentDatatables::class, 'students'])->name('assign-students');
+
+    Route::get('assign-classroom-staff', App\Http\Controllers\Datatables\AssignClassroomStaffDatatables::class)->name('assign-classroom-staff');
+
+    Route::get('assign-staffs', [App\Http\Controllers\Datatables\AssignClassroomStaffDatatables::class, 'staffs'])->name('assign-staffs');
 });

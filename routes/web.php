@@ -7,6 +7,7 @@ use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
+use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
 use App\Http\Controllers\UsersController;
@@ -77,6 +78,12 @@ Route::group([], function () {
 
     // Payment Type
     Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
+
+
+    // Assign staff student
+    Route::get('assign-classroom-staff', AssignClassroomStaffController::class)->name(('assign-classroom-staff.index'));
+    Route::post('assign-classroom-staff', [AssignClassroomStaffController::class, 'store'])->name(('assign-classroom-staff.store'));
+    Route::delete('assign-classroom-staff', [AssignClassroomStaffController::class, 'destroy'])->name(('assign-classroom-staff.destroy'));
 });
 
 Route::group([], function () {

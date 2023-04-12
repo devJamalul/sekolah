@@ -7,6 +7,7 @@ use App\Models\Classroom;
 use App\Models\AcademicYear;
 use App\Models\ClassroomStudent;
 use App\Models\Grade;
+use App\Models\Staff;
 
 beforeEach(function () {
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
@@ -51,15 +52,15 @@ dataset('staff_cannot_crud', [
 
 it("forbid another  guest", function () {
     $this
-        ->get(route('assign-classroom-student.index'))
+        ->get(route('assign-classroom-staff.index'))
         ->assertNotFound();
 });
 
 
-it('can render page assign class student', function (User $user) {
+it('can render page assign class staff', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->id]);
-    $this->actingAs($user)->get(route('assign-classroom-student.index'))->assertOk();
+    $this->actingAs($user)->get(route('assign-classroom-staff.index'))->assertOk();
 })->with('staff_can_crud');
 
 
@@ -68,18 +69,19 @@ it('required add id classroom', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->id]);
     $classroom = Classroom::factory();
-    $student = Student::factory()->create();
+    $staff = Staff::factory()->create();
     $data = [
         'id' => [
-            $student->id
+            $staff->id
         ],
         'classroom_id' => '',
     ];
-    $this->actingAs($user)->post(route('assign-classroom-student.store'), $data)->assertInvalid(['classroom_id']);
+    $this->actingAs($user)->post(route('assign-classroom-staff.store'), $data)
+        ->assertInvalid(['classroom_id']);
 })->with('staff_can_crud');
 
 
-it('required  add id students', function (User $user) {
+it('required  add id staff', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->id]);
     $academicYear = AcademicYear::factory()->create([
@@ -91,76 +93,74 @@ it('required  add id students', function (User $user) {
 
 
     $classroom = Classroom::factory()->create();
-    $student = Student::factory()->create();
 
     $data = [
         'id' => '',
         'classroom_id' => $classroom->id,
     ];
 
-    $this->actingAs($user)->post(route('assign-classroom-student.store'), $data)->assertInvalid(['id']);
+    $this->actingAs($user)->post(route('assign-classroom-staff.store'), $data)->assertInvalid(['id']);
 })->with('staff_can_crud');
 
 
 it("can store student classroom", function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->id]);
     $academicYear = AcademicYear::factory()->create([
         'status_years' => AcademicYear::STATUS_STARTED
     ]);
     session([
-        'academic_year_id' => $academicYear->id
+        'academic_year_id' => $academicYear->id,
+        'school_id' => $academicYear->school_id
     ]);
 
 
 
-    $classroom = Classroom::factory()->has(Student::factory(1))->create();
-    $student  = $classroom->students()->first();
+    $classroom = Classroom::factory()->has(Staff::factory(1))->create();
+    $staff  = $classroom->staff()->first();
     $data = [
-        'classroom_id' => $student->pivot->classroom_id,
-        'id' => [$student->id]
+        'classroom_id' => $staff->pivot->classroom_id,
+        'id' => $staff->id
     ];
 
     $this->actingAs($user)
-        ->post(route('assign-classroom-student.store'), $data)
-        ->assertRedirect(route('assign-classroom-student.index'));
+        ->post(route('assign-classroom-staff.store'), $data)
+        ->assertRedirect(route('assign-classroom-staff.index'));
 
-    $this->assertDatabaseHas('classroom_student', [
-        'classroom_id' => $student->pivot->classroom_id,
-        'student_id' => $student->id
+    $this->assertDatabaseHas('classroom_staff', [
+        'classroom_id' => $staff->pivot->classroom_id,
+        'staff_id' => $staff->id
     ]);
 })->with('staff_can_crud');
 
 
-it('can  Destroy  Student classroom', function (User $user) {
+it('can  Destroy  Staff classroom', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->id]);
-    $classroom = Classroom::factory()->has(Student::factory(1))->create([
+    $classroom = Classroom::factory()->has(Staff::factory(1))->create([
         'school_id' => $school->id
     ]);
-    $student  = $classroom->students()->first();
+    $staff  = $classroom->staff()->first();
     $data = [
-        'classroom_id' => $student->pivot->classroom_id,
-        'id' => [$student->id]
+        'classroom_id' => $staff->pivot->classroom_id,
+        'id' => [$staff->id]
     ];
 
     $this->actingAs($user)
-        ->delete(route('assign-classroom-student.destroy'), $data)
-        ->assertRedirect(route('assign-classroom-student.index'));
+        ->delete(route('assign-classroom-staff.destroy'), $data)
+        ->assertRedirect(route('assign-classroom-staff.index'));
 
-    $this->assertDatabaseMissing('classroom_student', $data);
+    $this->assertDatabaseMissing('classroom_staff', $data);
 })->with('staff_can_crud');
 
 
 it('forbid store as page user', function ($user) {
     $this->actingAs($user)
-        ->post(route('assign-classroom-student.store'))
+        ->post(route('assign-classroom-staff.store'))
         ->assertNotFound();
 })->with('staff_cannot_crud');
 
 
 it('forbid destroy as page user', function ($user) {
     $this->actingAs($user)
-        ->delete(route('assign-classroom-student.destroy'))
+        ->delete(route('assign-classroom-staff.destroy'))
         ->assertNotFound();
 })->with('staff_cannot_crud');

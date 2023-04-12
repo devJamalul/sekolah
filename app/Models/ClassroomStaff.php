@@ -13,4 +13,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ClassroomStaff extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $table = "classroom_staff";
+
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
 }
