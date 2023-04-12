@@ -37,4 +37,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('assign-classroom-staff', App\Http\Controllers\Datatables\AssignClassroomStaffDatatables::class)->name('assign-classroom-staff');
 
     Route::get('assign-staffs', [App\Http\Controllers\Datatables\AssignClassroomStaffDatatables::class, 'staffs'])->name('assign-staffs');
+
+    Route::get('expense', [App\Http\Controllers\Datatables\ExpenseDatatables::class, 'index'])->name('expense');
 });

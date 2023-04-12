@@ -45,6 +45,7 @@ class AcademyYearRequest extends FormRequest
                 'years_formatted',
                 'valid_year'
             ]
+
         ];
     }
 
