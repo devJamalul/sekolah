@@ -138,7 +138,7 @@ class AcademyYearController extends Controller
         return AcademicYear::where('status_years', $status)->update(['status_years' => AcademicYear::STATUS_CLOSED]);
     }
 
-    private function updateSessionStatusActive(AcademicYear $academicYear)
+    private function updateSessionStatusActive(AcademicYear $academyYear)
     {
         if ($academyYear->status_years === AcademicYear::STATUS_STARTED) {
             session('academic_year_id',  $academyYear->id);
