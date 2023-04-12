@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ConfigSchoolController;
+use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStudentController;
@@ -77,6 +79,9 @@ Route::group([], function () {
 
     // Payment Type
     Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
+    // Expense
+    Route::resource('expense', ExpenseController::class);
+    Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
 });
 
 Route::group([], function () {

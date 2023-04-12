@@ -12,7 +12,7 @@ class GradeDatatables extends Controller
     //
     public function index()
     {
-        $grade = Grade::with('school');
+        $grade = Grade::with('school')->latest('created_at');
         return DataTables::of($grade)
             ->addColumn('action', function (Grade $row) {
                 $data = [
