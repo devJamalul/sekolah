@@ -1,6 +1,6 @@
 @php
   $menuAdministrasi = navIsResource('schools') || navIsResource('users') ? 'show' : '';
-  $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') ? 'show' : '';
+  $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') || navIsResource('expense') ? 'show' : '';
   $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') || navIsResource('assign-classroom-student') ? 'show' : '';
   $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
 @endphp
@@ -71,6 +71,11 @@
         @can('tuition.index')
           <a href="{{ route('tuition.index') }}" class="collapse-item {{ navIsResource('tuition') }}">
             Biaya
+          </a>
+        @endcan
+        @can('expense.index')
+          <a href="{{ route('expense.index') }}" class="collapse-item {{ navIsResource('expense') }}">
+            Pengeluaran Biaya
           </a>
         @endcan
       </div>
