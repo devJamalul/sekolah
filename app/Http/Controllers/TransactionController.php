@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentType;
+use App\Models\Student;
+use App\Models\StudentTuition;
+use App\Models\StudentTuitionPaymentHistories;
+use App\Models\StudentTuitionPaymentHistory;
 use App\Models\Transaction;
+use App\Notifications\PaidTuitionNotification;
+use App\Notifications\PartialTuitionNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -12,7 +20,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        $data['title'] = "Transaksi";
+        return view('pages.transaction.index', $data);
     }
 
     /**
@@ -28,15 +37,32 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required'
+            ],
+            [
+                'name.required' => 'Nama Siswa / NIS harus diisi'
+            ]
+        );
+        session(['transaction_keyword' => $request->name]);
+
+        $data['title'] = "Keyword : " . $request->name;
+        return view('pages.transaction.list', $data);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Transaction $transaction)
+    public function show(Student $transaction)
     {
-        //
+        $data['title'] = "Transaksi : " . $transaction->name;
+        $data['student'] = $transaction;
+        $data['student_tuitions'] = $transaction->student_tuitions()->whereIn('status', [
+            StudentTuition::STATUS_PENDING, StudentTuition::STATUS_PARTIAL
+        ])->orderBy('period')->get();
+        $data['payment_types'] = PaymentType::orderBy('name')->get();
+        return view('pages.transaction.store', $data);
     }
 
     /**
@@ -50,9 +76,68 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $transaction)
+    public function update(Request $request, Student $transaction)
     {
-        //
+        $request->validate(
+            [
+                'student_tuition_id' => 'required|exists:student_tuitions,id',
+                'payment_type_id' => 'required|exists:payment_types,id',
+                'nominal' => 'required|numeric|min:1',
+            ],
+            [
+                'student_tuition_id.required' => 'Tagihan biaya harus dipilih',
+                'payment_type_id.required' => 'Metode pembayaran harus dipilih',
+                'nominal.required' => 'Nominal harus diisi',
+                'nominal.numeric' => 'Nominal harus diisi dengan angka saja',
+                'nominal.min' => 'Nominal tidak boleh diisi 0 (nol)'
+            ]
+        );
+
+        try {
+            DB::beginTransaction();
+
+            $student_tuition = StudentTuition::firstWhere([
+                'student_id' => $transaction->getKey(),
+                'id' => $request->student_tuition_id,
+            ]);
+
+            // cek total pembayaran sebelumnya
+            $total_price = StudentTuitionPaymentHistory::where([
+                'student_tuition_id' => $student_tuition->getKey()
+            ])->sum('price');
+
+            $total_payment = $request->nominal + $total_price;
+            if ($total_payment >= $student_tuition->grand_total) {
+                $student_tuition->status = StudentTuition::STATUS_PAID;
+            } else {
+                $student_tuition->status = StudentTuition::STATUS_PARTIAL;
+            }
+
+            $student_tuition->payment_type_id = $request->payment_type_id;
+            $student_tuition->save();
+
+            // input histori
+            StudentTuitionPaymentHistory::create([
+                'student_tuition_id' => $student_tuition->getKey(),
+                'price' => $request->nominal,
+                'payment_type_id' => $request->payment_type_id,
+            ]);
+
+            DB::commit();
+
+            if ($total_payment >= $student_tuition->grand_total) {
+                $delay = now()->addSeconds(30);
+                $transaction->notify((new PaidTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+            } else {
+                $delay = now()->addSeconds(30);
+                $transaction->notify((new PartialTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+            }
+
+            return redirect()->route('transactions.show', $transaction->getKey())->withToastSuccess('Berhasil menambahkan data transaksi!');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withToastError('Ops, ada kesalahan saat menambahkan data transaksi!');
+        }
     }
 
     /**
