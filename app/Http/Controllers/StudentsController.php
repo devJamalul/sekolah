@@ -127,7 +127,6 @@ class StudentsController extends Controller
 
             return redirect()->route('students.index')->withToastSuccess('Berhasil menambahkan data siswa!');
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
             return redirect()->back()->withInput()->withToastError('Ops, ada kesalahan saat menambahkan data siswa!');
         }

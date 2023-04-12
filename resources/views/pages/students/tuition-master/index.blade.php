@@ -10,7 +10,7 @@
         <div class="d-sm-flex align-items-center justify-content-between">
             <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
             <div>
-                <a href="{{ route('tuition-master.create', [$id => $id]) }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
+                <a href="{{ route('tuition-master.create', ['id' => $id]) }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
             </div>
         </div>
         
@@ -25,7 +25,7 @@
                         ['data' => 'note'],
                         ['data' => 'action']
                     ]" 
-                    :getDataUrl="route('datatable.students.tuition-master')" 
+                    :getDataUrl="route('datatable.students.tuition-master', ['id' => $id])" 
                 />
             </div>
         </div>
