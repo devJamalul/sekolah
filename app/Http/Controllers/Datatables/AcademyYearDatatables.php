@@ -26,10 +26,10 @@ class AcademyYearDatatables extends Controller
             })
             ->editColumn('year_start', function ($row) {
 
-                return $row->year_start?->toFormattedDateString();
+                return $row->year_start;
             })
             ->editColumn('year_end', function ($row) {
-                return $row->year_end?->toFormattedDateString();
+                return $row->year_end;
             })
             ->addColumn('action', function (AcademicYear $row) {
                 $data = [

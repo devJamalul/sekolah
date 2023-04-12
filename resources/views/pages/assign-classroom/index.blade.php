@@ -45,7 +45,7 @@
                 {{-- START SELECT CLASS  --}}
                 <div class="d-flex justify-content-between ">
                     <div class="w-75 d-flex py-4">
-                        <h6 class="font-weight-bold">Tahun Ajaran : {{ $academy_year?->name }}</h6>
+                        <h6 class="font-weight-bold">Tahun Ajaran : {{ $academy_year?->academic_year_name }}</h6>
                     </div>
                     {{--  START SELECT CLASS COMPONENT TETAPKAN KELAS DAN HAPUS KELAS --}}
                     <div class="w-75 ml-5  d-flex flex-column">
@@ -68,7 +68,7 @@
                                                 @foreach ($classroom as $key => $class)
                                                     <option value="{{ $class->id }}"
                                                         {{ session('classroom_id') == $class->id ? 'selected' : '' }}>
-                                                        {{ $class->grade->name }} -
+                                                        {{ $class->grade->grade_name }} -
                                                         {{ $class->name }}</option>
                                                 @endforeach
                                             </select>

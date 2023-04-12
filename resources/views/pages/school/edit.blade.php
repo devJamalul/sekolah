@@ -21,7 +21,7 @@
                         <div class="col-6">
                             <p class="font-weight-bold h5" id="title-school">Informasi Sekolah</p>
                             <hr style="border-top: 1px dashed #2e3a61">
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="school-select">Yayasan</label>
                                 <select class="form-control @error('school_id') is-invalid @enderror" name="school_id"
                                     id="school-select">
@@ -37,7 +37,7 @@
                                         {{ $message }}
                                     </div>
                                 @enderror
-                            </div>
+                            </div> --}}
                             <div class="form-group">
                                 <label for="name-input">Nama Sekolah <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control   @error('school_name') is-invalid @enderror"
@@ -176,7 +176,7 @@
 @endsection
 
 @push('js')
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             let h6 = $('h6.text-primary')
             let labelNamaSekolah = $('label[for="name-input"]')
@@ -199,5 +199,5 @@
                 }
             })
         });
-    </script>
+    </script> --}}
 @endpush
