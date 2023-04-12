@@ -17,17 +17,17 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'tuition'" 
-                    :tableHeaders="['Tipe Biaya', 'Tahun Akademik', 'Tingkat', 'Nominal', 'Permintaan dari', 'Disetujui Oleh', 'Aksi']" 
+                    <x-datatable :tableId="'tuition'"
+                    :tableHeaders="['Tipe Biaya', 'Tahun Akademik', 'Tingkat', 'Nominal', 'Permintaan dari', 'Disetujui Oleh', 'Aksi']"
                     :tableColumns="[
-                        ['data' => 'tuition_type', 'name' => 'price'], 
-                        ['data' => 'academic_year'], 
-                        ['data' => 'grade'], 
-                        ['data' => 'price'], 
-                        ['data' => 'request_by'], 
-                        ['data' => 'approval_by'], 
+                        ['data' => 'tuition_type', 'name' => 'price'],
+                        ['data' => 'academic_year'],
+                        ['data' => 'grade'],
+                        ['data' => 'price'],
+                        ['data' => 'request_by'],
+                        ['data' => 'approval_by'],
                         ['data' => 'action']
-                        ]" 
+                        ]"
                     :getDataUrl="route('datatable.tuition')" />
                 </div>
             </div>
