@@ -24,7 +24,7 @@
                                 id="tuition-type-select">
                                 <option value="">-</option>
                                 @foreach ($tuitionTypes as $tuitionType)
-                                    <option value="{{ $tuitionType->id }}">
+                                    <option value="{{ $tuitionType->id }}" @selected(old('tuition_type_id') == $tuitionType->id)>
                                         {{ $tuitionType->name }}
                                     </option>
                                 @endforeach
@@ -41,7 +41,7 @@
                                 id="academic-year-select">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $academicYear)
-                                    <option value="{{ $academicYear->id }}">
+                                    <option value="{{ $academicYear->id }}" @selected(old('academic_year_id') == $academicYear->id)>
                                         {{ $academicYear->academic_year_name }}
                                     </option>
                                 @endforeach
@@ -58,7 +58,7 @@
                                 id="grade-select">
                                 <option value="">-</option>
                                 @foreach ($grades as $grade)
-                                    <option value="{{ $grade->id }}">
+                                    <option value="{{ $grade->id }}" @selected(old('grade_id') == $grade->id)>
                                         {{ $grade->grade_name }}
                                     </option>
                                 @endforeach
@@ -84,7 +84,7 @@
                                 id="requested-by-select">
                                 <option value="">-</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">
+                                    <option value="{{ $user->id }}" @selected(old('requested_by') == $user->id)>
                                         {{ $user->name }}
                                     </option>
                                 @endforeach
@@ -101,7 +101,7 @@
                                 id="approved-by-select">
                                 <option value="">-</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">
+                                    <option value="{{ $user->id }}" @selected(old('approved_by') == $user->id)>
                                         {{ $user->name }}
                                     </option>
                                 @endforeach

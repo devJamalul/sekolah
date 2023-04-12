@@ -16,6 +16,10 @@ class TuitionType extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'recurring' => 'boolean'
+    ];
+
     protected static function booted()
     {
         static::addGlobalScope(new TuitionTypeScope);
