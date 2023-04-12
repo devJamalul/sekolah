@@ -9,10 +9,13 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
+use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\PaymentTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +50,7 @@ Route::group([], function () {
 
     // Student
     Route::resource('students', StudentsController::class)->except(['show']);
+    Route::get('students/tuition-master', [StudentsController::class, 'tuitionMaster'])->name('students.tuition-master');
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
     Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
 
@@ -57,17 +61,22 @@ Route::group([], function () {
     Route::post('school_selector', SchoolSelectorController::class)->name('school_selector')->middleware('role:super admin|ops admin');
 
     // Assign Classroom student
-    Route::GET('assign-classroom-student', AssignClassroomStudentController::class)->name(('assign-classroom-student.index'));
-    Route::POST('assign-classroom-student', [AssignClassroomStudentController::class, 'store'])->name(('assign-classroom-student.store'));
-    Route::DELETE('assign-classroom-student', [AssignClassroomStudentController::class, 'destroy'])->name(('assign-classroom-student.destroy'));
+    Route::get('assign-classroom-student', AssignClassroomStudentController::class)->name(('assign-classroom-student.index'));
+    Route::post('assign-classroom-student', [AssignClassroomStudentController::class, 'store'])->name(('assign-classroom-student.store'));
+    Route::delete('assign-classroom-student', [AssignClassroomStudentController::class, 'destroy'])->name(('assign-classroom-student.destroy'));
 
 
     // Transactions
     Route::resource("transactions", TransactionController::class);
 
+    // Users
+    Route::resource("users", UsersController::class);
     // Tuition
     Route::resource('tuition', TuitionController::class)->except(['show']);
     Route::resource('publish-tuition', PublishTuitionController::class)->except(['show']);
+
+    // Payment Type
+    Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
 });
 
 Route::group([], function () {
@@ -82,4 +91,3 @@ Route::group(['prefix' => 'config', 'as' => 'config.'], function () {
 Route::fallback(function () {
     abort(404);
 });
-

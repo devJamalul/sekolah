@@ -46,7 +46,7 @@ class Classroom extends Model
 
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class)->withTimestamps();
+        return $this->belongsToMany(Student::class)->withTimestamps()->orderBy('created_at');
     }
     public function student(): BelongsTo
     {

@@ -32,7 +32,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: url,
-                columns: columns
+                columns: columns,
             });
 
 

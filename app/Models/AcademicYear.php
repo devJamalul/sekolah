@@ -23,11 +23,10 @@ class AcademicYear extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'year_start' => 'date',
-        'year_end'   => 'date',
+    protected $dates = [
+        'year_start',
+        'year_end'
     ];
-
 
     protected static function booted()
     {

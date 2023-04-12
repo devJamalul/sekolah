@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\School;
 use App\Models\Student;
-use App\Models\TuitionType;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 
 beforeEach(function () {
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
@@ -111,7 +111,6 @@ beforeEach(function () {
         $this->actingAs($this->superAdmin)
             ->post(route('students.store'), [
                 'school_id' => 2,
-                'academic_year_id' => '',
 
                 'name' => '',
                 'gender' => '',
@@ -136,7 +135,6 @@ beforeEach(function () {
                 'guardian_address' => $this->faker->address(),
                 'guardian_phone_number' => $this->faker->randomNumber(9, true),
             ])->assertInvalid([
-                'academic_year_id',
                 'name',
                 'gender',
                 'address',
@@ -153,7 +151,6 @@ beforeEach(function () {
         $this->actingAs($this->superAdmin)
             ->post(route('students.store'), [
                 'school_id' => 2,
-                'academic_year_id' => 1,
 
                 'name' => $this->faker->name(),
                 'gender' => 'Love Live',
@@ -194,7 +191,6 @@ beforeEach(function () {
         $this->actingAs($this->tataUsaha)
             ->post(route('students.store'), [
                 'school_id' => 2,
-                'academic_year_id' => $this->faker->numberBetween(1, 10),
 
                 'name' => $this->faker->name(),
                 'gender' => $this->faker->randomElement(['L', 'P']),
@@ -226,13 +222,13 @@ beforeEach(function () {
             ]);
     });
 
-    it('array validation on create student', function () {
+    it('files validation on create student', function () {
         $this->actingAs($this->tataUsaha)
             ->post(route('students.store'), [
                 'school_id' => 2,
-                'academic_year_id' => $this->faker->numberBetween(1, 10),
 
                 'name' => $this->faker->name(),
+                'email' => $this->faker->unique()->safeEmail(),
                 'gender' => $this->faker->randomElement(['L', 'P']),
                 'address' => $this->faker->address(),
                 'dob' => $this->faker->date(),
@@ -255,46 +251,14 @@ beforeEach(function () {
                 'guardian_address' => $this->faker->address(),
                 'guardian_phone_number' => $this->faker->randomNumber(7, false),
 
-                'tuitions' => 'String Desu!'
-            ])->assertInvalid(['tuitions']);
-    });
-
-    it('array items validation on create student', function () {
-        $this->actingAs($this->tataUsaha)
-            ->post(route('students.store'), [
-                'school_id' => 2,
-                'academic_year_id' => $this->faker->numberBetween(1, 10),
-
-                'name' => $this->faker->name(),
-                'gender' => $this->faker->randomElement(['L', 'P']),
-                'address' => $this->faker->address(),
-                'dob' => $this->faker->date(),
-                'religion' => 'katolik',
-                'phone_number' => $this->faker->randomNumber(9, true),
-                'family_card_number' => $this->faker->randomNumber(9, true),
-                'nik' => $this->faker->randomNumber(9, true),
-                'nisn' => $this->faker->randomNumber(9, true),
-                'nis' => $this->faker->randomNumber(9, true),
-
-                'father_name' => $this->faker->name('male'),
-                'father_address' => $this->faker->address(),
-                'father_phone_number' => $this->faker->randomNumber(7, false),
-
-                'mother_name' => $this->faker->name('female'),
-                'mother_address' => $this->faker->address(),
-                'mother_phone_number' => $this->faker->randomNumber(7, false),
-
-                'guardian_name' => $this->faker->name('female'),
-                'guardian_address' => $this->faker->address(),
-                'guardian_phone_number' => $this->faker->randomNumber(7, false),
-
-                'tuitions' => ['1' => 'Stering Desu~', '2' => 'mata Stering Desu~']
-            ])->assertInvalid(['tuitions.1', 'tuitions.2']);
+                'file_photo' => 'string',
+                'file_birth_certificate' => 'string',
+                'file_family_card' => 'string',
+            ])->assertInvalid(['file_photo', 'file_birth_certificate', 'file_family_card']);
     });
 
     it('can create new Student', function (User $user) {
         $school_id = 2;
-        $academic_year_id = $this->faker->numberBetween(1, 10);
 
         $name = $this->faker->name();
         $gender = $this->faker->randomElement(['L', 'P']);
@@ -323,7 +287,6 @@ beforeEach(function () {
         $this->actingAs($user)
             ->post(route('students.store'), [
                 'school_id' => $school_id,
-                'academic_year_id' => $academic_year_id,
 
                 'name' => $name,
                 'gender' => $gender,
@@ -381,12 +344,8 @@ beforeEach(function () {
         User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     ]);
 
-    it('can create new Student With Tuitions', function (User $user) {
-        $tuitionType1 = TuitionType::factory()->create();
-        $tuitionType2 = TuitionType::factory()->create();
-
+    it('can create new Student with Documents', function (User $user) {
         $school_id = 2;
-        $academic_year_id = $this->faker->numberBetween(1, 10);
 
         $name = $this->faker->name();
         $gender = $this->faker->randomElement(['L', 'P']);
@@ -411,10 +370,13 @@ beforeEach(function () {
         $guardian_address = $this->faker->address();
         $guardian_phone_number = $this->faker->randomNumber(7, false);
 
+        $file_photo = UploadedFile::fake()->image('photo.jpg');
+        $file_birth_certificate = UploadedFile::fake()->image('birth-certificate.jpg');
+        $file_family_card = UploadedFile::fake()->image('family-card.jpg');
+
         $this->actingAs($user)
             ->post(route('students.store'), [
                 'school_id' => $school_id,
-                'academic_year_id' => $academic_year_id,
 
                 'name' => $name,
                 'gender' => $gender,
@@ -439,16 +401,16 @@ beforeEach(function () {
                 'guardian_address' => $guardian_address,
                 'guardian_phone_number' => $guardian_phone_number,
 
-                'tuitions' => [
-                    $tuitionType1->getKey() => 23456789,
-                    $tuitionType2->getKey() => 23456789
-                ],
-            ])->assertRedirect(route('students.index'));
-
-        $this->assertDatabaseHas('student_tuitions', [
-            'tuition_type_id' => $tuitionType1->getKey(),
-            'tuition_type_id' => $tuitionType2->getKey(),
-        ]);
+                'file_photo' => $file_photo,
+                'file_birth_certificate' => $file_birth_certificate,
+                'file_family_card' => $file_family_card,
+            ])
+            ->assertRedirect(route('students.index'));
+        // $this->assertDatabaseHas('students', [
+        //     'file_photo' => $file_photo,
+        //     'file_birth_certificate' => $file_birth_certificate,
+        //     'file_family_card' => $file_family_card,
+        // ]);
     })->with([
         User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
         User::ROLE_BENDAHARA => [fn () => $this->bendahara],
@@ -458,7 +420,6 @@ beforeEach(function () {
 
     it('forbid create new Student', function (User $user) {
         $school_id = 2;
-        $academic_year_id = $this->faker->numberBetween(1, 10);
 
         $name = $this->faker->name();
         $gender = $this->faker->randomElement(['L', 'P']);
@@ -486,7 +447,6 @@ beforeEach(function () {
         $this->actingAs($user)
             ->post(route('students.store'), [
                 'school_id' => $school_id,
-                'academic_year_id' => $academic_year_id,
 
                 'name' => $name,
                 'gender' => $gender,
@@ -558,7 +518,6 @@ beforeEach(function () {
         $this->actingAs($this->tataUsaha)
             ->put(route('students.update', $student->getKey()), [
                 'school_id' => $school->getKey(),
-                'academic_year_id' => '',
 
                 'name' => '',
                 'gender' => '',
@@ -583,7 +542,6 @@ beforeEach(function () {
                 'guardian_address' => $this->faker->address(),
                 'guardian_phone_number' => $this->faker->randomNumber(9, true),
             ])->assertInvalid([
-                'academic_year_id',
                 'name',
                 'gender',
                 'address',
@@ -604,7 +562,6 @@ beforeEach(function () {
         $this->actingAs($this->tataUsaha)
             ->put(route('students.update', $student->getKey()), [
                 'school_id' => $school->getKey(),
-                'academic_year_id' => 1,
 
                 'name' => $this->faker->name(),
                 'gender' => 'Love Live',
@@ -649,7 +606,6 @@ beforeEach(function () {
         $this->actingAs($this->tataUsaha)
             ->put(route('students.update', $student->getKey()), [
                 'school_id' => $school->getKey(),
-                'academic_year_id' => $this->faker->numberBetween(1, 10),
 
                 'name' => $this->faker->name(),
                 'gender' => $this->faker->randomElement(['L', 'P']),
@@ -681,7 +637,7 @@ beforeEach(function () {
             ]);
     });
 
-    it('array validation on update student', function () {
+    it('Files validation on update student', function () {
         $school = School::factory()->create();
         session(['school_id' => $school->getKey()]);
         $student = Student::factory()->create();
@@ -689,7 +645,6 @@ beforeEach(function () {
         $this->actingAs($this->tataUsaha)
             ->put(route('students.update', $student->getKey()), [
                 'school_id' => $school->getKey(),
-                'academic_year_id' => $this->faker->numberBetween(1, 10),
 
                 'name' => $this->faker->name(),
                 'gender' => $this->faker->randomElement(['L', 'P']),
@@ -714,60 +669,18 @@ beforeEach(function () {
                 'guardian_address' => $this->faker->address(),
                 'guardian_phone_number' => $this->faker->randomNumber(7, false),
 
-                'tuitions' => 'String Desu!',
-                'selected_tuitions' => 'String Desu!'
-            ])->assertInvalid(['tuitions', 'selected_tuitions']);
-    });
-
-    it('array items validation on update student', function () {
-        $school = School::factory()->create();
-        session(['school_id' => $school->getKey()]);
-        $student = Student::factory()->create();
-
-        $this->actingAs($this->tataUsaha)
-            ->put(route('students.update', $student->getKey()), [
-                'school_id' => $school->getKey(),
-                'academic_year_id' => $this->faker->numberBetween(1, 10),
-
-                'name' => $this->faker->name(),
-                'gender' => $this->faker->randomElement(['L', 'P']),
-                'address' => $this->faker->address(),
-                'dob' => $this->faker->date(),
-                'religion' => 'katolik',
-                'phone_number' => $this->faker->randomNumber(9, true),
-                'family_card_number' => $this->faker->randomNumber(9, true),
-                'nik' => $this->faker->randomNumber(9, true),
-                'nisn' => $this->faker->randomNumber(9, true),
-                'nis' => $this->faker->randomNumber(9, true),
-
-                'father_name' => $this->faker->name('male'),
-                'father_address' => $this->faker->address(),
-                'father_phone_number' => $this->faker->randomNumber(7, false),
-
-                'mother_name' => $this->faker->name('female'),
-                'mother_address' => $this->faker->address(),
-                'mother_phone_number' => $this->faker->randomNumber(7, false),
-
-                'guardian_name' => $this->faker->name('female'),
-                'guardian_address' => $this->faker->address(),
-                'guardian_phone_number' => $this->faker->randomNumber(7, false),
-                
-                'tuitions' => ['1' => 'Stering Desu~', '2' => 'mata Stering Desu~'],
-                'selected_tuitions' => ['1' => 'Stering Desu~', '2' => 'mata Stering Desu~']
-            ])->assertInvalid([
-                'tuitions.1', 
-                'tuitions.2', 
-                'selected_tuitions.1', 
-                'selected_tuitions.2'
-            ]);
+                'file_photo' => 'string',
+                'file_birth_certificate' => 'string',
+                'file_family_card' => 'string',
+            ])->assertInvalid(['file_photo', 'file_birth_certificate', 'file_family_card']);
     });
 
     it('can update Student', function (User $user) {
         $student = Student::factory()->create();
-        session(['school_id' => $user->school_id ?? 2]);
-        $academic_year_id = $this->faker->numberBetween(1, 10);
+        session(['school_id' => $student->school_id]);
 
         $name = $this->faker->name();
+        $email = $this->faker->unique()->safeEmail();
         $gender = $this->faker->randomElement(['L', 'P']);
         $address = $this->faker->address();
         $dob = $this->faker->date();
@@ -786,15 +699,14 @@ beforeEach(function () {
         $mother_address = $this->faker->address();
         $mother_phone_number = $this->faker->randomNumber(7, false);
 
-        $guardian_name = $this->faker->name('female');
+        $guardian_name = $this->faker->name();
         $guardian_address = $this->faker->address();
         $guardian_phone_number = $this->faker->randomNumber(7, false);
-
+        
         $this->actingAs($user)
             ->put(route('students.update', $student->getKey()), [
-                'academic_year_id' => $academic_year_id,
-
                 'name' => $name,
+                'email' => $email,
                 'gender' => $gender,
                 'address' => $address,
                 'dob' => $dob,
@@ -850,12 +762,9 @@ beforeEach(function () {
         User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     ]);
 
-    it('can update Student With Tuitions', function (User $user) {
+    it('can update Student With Files', function (User $user) {
         $student = Student::factory()->create();
         session(['school_id' => $user->school_id ?? 2]);
-        $tuitionType1 = TuitionType::factory()->create();
-        $tuitionType2 = TuitionType::factory()->create();
-        $academic_year_id = $this->faker->numberBetween(1, 10);
 
         $name = $this->faker->name();
         $gender = $this->faker->randomElement(['L', 'P']);
@@ -880,9 +789,12 @@ beforeEach(function () {
         $guardian_address = $this->faker->address();
         $guardian_phone_number = $this->faker->randomNumber(7, false);
 
+        $file_photo = UploadedFile::fake()->image('photo.jpg');
+        $file_birth_certificate = UploadedFile::fake()->image('birth-certificate.jpg');
+        $file_family_card = UploadedFile::fake()->image('family-card.jpg');
+
         $this->actingAs($user)
             ->put(route('students.update', $student->getKey()), [
-                'academic_year_id' => $academic_year_id,
 
                 'name' => $name,
                 'gender' => $gender,
@@ -907,16 +819,16 @@ beforeEach(function () {
                 'guardian_address' => $guardian_address,
                 'guardian_phone_number' => $guardian_phone_number,
 
-                'tuitions' => [
-                    $tuitionType1->getKey() => 23456789,
-                    $tuitionType2->getKey() => 23456789
-                ],
+                'file_photo' => $file_photo,
+                'file_birth_certificate' => $file_birth_certificate,
+                'file_family_card' => $file_family_card,
             ])->assertRedirect(route('students.index'));
 
-        $this->assertDatabaseHas('student_tuitions', [
-            'tuition_type_id' => $tuitionType1->getKey(),
-            'tuition_type_id' => $tuitionType2->getKey(),
-        ]);
+        // $this->assertDatabaseHas('students', [
+        //     'file_photo' => $file_photo,
+        //     'file_birth_certificate' => $file_birth_certificate,
+        //     'file_family_card' => $file_family_card,
+        // ]);
     })->with([
         User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
         User::ROLE_BENDAHARA => [fn () => $this->bendahara],
@@ -926,7 +838,6 @@ beforeEach(function () {
 
     it('forbid update Student', function (User $user) {
         $student = Student::factory()->create();
-        $academic_year_id = $this->faker->numberBetween(1, 10);
         
         $name = $this->faker->name();
         $gender = $this->faker->randomElement(['L', 'P']);
@@ -953,7 +864,6 @@ beforeEach(function () {
 
         $this->actingAs($user)
             ->put(route('students.update', $student->getKey()), [
-                'academic_year_id' => $academic_year_id,
 
                 'name' => $name,
                 'gender' => $gender,

@@ -30,8 +30,6 @@ class StudentsRequest extends FormRequest
     protected function postMethod(): array
     {
         return [
-            'academic_year_id' => 'required|exists:academic_years,id',
-
             'name' => 'required',
             'email' => 'nullable|email',
             'dob' => 'required',
@@ -56,16 +54,15 @@ class StudentsRequest extends FormRequest
             'guardian_address' => 'nullable',
             'guardian_phone_number' => 'nullable|max:20',
 
-            'tuitions' => 'nullable|array',
-            'tuitions.*' => "nullable|numeric",
+            'file_photo' => 'nullable|image|max:4000',
+            'file_birth_certificate' => 'nullable|image|max:4000',
+            'file_family_card' => 'nullable|image|max:4000',
         ];
     }
 
     protected function putMethod(): array
     {
         return [
-            'academic_year_id' => 'required|exists:academic_years,id',
-
             'name' => 'required',
             'email' => 'nullable|email',
             'dob' => 'required',
@@ -90,10 +87,9 @@ class StudentsRequest extends FormRequest
             'guardian_address' => 'nullable',
             'guardian_phone_number' => 'nullable|max:20',
 
-            'selected_tuitions' => 'nullable|array',
-            'selected_tuitions.*' => "nullable|numeric",
-            'tuitions' => 'nullable|array',
-            'tuitions.*' => "nullable|numeric",
+            'file_photo' => 'nullable|image|max:4000',
+            'file_birth_certificate' => 'nullable|image|max:4000',
+            'file_family_card' => 'nullable|image|max:4000',
         ];
     }
 }

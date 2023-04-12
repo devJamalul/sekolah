@@ -135,9 +135,9 @@ it("can store student classroom", function (User $user) {
 it('can  Destroy  Student classroom', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->id]);
-
-    Classroom::factory()->create();
-    $classroom = Classroom::factory()->has(Student::factory(1))->create();
+    $classroom = Classroom::factory()->has(Student::factory(1))->create([
+        'school_id' => $school->id
+    ]);
     $student  = $classroom->students()->first();
     $data = [
         'classroom_id' => $student->pivot->classroom_id,
@@ -148,9 +148,8 @@ it('can  Destroy  Student classroom', function (User $user) {
         ->delete(route('assign-classroom-student.destroy'), $data)
         ->assertRedirect(route('assign-classroom-student.index'));
 
-    })->with('staff_can_crud');
-
-
+    $this->assertDatabaseMissing('classroom_student', $data);
+})->with('staff_can_crud');
 
 
 it('forbid store as page user', function ($user) {

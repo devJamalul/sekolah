@@ -26,7 +26,7 @@ class StudentFactory extends Factory
         return [
             'school_id' => session('school_id') ?? 2,
             'name' => $faker->name($gender),
-            'email' => $faker->safeEmail(),
+            'email' => $faker->unique()->safeEmail(),
             'gender' => $gender,
             'address' => $faker->address(),
             'dob' => $faker->dateTimeBetween('-20 years', '-18 years'),

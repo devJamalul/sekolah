@@ -18,8 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
-
+use Illuminate\Support\Facades\Storage;
 
 class Student extends Model
 {
@@ -70,6 +69,39 @@ class Student extends Model
     {
         static::addGlobalScope(new StudentScope);
     }
+
+    // Accessor
+    public function getFilePhotoAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function getFileBirthCertificateAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function getFileFamilyCardAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
+    }
+    // End Accessor
+    
 
     public static function boot()
     {

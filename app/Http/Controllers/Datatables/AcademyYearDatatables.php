@@ -26,16 +26,17 @@ class AcademyYearDatatables extends Controller
             })
             ->editColumn('year_start', function ($row) {
 
-                return $row->year_start?->toFormattedDateString();
+                return $row->year_start;
             })
             ->editColumn('year_end', function ($row) {
-                return $row->year_end?->toFormattedDateString();
+                return $row->year_end;
             })
             ->addColumn('action', function (AcademicYear $row) {
                 $data = [
                     'edit_url'     => route('academy-year.edit', ['academy_year' => $row->id]),
                     'delete_url'   => route('academy-year.destroy', ['academy_year' => $row->id]),
-                    'redirect_url' => route('academy-year.index')
+                    'redirect_url' => route('academy-year.index'),
+                    'resource'     => 'academy-year',
                 ];
                 return view('components.datatable-action', $data);
             })

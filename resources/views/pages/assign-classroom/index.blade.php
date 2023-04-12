@@ -16,12 +16,14 @@
 
 
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
-
     <div class="row">
 
         {{-- START MENU FILTER CLASSROOM --}}
         <div class="col-lg-12">
+
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
+            </div>
             {{-- START VALIDATION ID STUDENTS --}}
             @error('id.*')
                 <div class="alert alert-danger">
@@ -43,7 +45,7 @@
                 {{-- START SELECT CLASS  --}}
                 <div class="d-flex justify-content-between ">
                     <div class="w-75 d-flex py-4">
-                        <h6 class="font-weight-bold">Tahun Ajaran : {{ $academy_year?->name }}</h6>
+                        <h6 class="font-weight-bold">Tahun Ajaran : {{ $academy_year?->academic_year_name }}</h6>
                     </div>
                     {{--  START SELECT CLASS COMPONENT TETAPKAN KELAS DAN HAPUS KELAS --}}
                     <div class="w-75 ml-5  d-flex flex-column">
@@ -66,7 +68,7 @@
                                                 @foreach ($classroom as $key => $class)
                                                     <option value="{{ $class->id }}"
                                                         {{ session('classroom_id') == $class->id ? 'selected' : '' }}>
-                                                        {{ $class->grade->name }} -
+                                                        {{ $class->grade->grade_name }} -
                                                         {{ $class->name }}</option>
                                                 @endforeach
                                             </select>

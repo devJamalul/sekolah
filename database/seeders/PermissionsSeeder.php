@@ -8,12 +8,14 @@ use Database\Seeders\Permissions\SchoolSeeder;
 use Database\Seeders\Permissions\StudentSeeder;
 use Database\Seeders\Permissions\TuitionSeeder;
 use Database\Seeders\Permissions\ClassroomSeeder;
+use Database\Seeders\Permissions\PaymentTypeSeeder;
 use Database\Seeders\Permissions\TransactionSeeder;
 use Database\Seeders\Permissions\TuitionTypeSeeder;
 use Database\Seeders\Permissions\AcademicYearSeeder;
 use Database\Seeders\Permissions\MasterConfigSeeder;
 use Database\Seeders\Permissions\SchoolConfigSeeder;
 use Database\Seeders\Permissions\SchoolSelectorSeeder;
+use Database\Seeders\Permissions\UserSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
 
@@ -46,8 +48,10 @@ class PermissionsSeeder extends Seeder
             MasterConfigSeeder::class,
             SchoolConfigSeeder::class,
             TransactionSeeder::class,
+            UserSeeder::class,
             AssignClassroomStudentSeeder::class,
             TuitionSeeder::class,
+            PaymentTypeSeeder::class
         ]);
     }
 }

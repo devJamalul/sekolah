@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\Models\Student;
-use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -13,12 +14,10 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
 {
     private $school_id;
-    private $academic_year;
 
-    public function __construct(string $school_id, string $academic_year)
+    public function __construct(string $school_id)
     {
         $this->school_id = $school_id;
-        $this->$academic_year = $academic_year;
     }
 
     /**
@@ -26,16 +25,12 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
     */
     public function collection(Collection $collection)
     {
-
         try {
-
             DB::beginTransaction();
-
             foreach ($collection as $key => $item) {
                 // Save Student
                     $student                            = new Student;
                     $student->school_id                 = $this->school_id;
-                    $student->academic_year_id          = $this->academic_year;
     
                     $student->name                      = $item['nama'];
                     $student->gender                    = $item['jenis_kelamin'];
@@ -65,8 +60,23 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
             }
             DB::commit();
             return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
-            
-        } catch (\Throwable $th) {
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            DB::rollBack();
+            $failures = $e->failures();
+
+            if (count($failures) > 0) {
+                $row = $failures[0]->row(); // row that went wrong
+                $column = $failures[0]->attribute(); // either heading key (if using heading row concern) or column index
+                $error = $failures[0]->errors(); // Actual error messages from Laravel validator
+                // $value = $failures[0]->values(); // The values of the row that has failed.
+                
+                return redirect()->route('students.index')->withToastError("Terjadi kesalahan pada Baris $row, Kolom $column, dengan pesan $error[0]");
+            }
+        } catch (ValidationException $ex) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withToastError($ex->errors());
+        } catch (Exception $ex) {
             DB::rollBack();
             return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data siswa!");
         }
@@ -86,17 +96,14 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
             'nisn' => 'nullable|numeric|max_digits:10',
 
             'nama_ayah' => 'required',
-            'pekerjaan_ayah' => 'required',
             'alamat_ayah' => 'nullable',
             'nomor_telepon_ayah' => 'nullable|max:20',
 
             'nama_ibu' => 'required',
-            'pekerjaan_ibu' => 'required',
             'alamat_ibu' => 'nullable',
             'nomor_telepon_ibu' => 'nullable|max:20',
 
             'nama_wali' => 'nullable',
-            'pekerjaan_wali' => 'nullable',
             'alamat_wali' => 'nullable',
             'nomor_telepon_wali' => 'nullable|max:20',
         ];

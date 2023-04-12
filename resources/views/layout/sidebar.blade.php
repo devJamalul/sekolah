@@ -1,7 +1,7 @@
 @php
-  $menuAdministrasi = navIsResource('schools') ? 'show' : '';
-  $menuKeuangan = navIsResource('tuition-type') ? 'show' : '';
-  $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') ? 'show' : '';
+  $menuAdministrasi = navIsResource('schools') || navIsResource('users') ? 'show' : '';
+  $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') ? 'show' : '';
+  $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') || navIsResource('assign-classroom-student') ? 'show' : '';
   $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
 @endphp
 
@@ -43,7 +43,11 @@
             Sekolah
           </a>
         @endcan
-        <a href="{{ route('home') }}" class="collapse-item">Pengguna</a>
+        @can('users.index')
+          <a href="{{ route('users.index') }}" class="collapse-item {{ navIsResource('users') }}">
+            Pengguna
+          </a>
+        @endcan
       </div>
     </div>
   </li>
@@ -62,6 +66,11 @@
         @can('tuition-type.index')
           <a href="{{ route('tuition-type.index') }}" class="collapse-item {{ navIsResource('tuition-type') }}">
             Tipe Biaya
+          </a>
+        @endcan
+        @can('tuition.index')
+          <a href="{{ route('tuition.index') }}" class="collapse-item {{ navIsResource('tuition') }}">
+            Biaya
           </a>
         @endcan
       </div>
@@ -97,6 +106,11 @@
         @can('classroom.index')
           <a href="{{ route('classroom.index') }}" class="collapse-item {{ navIsResource('classroom') }}">
             Ruang Kelas
+          </a>
+        @endcan
+        @can('assign-classroom-student.index')
+          <a href="{{ route('assign-classroom-student.index') }}" class="collapse-item {{ navIsResource('assign-classroom-student') }}">
+            Rombongan Belajar
           </a>
         @endcan
       </div>
