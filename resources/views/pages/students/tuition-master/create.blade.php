@@ -27,8 +27,8 @@
                 class="form-control select2 @error('tuition_id') is-invalid @enderror" required>
                 <option value="">--- Pilih Biaya Sekolah ---</option>
                 @foreach ($tuitions as $tuition)
-                    <option value="{{ $tuition->getKey() }}" @selected(old('tuition_id') == $tuition->getKey())>
-                        {{ $tuition->tuition->tuition_type->name }}
+                    <option value="{{ $tuition->id }}" @selected(old('tuition_id') == $tuition->id)>
+                        {{ $tuition->tuition_type->name }}
                     </option>
                 @endforeach
             </select>

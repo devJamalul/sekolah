@@ -20,7 +20,7 @@
                     :tableId="'students-tuition-master'" 
                     :tableHeaders="['Nama Biaya', 'Harga', 'Catatan', 'Aksi']" 
                     :tableColumns="[
-                        ['data' => 'tuition_type', 'name' => 'tuition_id'],
+                        ['data' => 'tuition_type', 'name' => 'tuition.tuition_type.name'],
                         ['data' => 'price'], 
                         ['data' => 'note'],
                         ['data' => 'action']

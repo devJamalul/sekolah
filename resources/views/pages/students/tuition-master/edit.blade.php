@@ -26,11 +26,11 @@
           <div class="form-group">
             <label for="tuition_id">Biaya Sekolah<span class="text-small text-danger">*</span></label>
             <select id="tuition_id" name="tuition_id"
-                class="form-control @error('tuition_id') is-invalid @enderror" required>
+                class="form-control select2 @error('tuition_id') is-invalid @enderror" required>
                 <option value="">--- Pilih Biaya Sekolah ---</option>
                 @foreach ($tuitions as $tuition)
-                <option value="{{ $tuition->getKey() }}" @selected($tuition->getKey() == old('tuition_id', $current_tuition->id))>
-                    {{ $tuition->tuition->tuition_type->name }}
+                <option value="{{ $tuition->getKey() }}" @selected($tuition->getKey() == old('tuition_id', $current_tuition->tuition_id))>
+                    {{ $tuition->tuition_type->name }}
                 </option>
                 @endforeach
             </select>

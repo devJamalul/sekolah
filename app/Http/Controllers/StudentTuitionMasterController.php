@@ -35,8 +35,8 @@ class StudentTuitionMasterController extends Controller
     {
         $student = Student::findOrFail($req->id);
         $academicYear = AcademicYear::where('status_years', 'started')->first();
-        $selectedStudentTuitionMaster = Tuition::where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get();
-        $studentTuitionMaster = collect(StudentTuitionMaster::with('tuition.tuition_type')->where('student_id', $student->id)->get())
+        $selectedStudentTuitionMaster = StudentTuitionMaster::where('student_id', $student->id)->get();
+        $studentTuitionMaster = collect(Tuition::with('tuition_type')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get())
                                 ->reject(function($tuitionMasters) use($selectedStudentTuitionMaster){
                                     foreach ($selectedStudentTuitionMaster as $selectedTuition) {
 
@@ -45,7 +45,6 @@ class StudentTuitionMasterController extends Controller
 
                                     }
                                 });
-
         $data = [
             'id' => $req->id,
             'title' => "Tambah Biaya Khusus $student->name",
@@ -90,22 +89,21 @@ class StudentTuitionMasterController extends Controller
         $academicYear = AcademicYear::where('status_years', 'started')->first();
         $studentTuitionMaster = StudentTuitionMaster::findOrFail($request->tuition_master);
 
-        $selectedStudentTuitionMaster = Tuition::where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get();
-        $studentTuitionMasterData = collect(StudentTuitionMaster::with('tuition.tuition_type')->where('student_id', $student->id)->get())
-                                ->reject(function($tuitionMasters) use($selectedStudentTuitionMaster, $request){
-                                    foreach ($selectedStudentTuitionMaster as $selectedTuition) {
-
-                                        // Remove if has same id with SelectedStudentMasterTuition
-                                        if ($tuitionMasters->id == $selectedTuition->id && $tuitionMasters->id == $request->tuition_master ) return $tuitionMasters; 
-
-                                    }
-                                });
-        // dd($studentTuitionMasterData);
+        $selectedStudentTuitionMasterData = StudentTuitionMaster::where('student_id', $student->id)->get();
+        $tuitions = Tuition::with('tuition_type')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get();
+        $studentTuitionMasterData = collect($tuitions)->reject(function($tuitionMasters) use($selectedStudentTuitionMasterData){
+                                        foreach ($selectedStudentTuitionMasterData as $selectedTuition) {
+                                            if ($tuitionMasters->id == $selectedTuition->tuition_id) return $tuitionMasters; 
+                                        }
+                                    });
+        $selectedStudentTuitionMaster = collect($tuitions)->first(function($tuitionMasters) use($studentTuitionMaster){
+            if ($tuitionMasters->id == $studentTuitionMaster->tuition_id) return $tuitionMasters; 
+        });
 
         $data = [
             'student_id' => $request->id,
             'title' => "Ubah Biaya Khusus $student->name",
-            'tuitions' => $studentTuitionMasterData,
+            'tuitions' => $studentTuitionMasterData->merge([$selectedStudentTuitionMaster]),
             'current_tuition' => $studentTuitionMaster,
         ];
 
@@ -115,9 +113,19 @@ class StudentTuitionMasterController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StudentTuitionMasterRequest $request)
     {
-        //
+        try {
+            $studentTuitionMaster = StudentTuitionMaster::findOrFail($request->tuition_master);
+            $studentTuitionMaster->student_id           = $request->id;
+            $studentTuitionMaster->tuition_id           = $request->tuition_id;
+            $studentTuitionMaster->price                = $request->price;
+            $studentTuitionMaster->note                 = $request->note;
+            $studentTuitionMaster->save();
+            return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');
+        } catch (\Throwable $th) {
+            return redirect()->back()->withInput()->withToastError('Ops, ada kesalahan saat menambahkan Biaya Khusus Siswa!');
+        }
     }
 
     /**

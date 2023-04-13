@@ -12,7 +12,7 @@ class StudentTuitionMasterDatatables extends Controller
 {
     public function index(Request $request)
     {
-        $studentTuitionMaster = StudentTuitionMaster::where('student_id', $request->id)->with('tuition.tuition_type')->latest('created_at');
+        $studentTuitionMaster = StudentTuitionMaster::where('student_id', $request->id)->with('tuition.tuition_type')->latest('student_tuition_masters.created_at');
         return DataTables::of($studentTuitionMaster)
                         ->editColumn('tuition_type', function ($row) {
                             return $row->tuition->tuition_type->name;
