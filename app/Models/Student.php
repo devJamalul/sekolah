@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\User;
 use App\Models\School;
-use App\Models\AcademicYear;
 use App\Models\Scopes\StudentScope;
 use App\Models\StudentTuition;
 
@@ -13,16 +12,16 @@ use Illuminate\Support\Str;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
 class Student extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Notifiable;
 
     const GENDER_LAKI = 'l';
     const GENDER_PEREMPUAN = 'p';
@@ -33,6 +32,9 @@ class Student extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'dob' => 'datetime:Y-m-d'
+    ];
 
     public function classrooms(): BelongsToMany
     {
@@ -43,11 +45,6 @@ class Student extends Model
     {
         return $this->hasMany(StudentTuition::class);
     }
-
-    // public function academic_year(): HasOne
-    // {
-    //     return $this->hasOne(AcademicYear::class);
-    // }
 
     public function user(): BelongsTo
     {
@@ -101,7 +98,7 @@ class Student extends Model
         }
     }
     // End Accessor
-    
+
 
     public static function boot()
     {
@@ -110,36 +107,36 @@ class Student extends Model
         self::created(function (Student $student) {
 
             // Save User
-                $user               = new User;
-                $user->school_id    = $student->school_id;
-                $user->name         = $student->name;
-                $user->email        = Str::slug($student->name. Carbon::parse($student->created_at)->format('dmy'), '-').'@gmail.com';
-                $user->password     = bcrypt('password');
-                $user->save();
-                $user->assignRole(User::ROLE_SISWA);
+            $user               = new User;
+            $user->school_id    = $student->school_id;
+            $user->name         = $student->name;
+            $user->email        = Str::slug($student->name . Carbon::parse($student->created_at)->format('dmy'), '-') . '@gmail.com';
+            $user->password     = bcrypt('password');
+            $user->save();
+            $user->assignRole(User::ROLE_SISWA);
             // End Save User
 
             // Update Student's User ID
-                $student->user_id   = $user->id;
-                $student->save();
+            $student->user_id   = $user->id;
+            $student->save();
             // End Update Student's User ID
 
         });
 
-        self::updated(function(Student $student){
+        self::updated(function (Student $student) {
 
             // Update User
-                $user               = User::findOrFail($student->user_id);
-                $user->name         = $student->name;
-                $user->save();
+            $user               = User::findOrFail($student->user_id);
+            $user->name         = $student->name;
+            $user->save();
             // End Update User
 
         });
 
-        self::deleted(function(Student $student){
+        self::deleted(function (Student $student) {
 
             // Delete User
-                // User::findOrFail($student->user_id)->delete();
+            // User::findOrFail($student->user_id)->delete();
             // End Delete User
 
         });

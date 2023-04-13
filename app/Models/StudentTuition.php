@@ -16,7 +16,16 @@ class StudentTuition extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const STATUS_PENDING = "pending";
+    const STATUS_PAID = "paid";
+    const STATUS_PARTIAL = "partial";
+
     protected $guarded = [];
+
+    protected $casts = [
+        'period' => 'datetime:Y-m-d',
+        'is_sent' => 'boolean'
+    ];
 
     public function student(): BelongsTo
     {
@@ -32,7 +41,7 @@ class StudentTuition extends Model
     {
         return $this->belongsTo(PaymentType::class);
     }
-    
+
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
@@ -43,6 +52,10 @@ class StudentTuition extends Model
         return $this->hasMany(StudentTuitionDetail::class);
     }
 
+    public function student_tuition_payment_histories(): HasMany
+    {
+        return $this->hasMany(StudentTuitionPaymentHistory::class);
+    }
 
     protected static function booted()
     {

@@ -197,7 +197,6 @@ it('can render Academy Years update data  as ', function (User $user) {
     $this->actingAs($user)
         ->put(route('academy-year.update', ['academy_year' => $academyYear->id]), $data)
         ->assertRedirect(route('academy-year.index'));
-
     $this->assertDatabaseHas('academic_years', $data);
 })->with('staff_can_crud');
 

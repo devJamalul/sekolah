@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\Classroom;
-use App\Models\ClassroomStudent;
-use App\Models\Student;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -40,19 +38,6 @@ class AssignClassroomStudentRequest extends FormRequest
         return [
             'classroom_id' => 'required',
             'id'           => 'required|array',
-            'id.*'         => Rule::forEach(function () {
-                return [
-                    function ($attribute, $student_id, $fail) {
-                        $classroom = Classroom::whereHas('students', fn ($q) => $q->where('student_id', $student_id))->find($this->classroom_id);
-                        if ($classroom) {
-                            $student = Student::find($student_id);
-
-                            return $fail("{$student->nis}({$student->name}) ");
-                        }
-                        return true;
-                    },
-                ];
-            })
         ];
     }
 

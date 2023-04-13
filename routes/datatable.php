@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Datatables\StudentDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
+use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\UsersDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -21,6 +22,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('grade', [App\Http\Controllers\Datatables\GradeDatatables::class, 'index'])->name('grade');
 
+    Route::get('transactions', TransactionDatatables::class)->name('transactions');
+
     Route::get('classroom', [App\Http\Controllers\Datatables\ClassroomDatatables::class, 'index'])->name('classroom');
 
     Route::get('tuition-type', [App\Http\Controllers\Datatables\TuitionTypeDatatables::class, 'index'])->name('tuition-type');
@@ -32,4 +35,12 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('payment-type', App\Http\Controllers\Datatables\PaymentTypeDatatables::class)->name('payment-type');
 
     Route::get('assign-students', [App\Http\Controllers\Datatables\AssignClassroomStudentDatatables::class, 'students'])->name('assign-students');
+
+    Route::get('assign-classroom-staff', App\Http\Controllers\Datatables\AssignClassroomStaffDatatables::class)->name('assign-classroom-staff');
+
+    Route::get('assign-staffs', [App\Http\Controllers\Datatables\AssignClassroomStaffDatatables::class, 'staffs'])->name('assign-staffs');
+
+    Route::get('expense', [App\Http\Controllers\Datatables\ExpenseDatatables::class, 'index'])->name('expense');
+
+    Route::get('staff', [App\Http\Controllers\Datatables\StaffDatatables::class, 'index'])->name('staff');
 });

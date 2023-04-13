@@ -56,7 +56,7 @@ it("forbid another  guest", function () {
 });
 
 
-it('can render page assignclas student', function (User $user) {
+it('can render page assign class student', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->id]);
     $this->actingAs($user)->get(route('assign-classroom-student.index'))->assertOk();

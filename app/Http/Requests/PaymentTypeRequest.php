@@ -33,6 +33,7 @@ class PaymentTypeRequest extends FormRequest
     {
         return [
             'school_id' => 'required|exists:schools,id',
+            'wallet_id' => 'required|exists:wallets,id',
             'name'      => [
                 'required',
                 Rule::unique('payment_types')->where(function ($q) {
@@ -48,6 +49,7 @@ class PaymentTypeRequest extends FormRequest
 
         return [
             'school_id' => 'required|exists:schools,id',
+            'wallet_id' => 'required|exists:wallets,id',
             'name'      => [
                 'required',
                 Rule::unique('payment_types')->where(function ($q) {
