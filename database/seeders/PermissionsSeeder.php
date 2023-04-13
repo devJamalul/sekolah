@@ -21,6 +21,7 @@ use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
 use Database\Seeders\Permissions\ExpenseSeeder;
+use Database\Seeders\Permissions\TransactionReportSeeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -57,7 +58,8 @@ class PermissionsSeeder extends Seeder
             PaymentTypeSeeder::class,
             StudentTuitionMasterSeeder::class,
             AssignClassroomStaffSeeder::class,
-            ExpenseSeeder::class
+            ExpenseSeeder::class,
+            TransactionReportSeeder::class,
         ]);
     }
 }

@@ -20,6 +20,7 @@ use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\TransactionReportController;
 use App\Http\Controllers\StudentTuitionMasterController;
 
 /*
@@ -75,6 +76,7 @@ Route::group([], function () {
 
     // Transactions
     Route::resource("transactions", TransactionController::class);
+    Route::resource("transaction-report", TransactionReportController::class)->only(['index', 'store']);
 
     // Users
     Route::resource("users", UsersController::class);
