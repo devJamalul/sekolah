@@ -10,8 +10,10 @@ use App\Models\StudentTuitionPaymentHistory;
 use App\Models\Transaction;
 use App\Notifications\PaidTuitionNotification;
 use App\Notifications\PartialTuitionNotification;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Event\Code\Throwable;
 
 class TransactionController extends Controller
 {
@@ -96,6 +98,11 @@ class TransactionController extends Controller
         try {
             DB::beginTransaction();
 
+            // tidak bisa transaksi kalau belum punya kelas
+            if (count($transaction->classrooms) == 0) {
+                throw new \ErrorException('Siswa harus memiliki kelas terlebih dahulu');
+            }
+
             $student_tuition = StudentTuition::firstWhere([
                 'student_id' => $transaction->getKey(),
                 'id' => $request->student_tuition_id,
@@ -136,7 +143,7 @@ class TransactionController extends Controller
             return redirect()->route('transactions.show', $transaction->getKey())->withToastSuccess('Berhasil menambahkan data transaksi!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->withInput()->withToastError('Ops, ada kesalahan saat menambahkan data transaksi!');
+            return redirect()->back()->withInput()->withToastError('Ops! ' . $th->getMessage());
         }
     }
 
