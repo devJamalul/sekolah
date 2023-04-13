@@ -35,7 +35,6 @@ class ExpenseDatatables extends Controller
                             'url' => route('expense.show', ['expense' => $row->id])
                         ]
                     ]
-
                 ];
                 return view('components.datatable-action', $data);
             })->toJson();
