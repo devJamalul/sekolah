@@ -17,6 +17,12 @@ class StudentTuitionMasterDatatables extends Controller
                         ->editColumn('tuition_type', function ($row) {
                             return $row->tuition->tuition_type->name;
                         })
+                        ->editColumn('price', function ($row) {
+                            return 'Rp. ' . number_format($row->price, 0, ',', '.');
+                        })
+                        ->editColumn('note', function ($row) {
+                            return $row->note ?? '-';
+                        })
                         ->addColumn('action', function (StudentTuitionMaster $row) use($request) {
                             $data = [
                                 'edit_url'     => route('tuition-master.edit', ['id' => $request->id, 'tuition_master' => $row->id]),
