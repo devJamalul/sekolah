@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Grade;
 use App\Models\Staff;
+use App\Models\Wallet;
 use App\Models\Expense;
 use App\Models\Student;
 use App\Models\Tuition;
@@ -117,5 +118,10 @@ class School extends Model
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);
+    }
+    
+    public function wallets(): HasMany
+    {
+        return $this->hasMany(Wallet::class);
     }
 }
