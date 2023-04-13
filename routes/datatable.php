@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Datatables\StudentDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
+use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
 use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\UsersDatatables;
 
@@ -13,7 +14,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('users', UsersDatatables::class)->name('users');
 
     Route::get('students', [StudentDatatables::class, 'index'])->name('students');
-
+    Route::get('students/tuition-master', [StudentTuitionMasterDatatables::class, 'index'])->name('students.tuition-master');
 
     Route::get('academic-years', [App\Http\Controllers\Datatables\AcademyYearDatatables::class, 'index'])->name('academic-years');
 

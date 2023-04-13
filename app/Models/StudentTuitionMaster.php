@@ -20,6 +20,11 @@ class StudentTuitionMaster extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function tuition(): BelongsTo
+    {
+        return $this->belongsTo(Tuition::class);
+    }
+
     public function tuitions(): BelongsToMany
     {
         return $this->belongsToMany(Tuition::class);
