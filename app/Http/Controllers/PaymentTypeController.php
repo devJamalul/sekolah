@@ -6,6 +6,7 @@ use App\Models\PaymentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\PaymentTypeRequest;
+use App\Models\Wallet;
 
 class PaymentTypeController extends Controller
 {
@@ -27,7 +28,8 @@ class PaymentTypeController extends Controller
     public function create()
     {
         $title = "Tambah {$this->title}";
-        return view('pages.payment-type.create', compact('title'));
+        $wallet = Wallet::all();
+        return view('pages.payment-type.create', compact('title', 'wallet'));
     }
 
     /**
@@ -42,6 +44,7 @@ class PaymentTypeController extends Controller
             $paymentType            = new PaymentType();
             $paymentType->school_id = $request->school_id;
             $paymentType->name      = $request->name;
+            $paymentType->wallet_id = $request->wallet_id;
             $paymentType->save();
 
             DB::commit();
@@ -60,7 +63,8 @@ class PaymentTypeController extends Controller
     public function edit(PaymentType $paymentType)
     {
         $title = "Ubah {$this->title}";
-        return view('pages.payment-type.edit', compact('paymentType', 'title'));
+        $wallet = Wallet::all();
+        return view('pages.payment-type.edit', compact('paymentType', 'wallet', 'title'));
     }
 
     /**
@@ -74,6 +78,7 @@ class PaymentTypeController extends Controller
 
             $paymentType->school_id = $request->school_id;
             $paymentType->name      = $request->name;
+            $paymentType->wallet_id = $request->wallet_id;
             $paymentType->save();
 
             DB::commit();
