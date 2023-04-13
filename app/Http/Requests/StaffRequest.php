@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PaymentTypeRequest extends FormRequest
+class StaffRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,6 +20,7 @@ class PaymentTypeRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
+
     public function rules(): array
     {
 
@@ -33,14 +34,7 @@ class PaymentTypeRequest extends FormRequest
     {
         return [
             'school_id' => 'required|exists:schools,id',
-            'wallet_id' => 'required|exists:wallets,id',
-            'name'      => [
-                'required',
-                Rule::unique('payment_types')->where(function ($q) {
-                    $q->where('name', $this->name);
-                    $q->where('school_id', $this->school_id);
-                })
-            ],
+            'name'      => 'required'
         ];
     }
 
@@ -49,14 +43,7 @@ class PaymentTypeRequest extends FormRequest
 
         return [
             'school_id' => 'required|exists:schools,id',
-            'wallet_id' => 'required|exists:wallets,id',
-            'name'      => [
-                'required',
-                Rule::unique('payment_types')->where(function ($q) {
-                    $q->where('name', $this->name);
-                    $q->where('school_id', $this->school_id);
-                })->ignore($this->payment_type->id)
-            ],
+            'name'      => 'required'
         ];
     }
 }

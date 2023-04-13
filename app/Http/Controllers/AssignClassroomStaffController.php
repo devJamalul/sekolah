@@ -8,66 +8,69 @@ use App\Models\Classroom;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\AssignClassroomStudentRequest;
+use App\Http\Requests\AssignClassroomStaffRequest;
 use App\Models\ClassroomStudent;
+use Exception;
 
-class AssignClassroomStudentController extends Controller
+class AssignClassroomStaffController extends Controller
 {
     /**
      * Handle the incoming request.
      */
     public function __invoke(Request $request)
     {
-        $data['title'] = "Tetapkan Kelas";
+        $data['title'] = "Tetapkan Wali Kelas";
         $data['academy_year'] = AcademicYear::active()->first();
         $data['classroom'] = Classroom::with('grade')->where('academic_year_id', $data['academy_year']?->id)->get();
-        return view('pages.assign-classroom-student.index', $data);
+        return view('pages.assign-classroom-staff.index', $data);
     }
 
-    public function store(AssignClassroomStudentRequest $request)
+    public function store(AssignClassroomStaffRequest $request)
     {
         DB::beginTransaction();
 
         try {
             $classroom = Classroom::find($request->classroom_id);
-            $classroom->students()->attach($request->id);
+
+            throw_if($classroom->staff->count() >= 1, "Gagal!, Wali Kelas pada kelas  {$classroom->name} sudah tersedia");
+
+            $classroom->staff()->attach($request->id);
             $classroom->save();
             DB::commit();
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
+            $msg =  $e->getCode() == 0 ? $e->getMessage() : "Gagal Tetapkan Wali Kelas";
             return redirect()
-                ->route('assign-classroom-student.index')
+                ->route('assign-classroom-staff.index')
                 ->with('classroom_id', $request->classroom_id)
-                ->withToastError('Gagal Tetapkan Kelas');
+                ->withToastError($msg);
         }
 
 
         return redirect()
-            ->route('assign-classroom-student.index')
-            ->withToastSuccess('Berhasil Tetapkan Kelas');
+            ->route('assign-classroom-staff.index')
+            ->withToastSuccess('Berhasil Tetapkan Wali Kelas');
     }
 
-    public function destroy(AssignClassroomStudentRequest $request)
+    public function destroy(AssignClassroomStaffRequest $request)
     {
-
-
 
 
         DB::beginTransaction();
         try {
             $classroom = Classroom::find($request->classroom_id);
-            $classroom->students()->detach($request->id);
+            $classroom->staff()->detach($request->id);
             $classroom->save();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()
-                ->route('assign-classroom-student.index')
+                ->route('assign-classroom-staff.index')
                 ->with('classroom_id', $request->classroom_id)
-                ->withToastError('Gagal Hapus Siswa ');
+                ->withToastError('Gagal Hapus Wali Kelas ');
         }
 
         return redirect()
-            ->route('assign-classroom-student.index')
-            ->withToastSuccess('Berhasil Hapus Siswa');
+            ->route('assign-classroom-staff.index')
+            ->withToastSuccess('Berhasil Hapus Wali Kelas');
     }
 }

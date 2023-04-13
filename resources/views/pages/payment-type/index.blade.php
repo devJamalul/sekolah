@@ -16,8 +16,9 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'payment-type-table'" :tableHeaders="['Sekolah', 'Tipe Pembayaran', 'Aksi']" :tableColumns="[
+                    <x-datatable :tableId="'payment-type-table'" :tableHeaders="['Sekolah', 'Wallet', 'Tipe Pembayaran', 'Aksi']" :tableColumns="[
                         ['data' => 'school.school_name', 'name' => 'name'],
+                        ['data' => 'wallet.name', 'name' => 'name'],
                         ['data' => 'name'],
                         ['data' => 'action'],
                     ]" :getDataUrl="route('datatable.payment-type')" />

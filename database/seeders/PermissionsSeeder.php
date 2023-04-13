@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\Permissions\UserSeeder;
 use Database\Seeders\Permissions\GradeSeeder;
 use Database\Seeders\Permissions\SchoolSeeder;
 use Database\Seeders\Permissions\StudentSeeder;
@@ -15,8 +16,8 @@ use Database\Seeders\Permissions\AcademicYearSeeder;
 use Database\Seeders\Permissions\MasterConfigSeeder;
 use Database\Seeders\Permissions\SchoolConfigSeeder;
 use Database\Seeders\Permissions\SchoolSelectorSeeder;
-use Database\Seeders\Permissions\UserSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
 use Database\Seeders\Permissions\ExpenseSeeder;
 
@@ -53,6 +54,7 @@ class PermissionsSeeder extends Seeder
             AssignClassroomStudentSeeder::class,
             TuitionSeeder::class,
             PaymentTypeSeeder::class,
+            AssignClassroomStaffSeeder::class,
             ExpenseSeeder::class
         ]);
     }
