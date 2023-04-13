@@ -25,7 +25,7 @@ class StudentDatatables extends Controller
                                 'custom_links' => [
                                     [
                                         'label' => 'Biaya Khusus',
-                                        'url' => route('students.tuition-master', ['student' => $row->id]),
+                                        'url' => route('tuition-master.index', ['id' => $row->id]),
                                     ]
                                 ]
                             ];

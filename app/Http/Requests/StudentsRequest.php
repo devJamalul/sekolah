@@ -42,11 +42,11 @@ class StudentsRequest extends FormRequest
             'nis' => 'nullable|numeric|max_digits:20',
             'nisn' => 'nullable|numeric|max_digits:10',
             
-            'father_name' => 'required',
+            'father_name' => 'nullable',
             'father_address' => 'nullable',
             'father_phone_number' => 'nullable|max:20',
 
-            'mother_name' => 'required',
+            'mother_name' => 'nullable',
             'mother_address' => 'nullable',
             'mother_phone_number' => 'nullable|max:20',
 
@@ -75,11 +75,11 @@ class StudentsRequest extends FormRequest
             'nis' => 'nullable|numeric|max_digits:20',
             'nisn' => 'nullable|numeric|max_digits:10',
 
-            'father_name' => 'required',
+            'father_name' => 'nullable',
             'father_address' => 'nullable',
             'father_phone_number' => 'nullable|max:20',
 
-            'mother_name' => 'required',
+            'mother_name' => 'nullable',
             'mother_address' => 'nullable',
             'mother_phone_number' => 'nullable|max:20',
 

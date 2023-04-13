@@ -20,6 +20,7 @@ use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\StudentTuitionMasterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,10 +54,12 @@ Route::group([], function () {
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
     // Student
-    Route::resource('students', StudentsController::class)->except(['show']);
-    Route::get('students/tuition-master', [StudentsController::class, 'tuitionMaster'])->name('students.tuition-master');
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
     Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
+    Route::resource('students', StudentsController::class);
+    Route::resource('students/{id}/tuition-master', StudentTuitionMasterController::class);
+    
+    
 
     // Tuition Type
     Route::resource("tuition-type", TuitionTypeController::class)->except(['show']);

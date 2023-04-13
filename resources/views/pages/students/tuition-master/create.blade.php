@@ -10,7 +10,7 @@
     <div class="d-sm-flex align-items-center justify-content-between">
         <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
         <div>
-            <a href="{{ route('students.index') }}" class="btn btn-primary btn-sm mr-2">Kembali</a>
+            <a href="{{ route('tuition-master.index', ['id' => $id]) }}" class="btn btn-primary btn-sm mr-2">Kembali</a>
         </div>
     </div>
     {{-- End Header --}}
@@ -18,14 +18,21 @@
     {{-- Content --}}
     <div class="card">
       <div class="card-body">
-        <form action="{{ route('schools.store') }}" method="post">
+        <form action="{{ route('tuition-master.store', ['id' => $id]) }}" method="post">
           @csrf
-
+          <input type="text" name="student_id" value="{{ $id }}" hidden>
           <div class="form-group">
-            <label for="name-input">Nama Sekolah</label>
-            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-              id="name-input" autocomplete="off">
-            @error('name')
+            <label for="tuition_id">Biaya Sekolah<span class="text-small text-danger">*</span></label>
+            <select id="tuition_id" name="tuition_id"
+                class="form-control select2 @error('tuition_id') is-invalid @enderror" required>
+                <option value="">--- Pilih Biaya Sekolah ---</option>
+                @foreach ($tuitions as $tuition)
+                    <option value="{{ $tuition->id }}" @selected(old('tuition_id') == $tuition->id)>
+                        {{ $tuition->tuition_type->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('tuition_id')
               <div class="invalid-feedback">
                 {{ $message }}
               </div>
@@ -33,29 +40,26 @@
           </div>
 
           <div class="form-group">
-            <label for="pic_name-input">Nama PIC</label>
-            <input type="text" class="form-control @error('pic_name') is-invalid @enderror" name="pic_name"
-              id="pic_name-input" autocomplete="off">
-            @error('pic_name')
+            <label for="price">Harga<span class="text-small text-danger">*</span></label>
+            <input type="text" name="price" value="{{ old('price', ) }}" id="price" class="form-control @error('price') is-invalid @enderror" required>
+            @error('price')
               <div class="invalid-feedback">
-                {{ $message }}
+                  {{ $message }}
               </div>
             @enderror
           </div>
 
           <div class="form-group">
-            <label for="pic_email-input">Email PIC</label>
-            <input type="email" class="form-control @error('pic_email') is-invalid @enderror" name="pic_email"
-              id="pic_email-input" autocomplete="off">
-            @error('pic_email')
+            <label for="note">Catatan</label>
+            <textarea name="note" id="note" rows="4" class="form-control @error('note') is-invalid @enderror">{{ old('note') }}</textarea>
+            @error('note')
               <div class="invalid-feedback">
-                {{ $message }}
+                  {{ $message }}
               </div>
             @enderror
           </div>
 
           <button type="submit" class="btn btn-primary">Simpan</button>
-          <button type="reset" class="btn btn-default">Batal</button>
         </form>
       </div>
     </div>
