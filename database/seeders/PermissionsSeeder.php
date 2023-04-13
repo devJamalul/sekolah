@@ -22,7 +22,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
-use Database\Seeders\Permissions\ExpenseSeeder;
 
 class PermissionsSeeder extends Seeder
 {
