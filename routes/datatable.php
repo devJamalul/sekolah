@@ -43,4 +43,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('expense', [App\Http\Controllers\Datatables\ExpenseDatatables::class, 'index'])->name('expense');
 
     Route::get('staff', [App\Http\Controllers\Datatables\StaffDatatables::class, 'index'])->name('staff');
+    
+    Route::get('wallet', [App\Http\Controllers\Datatables\WalletDatatables::class, 'index'])->name('wallet');
 });

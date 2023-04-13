@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\Permissions\UserSeeder;
 use Database\Seeders\Permissions\GradeSeeder;
 use Database\Seeders\Permissions\SchoolSeeder;
+use Database\Seeders\Permissions\WalletSeeder;
+use Database\Seeders\Permissions\ExpenseSeeder;
 use Database\Seeders\Permissions\StudentSeeder;
 use Database\Seeders\Permissions\TuitionSeeder;
 use Database\Seeders\Permissions\ClassroomSeeder;
@@ -57,7 +59,8 @@ class PermissionsSeeder extends Seeder
             PaymentTypeSeeder::class,
             StudentTuitionMasterSeeder::class,
             AssignClassroomStaffSeeder::class,
-            ExpenseSeeder::class
+            ExpenseSeeder::class,
+            WalletSeeder::class
         ]);
     }
 }
