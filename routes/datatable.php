@@ -5,6 +5,7 @@ use App\Http\Controllers\Datatables\StudentDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
 use App\Http\Controllers\Datatables\TransactionDatatables;
+use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\UsersDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -43,6 +44,9 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('expense', [App\Http\Controllers\Datatables\ExpenseDatatables::class, 'index'])->name('expense');
 
     Route::get('staff', [App\Http\Controllers\Datatables\StaffDatatables::class, 'index'])->name('staff');
+
+    Route::get('transaction-report', TransactionReportDatatables::class)->name('transaction-report');
     
     Route::get('wallet', [App\Http\Controllers\Datatables\WalletDatatables::class, 'index'])->name('wallet');
+
 });
