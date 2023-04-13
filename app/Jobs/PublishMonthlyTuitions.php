@@ -56,8 +56,6 @@ class PublishMonthlyTuitions implements ShouldQueue
                 // Student Tuitions
                 $student_tuition = StudentTuition::updateOrCreate(
                     [
-                        'status' => StudentTuition::STATUS_PENDING,
-                        'is_sent' => false,
                         'school_id' => $classroom->school_id,
                         'student_id' => $student->getKey(),
                         'period' => $tanggal,
