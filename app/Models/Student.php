@@ -32,6 +32,10 @@ class Student extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'dob' => 'datetime:Y-m-d'
+    ];
+
     public function classrooms(): BelongsToMany
     {
         return $this->belongsToMany(Classroom::class)->withTimestamps();
