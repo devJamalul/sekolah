@@ -22,7 +22,7 @@
                         <div class="form-group">
                             <label for="grade-input">Grade</label>
                             <input type="text" class="form-control @error('grade_name') is-invalid @enderror" name="grade_name"
-                                id="grade-input" placeholder="1, 2, 3, dsb">
+                                id="grade-input" placeholder="1, 2, 3, dsb" value="{{ old('grade_name') }}">
                             @error('grade_name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
