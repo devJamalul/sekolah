@@ -80,9 +80,8 @@ Route::group([], function () {
     Route::resource('publish-tuition', PublishTuitionController::class)->except(['show']);
 
     // Payment Type
-    Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
-
-
+    Route::resource("payment-type", PaymentTypeController::class)->exce
+    
     // Assign staff student
     Route::get('assign-classroom-staff', AssignClassroomStaffController::class)->name(('assign-classroom-staff.index'));
     Route::post('assign-classroom-staff', [AssignClassroomStaffController::class, 'store'])->name(('assign-classroom-staff.store'));
@@ -91,7 +90,6 @@ Route::group([], function () {
     // Expense
     Route::resource('expense', ExpenseController::class);
     Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
-
 
     //staff
     Route::resource("staff", StaffController::class)->except(['show']);
