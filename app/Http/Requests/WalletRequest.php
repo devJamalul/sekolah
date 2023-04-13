@@ -53,6 +53,7 @@ class WalletRequest extends FormRequest
                 Rule::unique('wallets')->where(function ($q) {
                     $q->where('name', $this->name);
                     $q->where('school_id', session('school_id'));
+                    $q->whereNull('deleted_at');
                 })->ignore($this->wallet->id, 'id')
             ],
         ];
