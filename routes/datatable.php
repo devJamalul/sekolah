@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Datatables\StudentDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
+use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\UsersDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -20,7 +21,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('grade', [App\Http\Controllers\Datatables\GradeDatatables::class, 'index'])->name('grade');
 
-    Route::get('students', [StudentDatatables::class, 'index'])->name('students');
+    Route::get('transactions', TransactionDatatables::class)->name('transactions');
 
     Route::get('classroom', [App\Http\Controllers\Datatables\ClassroomDatatables::class, 'index'])->name('classroom');
 
