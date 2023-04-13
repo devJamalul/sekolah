@@ -18,4 +18,9 @@ class StudentTuitionPaymentHistory extends Model
     {
         return $this->belongsTo(StudentTuition::class);
     }
+
+    public function payment_type(): BelongsTo
+    {
+        return $this->belongsTo(PaymentType::class);
+    }
 }
