@@ -14,7 +14,7 @@ class PaymentTypeDatatables extends Controller
      */
     public function __invoke(Request $request)
     {
-        $paymentType = PaymentType::with('school')->orderBy('created_at');
+        $paymentType = PaymentType::with('school', 'wallet')->orderBy('created_at');
         return DataTables::of($paymentType)
             ->addColumn('action', function ($row) {
                 $data = [

@@ -38,9 +38,14 @@ class GradeRequest extends FormRequest
 
     public function putMethod(): array
     {
-
         return [
-            'grade_name'      => 'required|unique:grades,grade_name',
+            'grade_name'      => [
+                'required',
+                Rule::unique('grades')->where(function ($q) {
+                    $q->where('grade_name', $this->grade_name);
+                    $q->where('school_id', session('school_id'));
+                })->ignore($this->grade->id, 'id')
+            ],
         ];
     }
 }

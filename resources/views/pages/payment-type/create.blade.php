@@ -36,6 +36,23 @@
                                 </div>
                             @enderror
                         </div>
+
+                        <div class="form-group">
+                            <label for="payment-type-input">Wallet</label>
+                            <select name="wallet_id" id=""
+                                class="form-control @error('wallet_id') is-invalid @enderror">
+                                <option value="">-</option>
+                                @foreach ($wallet as $opt)
+                                    <option value="{{ $opt->id }}" @selected(old('wallet_id') == $opt->id)> {{ $opt->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('wallet_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         <button type="submit" class="btn btn-primary">SIMPAN</button>
                     </form>
                 </div>

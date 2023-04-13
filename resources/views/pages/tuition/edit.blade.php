@@ -27,7 +27,7 @@
                                 id="tuition-type-select">
                                 <option value="">-</option>
                                 @foreach ($tuitionTypes as $tuitionType)
-                                    <option value="{{ $tuitionType->id }}" @if ($tuition->tuition_type_id === $tuitionType->id) selected @endif>
+                                    <option value="{{ $tuitionType->id }}" @selected(old('tuition_type_id', $tuition->tuition_type_id) == $tuitionType->id)>
                                         {{ $tuitionType->name }}
                                     </option>
                                 @endforeach
@@ -44,7 +44,7 @@
                                 id="academic-year-select">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $academicYear)
-                                    <option value="{{ $academicYear->id }}" @if ($tuition->academic_year_id === $academicYear->id) selected @endif>
+                                    <option value="{{ $academicYear->id }}" @selected(old('academic_year_id', $tuition->academic_year_id) == $academicYear->id)>
                                         {{ $academicYear->academic_year_name }}
                                     </option>
                                 @endforeach
@@ -60,8 +60,8 @@
                             <select class="form-control  @error('grade_id') is-invalid @enderror" name="grade_id"
                                 id="grade-select">
                                 <option value="">-</option>
-                                @foreach ($grades as $rade)
-                                    <option value="{{ $grade->id }}" @if ($tuition->grade_id === $grade->id) selected @endif>
+                                @foreach ($grades as $grade)
+                                    <option value="{{ $grade->id }}" @selected(old('grade_id', $tuition->grade_id) == $grade->id)>
                                         {{ $grade->grade_name }}
                                     </option>
                                 @endforeach
@@ -75,7 +75,7 @@
                         <div class="form-group">
                             <label for="price-input">Nominal</label>
                             <input type="text" class="form-control  @error('price') is-invalid @enderror" name="price"
-                                value="{{ $tuition->price }}" id="price-input" placeholder="" pattern="[0-9]+">
+                                value="{{ old('price', $tuition->price) }}" id="price-input" placeholder="" pattern="[0-9]+">
                             @error('period')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -88,7 +88,7 @@
                                 id="request-by-select">
                                 <option value="">-</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @if ($tuition->request_by === $user->id) selected @endif>
+                                    <option value="{{ $user->id }}" @selected(old('requested_by', $tuition->request_by) == $user->id)>
                                         {{ $user->name }}
                                     </option>
                                 @endforeach
@@ -105,7 +105,7 @@
                                 id="approved-by-select">
                                 <option value="">-</option>
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}" @if ($tuition->approval_by === $user->id) selected @endif>
+                                    <option value="{{ $user->id }}" @selected(old('approved_by', $tuition->approval_by) == $user->id)>
                                         {{ $user->name }}
                                     </option>
                                 @endforeach

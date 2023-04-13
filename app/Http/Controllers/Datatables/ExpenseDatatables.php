@@ -28,9 +28,12 @@ class ExpenseDatatables extends Controller
                     'edit_url'     => route('expense.edit', ['expense' => $row->id]),
                     'delete_url'   => route('expense.destroy', ['expense' => $row->id]),
                     'redirect_url' => route('expense.index'),
+                    'resource'     => 'expense',
                     'custom_links' => [
-                        'label' => 'Detail',
-                        'url' => route('expense.show', ['expense' => $row->id])
+                        [
+                            'label' => 'Detail',
+                            'url' => route('expense.show', ['expense' => $row->id])
+                        ]
                     ]
                 ];
                 return view('components.datatable-action', $data);

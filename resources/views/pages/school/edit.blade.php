@@ -139,7 +139,7 @@
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control @error('name_pic') is-invalid @enderror"
-                                    name="name_pic" value="{{ old('name_pic', $school->owner->name) }}" autocomplete="off"
+                                    name="name_pic" value="{{ old('name_pic', $school->owner?->name) }}" autocomplete="off"
                                     readonly>
                                 @error('name_pic')
                                     <div class="invalid-feedback">
@@ -150,7 +150,7 @@
                             <div class="form-group col-12">
                                 <label>Email <small class="text-danger">*</small> </label>
                                 <input type="email" class="form-control @error('email_pic') is-invalid @enderror"
-                                    name="email_pic" value="{{ old('email_pic', $school->owner->email) }}"
+                                    name="email_pic" value="{{ old('email_pic', $school->owner?->email) }}"
                                     autocomplete="off" readonly>
                                 @error('email_pic')
                                     <div class="invalid-feedback">

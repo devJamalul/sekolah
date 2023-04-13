@@ -2,22 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
+use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
-use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
+use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\AssignClassroomStudentController;
-use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\PaymentTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,10 +80,19 @@ Route::group([], function () {
     Route::resource('publish-tuition', PublishTuitionController::class)->except(['show']);
 
     // Payment Type
-    Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
+    Route::resource("payment-type", PaymentTypeController::class)->exce
+    
+    // Assign staff student
+    Route::get('assign-classroom-staff', AssignClassroomStaffController::class)->name(('assign-classroom-staff.index'));
+    Route::post('assign-classroom-staff', [AssignClassroomStaffController::class, 'store'])->name(('assign-classroom-staff.store'));
+    Route::delete('assign-classroom-staff', [AssignClassroomStaffController::class, 'destroy'])->name(('assign-classroom-staff.destroy'));
+    
     // Expense
     Route::resource('expense', ExpenseController::class);
     Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
+
+    //staff
+    Route::resource("staff", StaffController::class)->except(['show']);
 });
 
 Route::group([], function () {

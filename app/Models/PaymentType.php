@@ -31,4 +31,9 @@ class PaymentType extends Model
     {
         return $this->hasMany(StudentTuition::class);
     }
+
+    public function wallet(): BelongsTo
+    {
+        return $this->belongsTo(Wallet::class);
+    }
 }

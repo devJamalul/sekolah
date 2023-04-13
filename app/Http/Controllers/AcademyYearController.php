@@ -46,6 +46,8 @@ class AcademyYearController extends Controller
         DB::beginTransaction();
         try {
 
+            $this->updateStatusYearsClosed($request->status_years);
+
             $academyYear                     = new AcademicYear();
             $academyYear->year_start         = $request->year_start;
             $academyYear->year_end           = $request->year_end;
@@ -54,6 +56,7 @@ class AcademyYearController extends Controller
             $academyYear->status_years       = $request->status_years ?? AcademicYear::STATUS_CLOSED;
             $academyYear->save();
 
+            $this->updateSessionStatusActive($academyYear);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -87,12 +90,16 @@ class AcademyYearController extends Controller
         DB::beginTransaction();
         try {
 
+            $this->updateStatusYearsClosed($request->status_years);
+
             $academyYear->school_id = $request->school_id;
             $academyYear->year_start         = $request->year_start;
             $academyYear->year_end           = $request->year_end;
             $academyYear->academic_year_name = $request->academic_year_name;
             $academyYear->status_years = $request->status_years ?? AcademicYear::STATUS_CLOSED;
             $academyYear->save();
+
+            $this->updateSessionStatusActive($academyYear);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -123,6 +130,18 @@ class AcademyYearController extends Controller
             return response()->json([
                 'msg' => "Ops Gagal Hapus {$this->title}!"
             ], 400);
+        }
+    }
+
+    private function updateStatusYearsClosed($status)
+    {
+        return AcademicYear::where('status_years', $status)->update(['status_years' => AcademicYear::STATUS_CLOSED]);
+    }
+
+    private function updateSessionStatusActive(AcademicYear $academyYear)
+    {
+        if ($academyYear->status_years === AcademicYear::STATUS_STARTED) {
+            session('academic_year_id',  $academyYear->id);
         }
     }
 }
