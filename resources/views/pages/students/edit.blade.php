@@ -226,7 +226,7 @@
                 <div class="row">
                   <div class="col">
                     <div class="form-group">
-                      <label for="address">Address<span class="text-small text-danger">*</span></label>
+                      <label for="address">Alamat<span class="text-small text-danger">*</span></label>
                       <textarea name="address" id="address" rows="4" class="form-control @error('address') is-invalid @enderror" required>{{ old('address', $student->address) }}</textarea>
                       @error('address')
                         <div class="invalid-feedback">
@@ -242,14 +242,14 @@
   
                 {{-- Father Information Section --}}
 
-                  {{-- Work & Name --}}
+                  {{-- Phone & Name --}}
                   <div class="row">
         
                     {{-- Name --}}
                     <div class="col">
                       <div class="form-group">
-                        <label for="father_name">Nama Ayah<span class="text-small text-danger">*</span></label>
-                        <input type="text" name="father_name" id="father_name" value="{{ old('father_name', $student->father_name) }}" class="form-control @error('father_name') is-invalid @enderror" required>
+                        <label for="father_name">Nama Ayah</label>
+                        <input type="text" name="father_name" id="father_name" value="{{ old('father_name', $student->father_name) }}" class="form-control @error('father_name') is-invalid @enderror">
                         @error('father_name')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -274,14 +274,14 @@
                     {{-- End Phone --}}
         
                   </div>
-                  {{-- End Work & Name --}}
+                  {{-- End Phone & Name --}}
 
                   {{-- Address --}}
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
-                        <label for="father_address">Alamat Ayah<span class="text-small text-danger">*</span></label>
-                        <textarea name="father_address" id="father_address" rows="4" class="form-control @error('father_address') is-invalid @enderror" required>{{ old('father_address', $student->father_address) }}</textarea>
+                        <label for="father_address">Alamat Ayah</label>
+                        <textarea name="father_address" id="father_address" rows="4" class="form-control @error('father_address') is-invalid @enderror">{{ old('father_address', $student->father_address) }}</textarea>
                         @error('father_address')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -304,8 +304,8 @@
                     {{-- Name --}}
                     <div class="col">
                       <div class="form-group">
-                        <label for="mother_name">Nama Ibu<span class="text-small text-danger">*</span></label>
-                        <input type="text" name="mother_name" id="mother_name" value="{{ old('mother_name', $student->mother_name) }}" class="form-control @error('mother_name') is-invalid @enderror" required>
+                        <label for="mother_name">Nama Ibu</label>
+                        <input type="text" name="mother_name" id="mother_name" value="{{ old('mother_name', $student->mother_name) }}" class="form-control @error('mother_name') is-invalid @enderror">
                         @error('mother_name')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -336,8 +336,8 @@
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
-                        <label for="mother_address">Alamat Ibu<span class="text-small text-danger">*</span></label>
-                        <textarea name="mother_address" id="mother_address" rows="4" class="form-control @error('mother_address') is-invalid @enderror" required>{{ old('mother_address', $student->mother_address) }}</textarea>
+                        <label for="mother_address">Alamat Ibu</label>
+                        <textarea name="mother_address" id="mother_address" rows="4" class="form-control @error('mother_address') is-invalid @enderror">{{ old('mother_address', $student->mother_address) }}</textarea>
                         @error('mother_address')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -392,8 +392,8 @@
                   <div class="row">
                     <div class="col">
                       <div class="form-group">
-                        <label for="guardian_address">Alamat Wali<span class="text-small text-danger">*</span></label>
-                        <textarea name="guardian_address" id="guardian_address" rows="4" class="form-control @error('guardian_address') is-invalid @enderror" required>{{ old('guardian_address', $student->guardian_address) }}</textarea>
+                        <label for="guardian_address">Alamat Wali</label>
+                        <textarea name="guardian_address" id="guardian_address" rows="4" class="form-control @error('guardian_address') is-invalid @enderror">{{ old('guardian_address', $student->guardian_address) }}</textarea>
                         @error('guardian_address')
                           <div class="invalid-feedback">
                               {{ $message }}
