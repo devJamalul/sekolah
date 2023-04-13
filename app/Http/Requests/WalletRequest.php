@@ -32,9 +32,17 @@ class WalletRequest extends FormRequest
     public function postMethod(): array
     {
         return [
-            'name'          => 'required|unique:wallets,name',
+            'name'      => [
+                'required',
+                Rule::unique('wallets')->where(function ($q) {
+                    $q->where('name', $this->name);
+                    $q->where('school_id', session('school_id'));
+                    $q->whereNull('deleted_at');
+                })
+            ],
             'init_value'    => 'required|numeric|gt:0',
         ];
+        
     }
 
     public function putMethod(): array
