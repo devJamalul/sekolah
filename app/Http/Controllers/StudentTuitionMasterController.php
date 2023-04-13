@@ -17,7 +17,6 @@ class StudentTuitionMasterController extends Controller
     public function index(Request $req)
     {    
         $test = StudentTuitionMaster::with('tuition.tuition_type')->latest('created_at')->get();
-        // dd($test[0]->tuition->tuition_type->name);
 
         $student = Student::findOrFail($req->id);
         $data = [
