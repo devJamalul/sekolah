@@ -5,7 +5,7 @@
 @section('content')
 
     {{-- start Datatable --}}
-    <div class="col-lg-10">
+    <div class="col-12">
 
         <div class="d-sm-flex align-items-center justify-content-between">
             <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
