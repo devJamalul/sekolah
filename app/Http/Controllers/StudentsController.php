@@ -12,7 +12,9 @@ use App\Models\TuitionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Excel;
+use Exception;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 use function PHPUnit\Framework\isNull;
 
@@ -258,13 +260,28 @@ class StudentsController extends Controller
 
     public function importStudent()
     {
-        $excel = Excel::import(new StudentsImport(1), public_path('excel_import_template/students_import.xlsx'));
-        return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
+        $academicYears = AcademicYear::where('school_id', session('school_id'))->get();
+
+        $data = [
+            'academic_years' => $academicYears,
+            'title' => "Impor Data Siswa",
+        ];
+
+        return view('pages.students.import', $data);
     }
 
     public function importStudentByExcel(Request $request)
     {
-        $excel = Excel::import(new StudentsImport(session('school_id')), $request->file('excel'));
-        return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
+        try {
+            Excel::import(new StudentsImport, $request->file('excel_file'));
+            return redirect()->route('students.index')->withToastSuccess('Berhasil mengimpor data siswa!');
+        } catch (ValidationException $ex) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withToastError($ex->errors());
+        } catch (Exception $ex) {
+            DB::rollBack();
+            dd($ex);
+            return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data siswa!");
+        }
     }
 }
