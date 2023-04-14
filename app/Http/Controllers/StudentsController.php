@@ -280,7 +280,6 @@ class StudentsController extends Controller
             return redirect()->back()->withInput()->withToastError($ex->errors());
         } catch (Exception $ex) {
             DB::rollBack();
-            dd($ex);
             return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data siswa!");
         }
     }

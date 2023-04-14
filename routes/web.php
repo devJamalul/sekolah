@@ -60,8 +60,6 @@ Route::group([], function () {
     Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
     Route::resource('students', StudentsController::class);
     Route::resource('students/{id}/tuition-master', StudentTuitionMasterController::class);
-    
-    
 
     // Tuition Type
     Route::resource("tuition-type", TuitionTypeController::class)->except(['show']);
