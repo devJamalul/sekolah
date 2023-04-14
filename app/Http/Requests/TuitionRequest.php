@@ -37,6 +37,7 @@ class TuitionRequest extends FormRequest
             'grade_id' => 'required|exists:grades,id',
             'price' => 'required|numeric|gt:0',
             'requested_by' => 'required|exists:users,id',
+            'approved_by' => 'nullable|exists:users,id',
         ];
     }
 
@@ -49,6 +50,7 @@ class TuitionRequest extends FormRequest
             'grade_id' => 'required|exists:grades,id',
             'price' => 'required|numeric|gt:0',
             'requested_by' => 'required|exists:users,id',
+            'approved_by' => 'nullable|exists:users,id',
         ];
     }
 }

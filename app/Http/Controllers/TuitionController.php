@@ -32,7 +32,7 @@ class TuitionController extends Controller
         //
         $title = "Tambah Biaya";
         $tuitionTypes = TuitionType::orderBy('name')->get();
-        $academicYears = AcademicYear::orderByDesc('academic_year_name')->whereIn('status_years', ['started', 'registration'])->get();
+        $academicYears = AcademicYear::orderByDesc('academic_year_name')->whereIn('status_years', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_REGISTRATION])->get();
         $grades = Grade::orderBy('grade_name')->get();
         $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
             $q->whereIn('name', [
