@@ -20,6 +20,7 @@ use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\ReportStudentTuitionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +95,10 @@ Route::group([], function () {
 
     //staff
     Route::resource("staff", StaffController::class)->except(['show']);
+
+
+    // Report Student Tuitions
+    Route::get('report-student-tuition', [ReportStudentTuitionsController::class, 'index'])->name('report-student-tuition');
 });
 
 Route::group([], function () {
