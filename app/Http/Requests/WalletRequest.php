@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\UniqueGradeName;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GradeRequest extends FormRequest
+class WalletRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,27 +32,29 @@ class GradeRequest extends FormRequest
     public function postMethod(): array
     {
         return [
-            'grade_name'      => [
+            'name'      => [
                 'required',
-                Rule::unique('grades')->where(function ($q) {
-                    $q->where('grade_name', $this->grade_name);
+                Rule::unique('wallets')->where(function ($q) {
+                    $q->where('name', $this->name);
                     $q->where('school_id', session('school_id'));
                     $q->whereNull('deleted_at');
                 })
             ],
+            'init_value'    => 'required|numeric|gt:0',
         ];
+        
     }
 
     public function putMethod(): array
     {
         return [
-            'grade_name'      => [
+            'name'      => [
                 'required',
-                Rule::unique('grades')->where(function ($q) {
-                    $q->where('grade_name', $this->grade_name);
+                Rule::unique('wallets')->where(function ($q) {
+                    $q->where('name', $this->name);
                     $q->where('school_id', session('school_id'));
                     $q->whereNull('deleted_at');
-                })->ignore($this->grade->id, 'id')
+                })->ignore($this->wallet->id, 'id')
             ],
         ];
     }

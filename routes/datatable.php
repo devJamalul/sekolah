@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Datatables\StudentDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
+use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
 use App\Http\Controllers\Datatables\TransactionDatatables;
+use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\UsersDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -13,7 +15,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('users', UsersDatatables::class)->name('users');
 
     Route::get('students', [StudentDatatables::class, 'index'])->name('students');
-
+    Route::get('students/tuition-master', [StudentTuitionMasterDatatables::class, 'index'])->name('students.tuition-master');
 
     Route::get('academic-years', [App\Http\Controllers\Datatables\AcademyYearDatatables::class, 'index'])->name('academic-years');
 
@@ -44,4 +46,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('staff', [App\Http\Controllers\Datatables\StaffDatatables::class, 'index'])->name('staff');
 
     Route::get('report-student-tuitions', App\Http\Controllers\Datatables\ReportStudentTuitionsDatatables::class)->name('report-student-tuitions');
+    Route::get('transaction-report', TransactionReportDatatables::class)->name('transaction-report');
+
+    Route::get('wallet', [App\Http\Controllers\Datatables\WalletDatatables::class, 'index'])->name('wallet');
 });

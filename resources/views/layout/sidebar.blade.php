@@ -3,6 +3,7 @@
   $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') || navIsResource('expense') || navIsResource('transactions') ? 'show' : '';
   $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') || navIsResource('assign-classroom-student') ? 'show' : '';
   $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
+  $menuLaporan = navIsResource('transaction-report') ? 'show' : '';
 @endphp
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -127,6 +128,26 @@
     </div>
   </li>
   <!-- End Sekolah Menu -->
+
+  <!-- Laporan Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuLaporan" aria-expanded="true"
+      aria-controls="menuLaporan">
+      <i class="fas fa-chart-line"></i>
+      <span>Laporan</span>
+    </a>
+    <div id="menuLaporan" class="collapse {{ $menuLaporan }}" aria-labelledby="menuLaporan"
+      data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        @can('transaction-report.index')
+          <a href="{{ route('transaction-report.index') }}" class="collapse-item {{ navIsResource('transaction-report') }}">
+            Transaksi
+          </a>
+        @endcan
+      </div>
+    </div>
+  </li>
+  <!-- End Laporan Menu -->
 
   <!-- Konfigurasi Menu -->
   <li class="nav-item">

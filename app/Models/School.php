@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Grade;
 use App\Models\Staff;
+use App\Models\Wallet;
+use App\Models\Expense;
 use App\Models\Student;
 use App\Models\Tuition;
 use App\Models\Classroom;
@@ -17,8 +19,8 @@ use App\Models\StudentTuition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class School extends Model
 {
@@ -111,5 +113,15 @@ class School extends Model
     public function scopeInduk($query)
     {
         return $query->whereNull('school_id');
+    }
+    
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+    
+    public function wallets(): HasMany
+    {
+        return $this->hasMany(Wallet::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\PublishMonthlyTuitions;
+use App\Models\AcademicYear;
 use App\Models\School;
 use App\Models\Tuition;
 use Illuminate\Bus\Batch;
@@ -39,6 +40,13 @@ class PublishTuition extends Command
         $this->line('----------------');
         $schools = School::with('tuition_types')->latest()->get();
         foreach ($schools as $school) {
+            // academic year
+            $academic_year = AcademicYear::withoutGlobalScopes()->where('school_id', $school->getKey())->active()->first();
+
+            if (!$academic_year) {
+                continue;
+            }
+
             $jobs = [];
             $this->line('');
             $this->line('Administration for ' . $school->school_name);
@@ -54,7 +62,7 @@ class PublishTuition extends Command
             $this->line('-----------------------');
             foreach ($tuition_types as $tuition_type) {
                 $this->line('Tuition Type: ' . $tuition_type->name);
-                $tuitions = $tuition_type->tuitions()->withoutGlobalScopes()->get();
+                $tuitions = $tuition_type->tuitions()->withoutGlobalScopes()->where('academic_year_id', $academic_year->getKey())->get();
                 foreach ($tuitions as $tuition) {
                     $this->line('Tuition: ' . $tuition->getKey());
                     $jobs[] = new PublishMonthlyTuitions(
@@ -72,6 +80,7 @@ class PublishTuition extends Command
             $tuitions = Tuition::withoutGlobalScopes()
                 ->with('tuition_type')
                 ->where('school_id', $school->getKey())
+                ->where('academic_year_id', $academic_year->getKey())
                 ->whereNotNull('approval_by')
                 ->whereHas('tuition_type', function ($query) {
                     $query->withoutGlobalScopes()->where('recurring', false);
@@ -84,7 +93,7 @@ class PublishTuition extends Command
             } else {
                 $this->line('Additional Tuition: None');
             }
-            foreach($tuitions as $tuition) {
+            foreach ($tuitions as $tuition) {
                 $this->line('Tuition: ' . $tuition->getKey());
                 $jobs[] = new PublishMonthlyTuitions(
                     tuition: $tuition,
@@ -116,8 +125,8 @@ class PublishTuition extends Command
                     'period' => now()->addMonth()->startOfMonth(),
                 ])->info("Publish tuitions finished executing...");
             })
-            ->name('Publish tuitions for school : ' . $school->school_name)
-            ->dispatch();
+                ->name('Publish tuitions for school : ' . $school->school_name)
+                ->dispatch();
         }
     }
 }
