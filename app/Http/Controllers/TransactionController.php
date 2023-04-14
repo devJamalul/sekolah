@@ -114,7 +114,10 @@ class TransactionController extends Controller
             ])->sum('price');
 
             $total_payment = $request->nominal + $total_price;
-            if ($total_payment >= $student_tuition->grand_total) {
+            if ($total_payment > $student_tuition->grand_total) {
+                $lebih = $total_payment - $student_tuition->grand_total;
+                throw new \ErrorException('Pembayaran kelebihan IDR ' . number_format($lebih, '0', ',', '.'));
+            } else if ($total_payment == $student_tuition->grand_total) {
                 $student_tuition->status = StudentTuition::STATUS_PAID;
             } else {
                 $student_tuition->status = StudentTuition::STATUS_PARTIAL;
