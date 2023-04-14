@@ -39,7 +39,7 @@
                                             <span class="input-group-text" id="inputGroupPrepend">Start</span>
                                         </div>
                                         <input type="date" class="form-control" name="year_start" id="year_start"
-                                            placeholder="awal periode akademik">
+                                            placeholder="awal periode akademik" value="{{ old('year_start') }}">
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -48,7 +48,7 @@
                                             <span class="input-group-text" id="inputGroupPrepend">End</span>
                                         </div>
                                         <input type="date" class="form-control " name="year_end" id="year_end"
-                                            placeholder="awal periode akademik">
+                                            placeholder="awal periode akademik" value="{{ old('year_end') }}">
                                     </div>
                                 </div>
                             </div>
