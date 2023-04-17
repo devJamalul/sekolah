@@ -13,7 +13,7 @@
     <div class="sidebar-brand-icon">
       <i class="fas fa-school"></i>
     </div>
-    <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+    <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
   </a>
 
   <!-- Divider -->

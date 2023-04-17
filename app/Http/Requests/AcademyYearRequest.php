@@ -41,11 +41,12 @@ class AcademyYearRequest extends FormRequest
                         'academic_year_name' => $this->academic_year_name,
                         'school_id' => $this->school_id,
                     ]);
+                    $q->whereNull('deleted_at');
                 }),
                 'years_formatted',
                 'valid_year'
-            ]
-
+            ],
+            'status_years' => 'required'
         ];
     }
 
@@ -61,10 +62,12 @@ class AcademyYearRequest extends FormRequest
                         'academic_year_name' => $this->academic_year_name,
                         'school_id' => $this->school_id,
                     ]);
+                    $q->whereNull('deleted_at');
                 })->ignore($this->academy_year->id, 'id'),
                 'years_formatted',
                 'valid_year'
-            ]
+            ],
+            'status_years' => 'required'
         ];
     }
 
@@ -81,10 +84,12 @@ class AcademyYearRequest extends FormRequest
             if (isset($result[0]) && count($result[0]) >= 2) {
                 $startYear = $result[0][0];
                 $endYear = $result[0][1];
+
+                if ($endYear - $startYear > 1) return false;
                 return $startYear < $endYear;
             }
 
-            return true;
+            return false;
         });
     }
 

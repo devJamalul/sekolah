@@ -60,10 +60,18 @@ class FortifyServiceProvider extends ServiceProvider
                     session(['school_id' => $user->school_id]);
                 }
 
-                $academicYears = AcademicYear::active()->first();
+                $academicYear = AcademicYear::active()->first();
 
-                if (!is_null($academicYears)) {
-                    session(['academic_year_id' => $academicYears->id]);
+                if (!is_null($academicYear)) {
+                    session(['academic_year_id' => $academicYear->id]);
+                    session(['academic_year_name' => $academicYear->academic_year_name ]);
+                }
+
+                $ppdb = AcademicYear::PPDB()->first();
+
+                if (!is_null($ppdb)) {
+                    session(['ppdb_academic_year_id' => $ppdb->id]);
+                    session(['ppdb_academic_year_name' => $ppdb->academic_year_name]);
                 }
 
                 return $user;

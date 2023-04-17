@@ -12,6 +12,7 @@ use App\Http\Requests\AcademyYearRequest;
 class AcademyYearController extends Controller
 {
     private $title = "Tahun Akademik";
+
     /**
      * Display a listing of the resource.
      */
@@ -41,31 +42,26 @@ class AcademyYearController extends Controller
      */
     public function store(AcademyYearRequest $request)
     {
-
-
         DB::beginTransaction();
         try {
-
-            $this->updateStatusYearsClosed($request->status_years);
-
             $academyYear                     = new AcademicYear();
             $academyYear->year_start         = $request->year_start;
             $academyYear->year_end           = $request->year_end;
             $academyYear->school_id          = $request->school_id;
             $academyYear->academic_year_name = $request->academic_year_name;
-            $academyYear->status_years       = $request->status_years ?? AcademicYear::STATUS_CLOSED;
+            $academyYear->status_years       = $request->status_years;
             $academyYear->save();
 
+            $this->updateStatusYearsClosed($academyYear, $request->status_years);
             $this->updateSessionStatusActive($academyYear);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->route('academy-year.index')->withToastError("Ops Gagal Tambah  {$this->title} !");
+            return redirect()->route('academy-year.index')->withToastError("Ops Gagal Tambah {$this->title}!");
         }
 
-        return redirect()->route('academy-year.index')->withToastSuccess("Tambah {$this->title}  Berhasil!");
+        return redirect()->route('academy-year.index')->withToastSuccess("Tambah {$this->title} Berhasil!");
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -86,28 +82,27 @@ class AcademyYearController extends Controller
      */
     public function update(AcademyYearRequest $request, AcademicYear $academyYear)
     {
-
         DB::beginTransaction();
         try {
-
-            $this->updateStatusYearsClosed($request->status_years);
-
-            $academyYear->school_id = $request->school_id;
+            $academyYear->school_id          = $request->school_id;
             $academyYear->year_start         = $request->year_start;
             $academyYear->year_end           = $request->year_end;
             $academyYear->academic_year_name = $request->academic_year_name;
-            $academyYear->status_years = $request->status_years ?? AcademicYear::STATUS_CLOSED;
+            $academyYear->status_years       = $request->status_years;
             $academyYear->save();
+
+            if ($academyYear->wasChanged('status_years')) {
+                $this->updateStatusYearsClosed($academyYear, $request->status_years);
+            }
 
             $this->updateSessionStatusActive($academyYear);
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->route('academy-year.index')->withToastError("Ops Gagal ubah {$this->title} !");
+            return redirect()->route('academy-year.index')->withToastError("Ops Gagal ubah {$this->title}!");
         }
 
-
-        return redirect()->route('academy-year.index')->withToastSuccess("ubah {$this->title}  Berhasil!");
+        return redirect()->route('academy-year.index')->withToastSuccess("Ubah {$this->title} Berhasil!");
     }
 
     /**
@@ -115,9 +110,17 @@ class AcademyYearController extends Controller
      */
     public function destroy(AcademicYear $academyYear)
     {
-
         DB::beginTransaction();
         try {
+            if ($academyYear->status_years === AcademicYear::STATUS_STARTED) {
+                session()->forget('academic_year_id');
+                session()->forget('academic_year_name');
+            }
+
+            if ($academyYear->status_years === AcademicYear::STATUS_REGISTRATION) {
+                session()->forget('ppdb_academic_year_id');
+                session()->forget('ppdb_academic_year_name');
+            }
 
             $academyYear->delete();
             DB::commit();
@@ -125,7 +128,6 @@ class AcademyYearController extends Controller
                 'msg' => "Berhasil Hapus {$this->title}"
             ], 200);
         } catch (\Throwable $th) {
-
             DB::rollback();
             return response()->json([
                 'msg' => "Ops Gagal Hapus {$this->title}!"
@@ -133,15 +135,23 @@ class AcademyYearController extends Controller
         }
     }
 
-    private function updateStatusYearsClosed($status)
+    private function updateStatusYearsClosed(AcademicYear $academicYear, $status)
     {
-        return AcademicYear::where('status_years', $status)->update(['status_years' => AcademicYear::STATUS_CLOSED]);
+        AcademicYear::where('status_years', $status)
+        ->where('id', '<>', $academicYear->getKey())
+        ->update(['status_years' => AcademicYear::STATUS_CLOSED]);
     }
 
     private function updateSessionStatusActive(AcademicYear $academyYear)
     {
         if ($academyYear->status_years === AcademicYear::STATUS_STARTED) {
-            session('academic_year_id',  $academyYear->id);
+            session(['academic_year_id' => $academyYear->id]);
+            session(['academic_year_name' => $academyYear->academic_year_name]);
+        }
+
+        if ($academyYear->status_years === AcademicYear::STATUS_REGISTRATION) {
+            session(['ppdb_academic_year_id' => $academyYear->id]);
+            session(['ppdb_academic_year_name' => $academyYear->academic_year_name]);
         }
     }
 }
