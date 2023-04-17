@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\School;
 use App\Models\Scopes\AcademicYearScope;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,7 +41,7 @@ class AcademicYear extends Model
 
     public function scopePPDB(Builder $query): void
     {
-        $query->where('status_years', AcademicYear::STATUS_PPDB_YEAR)->latest();
+        $query->where('status_years', AcademicYear::STATUS_REGISTRATION)->latest();
     }
 
     public function students(): HasMany

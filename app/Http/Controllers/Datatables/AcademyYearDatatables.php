@@ -17,7 +17,7 @@ class AcademyYearDatatables extends Controller
 
         return DataTables::of($academyYear)
 
-            ->editColumn('status_years', function ($row) {
+            ->addColumn('status_years', function ($row) {
                 return match ($row->status_years) {
                     AcademicYear::STATUS_STARTED => '<span class="badge badge-success">Aktif</span>',
                     AcademicYear::STATUS_REGISTRATION => '<span class="badge badge-warning">Register</span>',

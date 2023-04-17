@@ -19,10 +19,11 @@ use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
-use App\Http\Controllers\AssignClassroomStaffController;
-use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\TransactionReportController;
+use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\StudentTuitionMasterController;
+use App\Http\Controllers\ReportStudentTuitionsController;
+use App\Http\Controllers\AssignClassroomStudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,15 +86,22 @@ Route::group([], function () {
 
     // Payment Type
     Route::resource("payment-type", PaymentTypeController::class)->except(['show']);
-    
     // Assign staff student
     Route::get('assign-classroom-staff', AssignClassroomStaffController::class)->name(('assign-classroom-staff.index'));
     Route::post('assign-classroom-staff', [AssignClassroomStaffController::class, 'store'])->name(('assign-classroom-staff.store'));
     Route::delete('assign-classroom-staff', [AssignClassroomStaffController::class, 'destroy'])->name(('assign-classroom-staff.destroy'));
-    
     // Expense
     Route::resource('expense', ExpenseController::class);
     Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
+
+
+    //staff
+    Route::resource("staff", StaffController::class)->except(['show']);
+
+
+    // Report Student Tuitions
+    Route::get('report-student-tuition', [ReportStudentTuitionsController::class, 'index'])->name('report-student-tuition');
+    Route::post('export-student-tuition', [ReportStudentTuitionsController::class, 'export'])->name('export-student-tuition');
 
     //staff
     Route::resource("staff", StaffController::class)->except(['show']);
