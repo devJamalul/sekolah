@@ -17,9 +17,6 @@ class ReportStudentTuitionsDatatables extends Controller
     public function __invoke(Request $request)
     {
 
-
-
-
         $studentTuitions = StudentTuition::with(
             [
                 'student_tuition_details.tuition.tuition_type',
