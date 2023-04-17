@@ -3,7 +3,7 @@
   $menuKeuangan = Request::is('tuition-type') || Request::is('tuition-type/*') || Request::is('tuition') || Request::is('tuition/*') || Request::is('expense') || Request::is('expense/*') || Request::is('transactions') || Request::is('transactions/*') ? 'show' : '';
   $menuSekolah = Request::is('grade') || Request::is('grade/*') || Request::is('academy-year') || Request::is('academy-year/*') || Request::is('students') || Request::is('students/*') || Request::is('classroom') || Request::is('classroom/*') || Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'show' : '';
   $menuKonfigurasi = Request::is('config') || Request::is('config/*') || Request::is('master-configs') || Request::is('master-configs/*') ? 'show' : '';
-  $menuLaporan = Request::is('transaction-report') || Request::is('transaction-report/*') ? 'show' : '';
+  $menuLaporan = Request::is('report-student-tuition') || Request::is('report-student-tuition/*') ? 'show' : '';
 @endphp
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -140,7 +140,7 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('transaction-report.index')
-          <a href="{{ route('transaction-report') }}" class="collapse-item {{ Request::is('transaction-report') || Request::is('transaction-report/*') ? 'active' : '' }}">
+          <a href="{{ route('report-student-tuition') }}" class="collapse-item {{ Request::is('report-student-tuition') || Request::is('report-student-tuition/*') ? 'active' : '' }}">
             Transaksi
           </a>
         @endcan
