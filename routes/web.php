@@ -102,7 +102,7 @@ Route::group([], function () {
 
 
     // Report Student Tuitions
-    Route::get('laporan-pembayaran-sekolah', [ReportStudentTuitionsController::class, 'index'])->name('laporan-pembayaran-sekolah');
+    Route::get('report-student-tuition', [ReportStudentTuitionsController::class, 'index'])->name('report-student-tuition');
     Route::post('export-student-tuition', [ReportStudentTuitionsController::class, 'export'])->name('export-student-tuition');
 
     //staff

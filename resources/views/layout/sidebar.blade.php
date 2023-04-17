@@ -1,9 +1,9 @@
 @php
-  $menuAdministrasi = navIsResource('schools') || navIsResource('users') ? 'show' : '';
-  $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') || navIsResource('expense') || navIsResource('transactions') ? 'show' : '';
-  $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') || navIsResource('assign-classroom-student') ? 'show' : '';
-  $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
-  $menuLaporan = navIsResource('laporan-pembayaran-sekolah') ? 'show' : '';
+  $menuAdministrasi = Request::is('schools') || Request::is('schools/*') || Request::is('users') || Request::is('users/*') ? 'show' : '';
+  $menuKeuangan = Request::is('tuition-type') || Request::is('tuition-type/*') || Request::is('tuition') || Request::is('tuition/*') || Request::is('expense') || Request::is('expense/*') || Request::is('transactions') || Request::is('transactions/*') ? 'show' : '';
+  $menuSekolah = Request::is('grade') || Request::is('grade/*') || Request::is('academy-year') || Request::is('academy-year/*') || Request::is('students') || Request::is('students/*') || Request::is('classroom') || Request::is('classroom/*') || Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'show' : '';
+  $menuKonfigurasi = Request::is('config') || Request::is('config/*') || Request::is('master-configs') || Request::is('master-configs/*') ? 'show' : '';
+  $menuLaporan = Request::is('report-student-tuition') || Request::is('report-student-tuition/*') ? 'show' : '';
 @endphp
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -20,7 +20,7 @@
   <hr class="sidebar-divider my-0">
 
   <!-- Nav Item - Dashboard -->
-  <li class="nav-item">
+  <li class="nav-item {{ Request::is('home') || Request::is('home/*') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('home') }}">
       <i class="fas fa-fw fa-tachometer-alt"></i>
       <span>Dashboard</span></a>
@@ -40,12 +40,12 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('schools.index')
-          <a href="{{ route('schools.index') }}" class="collapse-item {{ navIsResource('schools') }}">
+          <a href="{{ route('schools.index') }}" class="collapse-item  {{ Request::is('schools') || Request::is('schools/*') ? 'active' : '' }}">
             Sekolah
           </a>
         @endcan
         @can('users.index')
-          <a href="{{ route('users.index') }}" class="collapse-item {{ navIsResource('users') }}">
+          <a href="{{ route('users.index') }}" class="collapse-item  {{ Request::is('users') || Request::is('users/*') ? 'active' : '' }}">
             Pengguna
           </a>
         @endcan
@@ -65,22 +65,22 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('tuition-type.index')
-          <a href="{{ route('tuition-type.index') }}" class="collapse-item {{ navIsResource('tuition-type') }}">
+          <a href="{{ route('tuition-type.index') }}" class="collapse-item {{ Request::is('tuition-type') || Request::is('tuition-type/*') ? 'active' : '' }}">
             Tipe Biaya
           </a>
         @endcan
         @can('tuition.index')
-          <a href="{{ route('tuition.index') }}" class="collapse-item {{ navIsResource('tuition') }}">
+          <a href="{{ route('tuition.index') }}" class="collapse-item {{ Request::is('tuition') || Request::is('tuition/*') ? 'active' : '' }}">
             Biaya
           </a>
         @endcan
         @can('expense.index')
-          <a href="{{ route('expense.index') }}" class="collapse-item {{ navIsResource('expense') }}">
+          <a href="{{ route('expense.index') }}" class="collapse-item {{ Request::is('expense') || Request::is('expense/*') ? 'active' : '' }}">
             Pengeluaran Biaya
           </a>
         @endcan
         @can('transactions.index')
-          <a href="{{ route('transactions.index') }}" class="collapse-item {{ navIsResource('transactions') }}">
+          <a href="{{ route('transactions.index') }}" class="collapse-item {{ Request::is('transactions') || Request::is('transactions/*') ? 'active' : '' }}">
             Transaksi
           </a>
         @endcan
@@ -100,27 +100,27 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('grade.index')
-          <a href="{{ route('grade.index') }}" class="collapse-item {{ navIsResource('grade') }}">
+          <a href="{{ route('grade.index') }}" class="collapse-item {{ Request::is('grade') || Request::is('grade/*') ? 'active' : '' }}">
             Tingkat
           </a>
         @endcan
         @can('academy-year.index')
-          <a href="{{ route('academy-year.index') }}" class="collapse-item {{ navIsResource('academy-year') }}">
+          <a href="{{ route('academy-year.index') }}" class="collapse-item {{ Request::is('academy-year') || Request::is('academy-year/*') ? 'active' : '' }}">
             Tahun Akademik
           </a>
         @endcan
         @can('students.index')
-          <a href="{{ route('students.index') }}" class="collapse-item {{ navIsResource('students') }}">
+          <a href="{{ route('students.index') }}" class="collapse-item {{ Request::is('students') || Request::is('students/*') ? 'active' : '' }}">
             Data Siswa
           </a>
         @endcan
         @can('classroom.index')
-          <a href="{{ route('classroom.index') }}" class="collapse-item {{ navIsResource('classroom') }}">
+          <a href="{{ route('classroom.index') }}" class="collapse-item {{ Request::is('classroom') || Request::is('classroom/*') ? 'active' : '' }}">
             Ruang Kelas
           </a>
         @endcan
         @can('assign-classroom-student.index')
-          <a href="{{ route('assign-classroom-student.index') }}" class="collapse-item {{ navIsResource('assign-classroom-student') }}">
+          <a href="{{ route('assign-classroom-student.index') }}" class="collapse-item {{ Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'active' : '' }}">
             Rombongan Belajar
           </a>
         @endcan
@@ -140,7 +140,7 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('transaction-report.index')
-          <a href="{{ route('laporan-pembayaran-sekolah') }}" class="collapse-item {{ navIsResource('laporan-pembayaran-sekolah') }}">
+          <a href="{{ route('report-student-tuition') }}" class="collapse-item {{ Request::is('report-student-tuition') || Request::is('report-student-tuition/*') ? 'active' : '' }}">
             Transaksi
           </a>
         @endcan
@@ -160,12 +160,12 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('master-configs.index')
-          <a href="{{ route('master-configs.index') }}" class="collapse-item {{ navIsResource('master-configs') }}">
+          <a href="{{ route('master-configs.index') }}" class="collapse-item {{ Request::is('master-configs') || Request::is('master-configs/*') ? 'active' : '' }}">
             Master Konfigurasi
           </a>
         @endcan
         @can('config.index')
-          <a href="{{ route('config.index') }}" class="collapse-item {{ navIsResource('config') }}">
+          <a href="{{ route('config.index') }}" class="collapse-item {{ Request::is('config') || Request::is('config/*') ? 'active' : '' }}">
             Konfigurasi
           </a>
         @endcan
