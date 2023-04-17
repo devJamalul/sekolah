@@ -3,7 +3,7 @@
   $menuKeuangan = navIsResource('tuition-type') || navIsResource('tuition') || navIsResource('expense') || navIsResource('transactions') ? 'show' : '';
   $menuSekolah = navIsResource('grade') || navIsResource('academy-year') || navIsResource('students') || navIsResource('classroom') || navIsResource('assign-classroom-student') ? 'show' : '';
   $menuKonfigurasi = navIsResource('config') || navIsResource('master-configs') ? 'show' : '';
-  $menuLaporan = navIsResource('transaction-report') ? 'show' : '';
+  $menuLaporan = navIsResource('laporan-pembayaran-sekolah') ? 'show' : '';
 @endphp
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -140,7 +140,7 @@
       data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         @can('transaction-report.index')
-          <a href="{{ route('transaction-report.index') }}" class="collapse-item {{ navIsResource('transaction-report') }}">
+          <a href="{{ route('laporan-pembayaran-sekolah') }}" class="collapse-item {{ navIsResource('laporan-pembayaran-sekolah') }}">
             Transaksi
           </a>
         @endcan
