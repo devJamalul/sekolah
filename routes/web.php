@@ -19,10 +19,11 @@ use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
-use App\Http\Controllers\AssignClassroomStaffController;
-use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\TransactionReportController;
+use App\Http\Controllers\AssignClassroomStaffController;
 use App\Http\Controllers\StudentTuitionMasterController;
+use App\Http\Controllers\ReportStudentTuitionsController;
+use App\Http\Controllers\AssignClassroomStudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,8 @@ Route::group([], function () {
 
     // Report Student Tuitions
     Route::get('report-student-tuition', [ReportStudentTuitionsController::class, 'index'])->name('report-student-tuition');
+    Route::post('export-student-tuition', [ReportStudentTuitionsController::class, 'export'])->name('export-student-tuition');
+
     //staff
     Route::resource("staff", StaffController::class)->except(['show']);
 

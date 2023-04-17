@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Tuition;
 
 class StudentTuitionDetail extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $guarded = [];
 
     public function tuitions(): BelongsToMany
@@ -26,6 +27,11 @@ class StudentTuitionDetail extends Model
 
     public function students(): BelongsTo
     {
-        return $this->belongsTo(Tuition::class);
+        return $this->belongsTo(Tuition::class, 'tuition_id');
+    }
+
+    public function tuition(): BelongsTo
+    {
+        return $this->belongsTo(Tuition::class, 'tuition_id');
     }
 }
