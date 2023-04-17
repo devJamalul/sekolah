@@ -32,7 +32,7 @@
                         <div class="form-group">
                             <label for="year-academy-input">Tahun Akademik</label>
                             <input type="hidden" class="form-control  @error('academic_year_name') is-invalid @enderror"
-                                name="academic_year_name" value="{{ $academyYear->academic_year_name }}"
+                                name="academic_year_name" value="{{ old('academic_year_name', $academyYear->academic_year_name) }}"
                                 id="year-academy-input" placeholder="20XX - 20XX">
                             <div class="row">
                                 <div class="col-6">
@@ -43,7 +43,7 @@
                                         <span>
                                         </span>
                                         <input type="date" class="form-control" name="year_start"
-                                            value="{{ $academyYear->year_start }}" id="year_start"
+                                            value="{{ old('year_start', $academyYear->year_start) }}" id="year_start"
                                             placeholder="awal periode akademik">
                                     </div>
                                 </div>
@@ -53,7 +53,7 @@
                                             <span class="input-group-text" id="inputGroupPrepend">End</span>
                                         </div>
                                         <input type="date" class="form-control " name="year_end"
-                                            value="{{ $academyYear->year_end }}"id="year_end"
+                                            value="{{ old('year_end', $academyYear->year_end) }}"id="year_end"
                                             placeholder="awal periode akademik">
                                     </div>
                                 </div>
