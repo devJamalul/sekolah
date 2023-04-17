@@ -355,8 +355,15 @@
 
 
             $("#filter-data").click(function() {
-                setData()
+                setData() <<
+                    <<
+                    << < HEAD
 
+                    ===
+                    ===
+                    = >>>
+                    >>>
+                    > 38258394 c077bdce41c09233defcdb574825f12f
                 reportTable.ajax.reload(function(data) {
                     let total_payment = data.total_payment
                     let total_remaining_debt = data.total_remaining_debt
