@@ -27,6 +27,9 @@ class SchoolSelectorController extends Controller
         if (!is_null($academicYear)) {
             session(['academic_year_id' => $academicYear->id]);
             session(['academic_year_name' => $academicYear->academic_year_name]);
+        } else {
+            session()->forget('academic_year_id');
+            session()->forget('academic_year_name');
         }
 
         $ppdb = AcademicYear::PPDB()->first();
@@ -34,6 +37,9 @@ class SchoolSelectorController extends Controller
         if (!is_null($ppdb)) {
             session(['ppdb_academic_year_id' => $ppdb->id]);
             session(['ppdb_academic_year_name' => $ppdb->academic_year_name]);
+        } else {
+            session()->forget('ppdb_academic_year_id');
+            session()->forget('ppdb_academic_year_name');
         }
     }
 }
