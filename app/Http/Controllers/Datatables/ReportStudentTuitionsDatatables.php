@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Datatables;
 
 use Carbon\Carbon;
+use Laraindo\RupiahFormat;
 use Illuminate\Http\Request;
 use App\Models\StudentTuition;
 use Yajra\DataTables\DataTables;
@@ -80,13 +81,13 @@ class ReportStudentTuitionsDatatables extends Controller
             })
             ->addColumn('remaining_debt', function (StudentTuition $row) {
                 $remainingDebt = $row->grand_total - $row->student_tuition_payment_histories->sum('price');
-                return $remainingDebt > 0 ? $remainingDebt : 0;
+                return RupiahFormat::currency($remainingDebt > 0 ? $remainingDebt : 0);
             })
             ->addColumn('grand_total', function (StudentTuition $row) {
                 $price = $row->student_tuition_details->map(function ($row) {
                     return $row->price;
                 })->implode('&#013;');
-                return  '<span data-toggle="popover" data-placement="bottom" title="' . $price . '">' . $row->grand_total . '</span>';
+                return  '<span data-toggle="popover" data-placement="bottom" title="' .  RupiahFormat::currency($price) . '">' . RupiahFormat::currency($row->grand_total) . '</span>';
             })
             ->addColumn('status_payment', function (StudentTuition $row) {
                 return match ($row->status) {
@@ -96,8 +97,8 @@ class ReportStudentTuitionsDatatables extends Controller
                 };
             })
             ->with([
-                'total_payment' => $total_payment,
-                'total_remaining_debt' => $totalRemainingDebt > 0 ? $totalRemainingDebt : 0
+                'total_payment' => RupiahFormat::currency($total_payment),
+                'total_remaining_debt' => RupiahFormat::currency($totalRemainingDebt > 0 ? $totalRemainingDebt : 0)
             ])
             ->rawColumns(['status_payment', 'grand_total', 'tuition_type'])
 
