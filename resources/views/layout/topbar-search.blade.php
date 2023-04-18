@@ -1,5 +1,5 @@
 @hasanyrole('super admin|ops admin')
-    @if (!navIsResource('schools') and !navIsResource('master-configs'))
+    @if ((!Request::is('schools') and !Request::is('schools/*')) and (!Request::is('master-configs') and !Request::is('master-configs/*')))
         <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
             <select id="school_selector" name="school_selector"
                 class="form-control select2 @error('school_selector') is-invalid @enderror" required>

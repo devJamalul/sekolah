@@ -363,6 +363,7 @@
                         total_remaining_debt)
                     $(reportTable.table().footer()).find("#total_payment").html(
                         total_payment)
+                    alertInfo("Fillter Laporan Pembayaran Sekolah")
                 })
             })
 
@@ -387,7 +388,37 @@
                     $(reportTable.table().footer()).find("#total_payment").html(
                         total_payment)
                 })
+                alertInfo("Reset Fillter Laporan Pembayaran Sekolah")
             })
+
+            function alertInfo(message) {
+                Swal.fire({
+                    "title": message,
+                    "text": "",
+                    "showConfirmButton": false,
+                    "timerProgressBar": false,
+                    "customClass": {
+                        "container": null,
+                        "popup": null,
+                        "header": null,
+                        "title": null,
+                        "closeButton": null,
+                        "icon": null,
+                        "image": null,
+                        "content": null,
+                        "input": null,
+                        "actions": null,
+                        "confirmButton": null,
+                        "cancelButton": null,
+                        "footer": null
+                    },
+                    "icon": "info",
+                    "toast": true,
+                    "timer": 2000,
+                    "position": "top-end",
+                    "showCloseButton": true
+                });
+            }
 
         });
     </script>
