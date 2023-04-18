@@ -10,7 +10,7 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
                 <div class="btn-group">
-                    <a href="{{ route('report-school-finances') }}"
+                    <a href="{{ route('export-report-school-finances', $queryParameter) }}"
                         class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
                         Export Excel
                     </a>
@@ -56,7 +56,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'report-scholl-table'" :tableHeaders="['Dana Biaya', 'Tipe Uang', 'Note', 'tanggal']" :tableColumns="[
+                    <x-datatable :tableId="'report-scholl-table'" :tableHeaders="['Dana', 'Tipe Uang', 'Note', 'tanggal']" :tableColumns="[
                         ['data' => 'amount'],
                         ['data' => 'cashflow_type'],
                         ['data' => 'note'],

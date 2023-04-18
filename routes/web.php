@@ -115,6 +115,7 @@ Route::group([], function () {
     // report school finances
     Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances');
     Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances');
+    Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('export-report-school-finances');
 });
 
 Route::group([], function () {
