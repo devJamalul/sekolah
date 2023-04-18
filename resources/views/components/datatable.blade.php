@@ -19,14 +19,14 @@
 @push('js')
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script></script>
     <script>
         $(function() {
 
-            const table = $("#{{ $tableId }}")
-            const url = "{{ $getDataUrl }}";
+            const table = $("#{!! $tableId !!}")
+            const url = "{!! $getDataUrl !!}";
             const columns = @json($tableColumns);
 
+            console.log(url);
 
             table.DataTable({
                 processing: true,

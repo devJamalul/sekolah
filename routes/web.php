@@ -21,6 +21,7 @@ use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\TransactionReportController;
 use App\Http\Controllers\AssignClassroomStaffController;
+use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
@@ -110,6 +111,10 @@ Route::group([], function () {
 
     // Wallet
     Route::resource("wallet", WalletController::class)->except(['show']);
+
+    // report school finances
+    Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances');
+    Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances');
 });
 
 Route::group([], function () {
