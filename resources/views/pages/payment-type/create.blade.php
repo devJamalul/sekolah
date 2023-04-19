@@ -27,7 +27,8 @@
 
                         <input type="hidden" name="school_id" value="{{ session('school_id') }}">
                         <div class="form-group">
-                            <label for="payment-type-input">Tipe Pembayaran</label>
+                            <label for="payment-type-input">Tipe Pembayaran <span
+                                    class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                                 id="payment-type-input">
                             @error('name')
@@ -38,7 +39,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="payment-type-input">Wallet</label>
+                            <label for="payment-type-input">Wallet <span class="text-small text-danger">*</span></label>
                             <select name="wallet_id" id=""
                                 class="form-control @error('wallet_id') is-invalid @enderror">
                                 <option value="">-</option>

@@ -6,7 +6,7 @@
             <th>Tahun Ajaran</th>
             <th>Tingkatan</th>
             <th>Kelas</th>
-            <th>Tipe Biaya</th>
+            <th>Tipe Uang Sekolah</th>
             <th>Tipe Pembayaran</th>
             <th>Sisa Bayar</th>
             <th>Total Bayar</th>

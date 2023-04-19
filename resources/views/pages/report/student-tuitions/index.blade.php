@@ -41,7 +41,7 @@
                                     <th>Tahun Ajaran</th>
                                     <th>Tingkatan</th>
                                     <th>Kelas</th>
-                                    <th>Tipe Biaya</th>
+                                    <th>Tipe Uang Sekolah</th>
                                     <th>Tipe Pembayaran</th>
                                     <th>Sisa Bayar</th>
                                     <th>Total Bayar</th>
@@ -118,7 +118,6 @@
 
 @push('css')
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css">
     <link rel="stylesheet"
         href="https://datatables.net/release-datatables/extensions/FixedColumns/css/fixedColumns.bootstrap4.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -273,10 +272,10 @@
                         targets: 4
                     },
                     {
-                        width: 50,
+                        width: 150,
                         targets: 5
                     }, {
-                        width: 50,
+                        width: 150,
                         targets: 6
                     }, {
                         width: 200,
@@ -355,15 +354,7 @@
 
 
             $("#filter-data").click(function() {
-                setData() <<
-                    <<
-                    << < HEAD
-
-                    ===
-                    ===
-                    = >>>
-                    >>>
-                    > 38258394 c077bdce41c09233defcdb574825f12f
+                setData()
                 reportTable.ajax.reload(function(data) {
                     let total_payment = data.total_payment
                     let total_remaining_debt = data.total_remaining_debt

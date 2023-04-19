@@ -48,7 +48,7 @@ class ReportStudentTuitionsDatatables extends Controller
                 $q->where('student_id', $request->student);
             })
             ->when($request->has('bill'), function ($q) use ($request) {
-                $q->where('bill_number', $request->bill);
+                $q->where('bill_number', 'LIKE', '%' . $request->bill . '%');
             });
 
         $total_payment = $studentTuitions->sum('grand_total');
@@ -103,6 +103,7 @@ class ReportStudentTuitionsDatatables extends Controller
             ->rawColumns(['status_payment', 'grand_total', 'tuition_type'])
 
             ->only([
+                'id',
                 'bill_num',
                 'name_student',
                 'academy_year',

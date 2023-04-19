@@ -19,9 +19,9 @@
                     <form action="{{ route('tuition.store') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label for="tuition-type-select">Tipe Biaya<span class="text-small text-danger">*</span></label>
-                            <select class="form-control @error('tuition_type_id') is-invalid @enderror" name="tuition_type_id"
-                                id="tuition-type-select">
+                            <label for="tuition-type-select">Tipe Uang Sekolah<span class="text-small text-danger">*</span></label>
+                            <select class="form-control @error('tuition_type_id') is-invalid @enderror"
+                                name="tuition_type_id" id="tuition-type-select">
                                 <option value="">-</option>
                                 @foreach ($tuitionTypes as $tuitionType)
                                     <option value="{{ $tuitionType->id }}" @selected(old('tuition_type_id') == $tuitionType->id)>
@@ -73,9 +73,9 @@
                             <label for="price">Nominal<span class="text-small text-danger">*</span></label>
                             <input type="text" name="price" id="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" required pattern="[0-9]+">
                             @error('price')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                             @enderror
                         </div>
                         <button type="submit" class="btn btn-primary">SIMPAN</button>
