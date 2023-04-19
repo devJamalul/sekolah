@@ -32,13 +32,15 @@
                         <div class="form-group">
                             <label for="year-academy-input">Tahun Akademik</label>
                             <input type="hidden" class="form-control  @error('academic_year_name') is-invalid @enderror"
-                                name="academic_year_name" value="{{ old('academic_year_name', $academyYear->academic_year_name) }}"
+                                name="academic_year_name"
+                                value="{{ old('academic_year_name', $academyYear->academic_year_name) }}"
                                 id="year-academy-input" placeholder="20XX - 20XX">
                             <div class="row">
                                 <div class="col-6">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend">Start</span>
+                                            <span class="input-group-text" id="inputGroupPrepend">Start <span
+                                                    class="text-small text-danger">*</span></span>
                                         </div>
                                         <span>
                                         </span>
@@ -50,7 +52,8 @@
                                 <div class="col-6">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend">End</span>
+                                            <span class="input-group-text" id="inputGroupPrepend">End <span
+                                                    class="text-small text-danger">*</span></span>
                                         </div>
                                         <input type="date" class="form-control " name="year_end"
                                             value="{{ old('year_end', $academyYear->year_end) }}"id="year_end"
@@ -65,7 +68,8 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="year-academy-input">Status Tahun Ajaran</label>
+                            <label for="year-academy-input">Status Tahun Ajaran <span
+                                    class="text-small text-danger">*</span></label>
                             <select name="status_years" id=""
                                 class="form-control  @error('status_years') is-invalid @enderror">
                                 <option value="">-</option>
