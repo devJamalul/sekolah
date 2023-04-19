@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\WalletDetail;
+use App\Models\WalletLog;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
@@ -20,7 +20,7 @@ class ReportSchoolFinancesExport implements FromView
     public function view(): View
     {
         $request = $this->request;
-        $walletDetail = WalletDetail::with('wallet')->where('wallet_id', $request->wallet_id)
+        $WalletLog = WalletLog::with('wallet')->where('wallet_id', $request->wallet_id)
             ->when($request->has('reportrange'), function ($q) use ($request) {
                 $reportDate = $this->parseDate($request->reportrange);
                 $q->whereBetween('created_at', [
@@ -28,9 +28,9 @@ class ReportSchoolFinancesExport implements FromView
                     $reportDate->transaction_report_end->endOfDay()->format('Y-m-d H:i:s'),
                 ]);
             })
-            ->when(in_array($request->cashflow_type, [WalletDetail::CASHFLOW_TYPE_IN, WalletDetail::CASHFLOW_TYPE_OUT]), function ($q) use ($request) {
+            ->when(in_array($request->cashflow_type, [WalletLog::CASHFLOW_TYPE_IN, WalletLog::CASHFLOW_TYPE_OUT]), function ($q) use ($request) {
                 $q->where('cashflow_type', $request->cashflow_type);
             })->get();
-        return view('exports.report-school-finance', compact('walletDetail'));
+        return view('exports.report-school-finance', compact('WalletLog'));
     }
 }
