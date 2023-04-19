@@ -37,7 +37,8 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body p-3">
-                    <h6> <b>Dana Awal</b> : Rp. {{ number_format($wallet->init_value, 0, ',', '.') }} </h6>
+                    <h6> <b>Dana Awal</b> :
+                        Rp. {{ number_format($wallet->init_value, 0, ',', '.') }} </h6>
                 </div>
             </div>
         </div>

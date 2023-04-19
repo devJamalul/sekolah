@@ -13,7 +13,7 @@
         @php
             $no = 1;
         @endphp
-        @foreach ($walletDetail as $row)
+        @foreach ($WalletLog as $row)
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ $row->wallet->name }}</td>
