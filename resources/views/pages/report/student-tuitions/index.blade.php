@@ -41,7 +41,7 @@
                                     <th>Tahun Ajaran</th>
                                     <th>Tingkatan</th>
                                     <th>Kelas</th>
-                                    <th>Tipe Biaya</th>
+                                    <th>Tipe Uang Sekolah</th>
                                     <th>Tipe Pembayaran</th>
                                     <th>Sisa Bayar</th>
                                     <th>Total Bayar</th>
@@ -272,10 +272,10 @@
                         targets: 4
                     },
                     {
-                        width: 50,
+                        width: 150,
                         targets: 5
                     }, {
-                        width: 50,
+                        width: 150,
                         targets: 6
                     }, {
                         width: 200,

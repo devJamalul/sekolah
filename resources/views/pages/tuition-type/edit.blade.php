@@ -32,7 +32,8 @@
 
                         <input type="hidden" name="school_id" value="{{ session('school_id') }}">
                         <div class="form-group">
-                            <label for="year-academy-input">Tipe Biaya <span class="text-small text-danger">*</span></label>
+                            <label for="year-academy-input">Tipe Uang Sekolah <span
+                                    class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('name') is-invalid @enderror" name="name"
                                 value="{{ old('name', $tuitionType->name) }}" id="year-academy-input">
                             @error('name')
