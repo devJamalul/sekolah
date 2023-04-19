@@ -8,6 +8,7 @@ use App\Models\Expense;
 use Illuminate\Http\Request;
 use App\Models\ExpenseDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ExpenseRequest;
 
 class ExpenseController extends Controller
@@ -47,9 +48,9 @@ class ExpenseController extends Controller
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
+            $expense->status            = Expense::STATUS_PENDING;
             $expense->note              = $request->note;
-            $expense->request_by        = $request->requested_by;
-            $expense->approval_by       = $request->approved_by;
+            $expense->request_by        = Auth::id();
             $expense->save();
 
             DB::commit();
@@ -97,8 +98,7 @@ class ExpenseController extends Controller
             $expense->school_id         = session('school_id');
             $expense->expense_date      = $request->expense_date;
             $expense->note              = $request->note;
-            $expense->request_by        = $request->requested_by;
-            $expense->approval_by       = $request->approved_by;
+            $expense->request_by        = Auth::id();
             $expense->save();
 
             DB::commit();

@@ -36,7 +36,7 @@ class TuitionRequest extends FormRequest
             'academic_year_id' => 'required|exists:academic_years,id',
             'grade_id' => 'required|exists:grades,id',
             'price' => 'required|numeric|gt:0',
-            'requested_by' => 'required|exists:users,id',
+            'requested_by' => 'nullable|exists:users,id',
             'approved_by' => 'nullable|exists:users,id',
         ];
     }
@@ -49,7 +49,7 @@ class TuitionRequest extends FormRequest
             'academic_year_id' => 'required|exists:academic_years,id',
             'grade_id' => 'required|exists:grades,id',
             'price' => 'required|numeric|gt:0',
-            'requested_by' => 'required|exists:users,id',
+            'requested_by' => 'nullable|exists:users,id',
             'approved_by' => 'nullable|exists:users,id',
         ];
     }

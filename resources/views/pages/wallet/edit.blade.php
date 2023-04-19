@@ -22,7 +22,7 @@
                         @method('PUT')
                         @csrf
                         <div class="form-group">
-                            <label for="name-input">Nama Dompet</label>
+                            <label for="name-input">Nama Dompet<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('name') is-invalid @enderror" name="name"
                                 value="{{ old('name', $wallet->name) }}" id="name-input" placeholder="">
                             @error('name')

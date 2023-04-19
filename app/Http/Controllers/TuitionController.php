@@ -10,6 +10,7 @@ use App\Models\TuitionType;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TuitionRequest;
 
 class TuitionController extends Controller
@@ -60,8 +61,7 @@ class TuitionController extends Controller
             $tuition->academic_year_id  = $request->academic_year_id;
             $tuition->grade_id          = $request->grade_id;
             $tuition->price             = $request->price;
-            $tuition->request_by        = $request->requested_by;
-            $tuition->approval_by       = $request->approved_by;
+            $tuition->request_by        = Auth::id();
             $tuition->save();
 
             DB::commit();
@@ -116,8 +116,7 @@ class TuitionController extends Controller
             $tuition->academic_year_id      = $request->academic_year_id;
             $tuition->grade_id              = $request->grade_id;
             $tuition->price                 = $request->price;
-            $tuition->request_by            = $request->requested_by;
-            $tuition->approval_by           = $request->approved_by;
+            $tuition->request_by            = Auth::id();
             $tuition->save();
 
             DB::commit();
