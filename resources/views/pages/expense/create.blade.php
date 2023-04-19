@@ -20,7 +20,7 @@
                     <form action="{{ route('expense.store') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label for="expense-number-input">No Pengeluaran Biaya</label>
+                            <label for="expense-number-input">No Pengeluaran Biaya<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('expense_number') is-invalid @enderror" name="expense_number"
                                 id="expense-number-input" placeholder="" value="Exp/{{date('Y')}}/{{ str_pad($expenseNumber == 0 ? $expenseNumber += 1 : $expenseNumber += 1, 4, '0', STR_PAD_LEFT) }}">
                             @error('expense_number')
@@ -30,7 +30,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="expense-date-input">Tanggal Pengeluaran Biaya</label>
+                            <label for="expense-date-input">Tanggal Pengeluaran Biaya<span class="text-small text-danger">*</span></label>
                             <input type="date" class="form-control @error('expense_date') is-invalid @enderror" name="expense_date"
                                 id="expense-date-input" placeholder="">
                             @error('expense_date')
@@ -49,40 +49,6 @@
                                 </div>
                             @enderror
                         </div>
-                        <div class="form-group">
-                            <label for="requested_by">Permintaan dari</label>
-                            <select class="form-control select2 @error('requested_by') is-invalid @enderror" name="requested_by"
-                                id="requested-by-select">
-                                <option value="">-</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('requested_by')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="approved_by">Disetujui oleh</label>
-                            <select class="form-control select2 @error('approved_by') is-invalid @enderror" name="approved_by"
-                                id="approved-by-select">
-                                <option value="">-</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('approved_by')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
-                        </div> 
                         <button type="submit" class="btn btn-primary">Lanjutkan</button>
                     </form>
                 </div>
