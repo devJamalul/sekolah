@@ -11,7 +11,7 @@ use App\Http\Requests\TuitionTypeRequest;
 class TuitionTypeController extends Controller
 {
 
-    protected $title = 'Tipe Biaya';
+    protected $title = 'Tipe Uang Sekolah';
     /**
      * Display a listing of the resource.
      */

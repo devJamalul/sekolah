@@ -36,7 +36,8 @@
                                 <div class="col-6">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend">Start</span>
+                                            <span class="input-group-text" id="inputGroupPrepend">Start <span
+                                                    class="text-small text-danger">*</span></span>
                                         </div>
                                         <input type="date" class="form-control" name="year_start" id="year_start"
                                             placeholder="awal periode akademik" value="{{ old('year_start') }}">
@@ -45,7 +46,8 @@
                                 <div class="col-6">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupPrepend">End</span>
+                                            <span class="input-group-text" id="inputGroupPrepend">End <span
+                                                    class="text-small text-danger">*</span></span>
                                         </div>
                                         <input type="date" class="form-control " name="year_end" id="year_end"
                                             placeholder="awal periode akademik" value="{{ old('year_end') }}">
@@ -61,7 +63,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="year-academy-input">Status Tahun Ajaran</label>
+                            <label for="year-academy-input">Status Tahun Ajaran <span
+                                    class="text-small text-danger">*</span></label>
                             <select name="status_years" id=""
                                 class="form-control  @error('status_years') is-invalid @enderror">
                                 <option value="">-</option>

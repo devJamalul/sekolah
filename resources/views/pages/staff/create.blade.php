@@ -27,7 +27,7 @@
 
                         <input type="hidden" name="school_id" value="{{ session('school_id') }}">
                         <div class="form-group">
-                            <label for="staff-input">Nama Staff</label>
+                            <label for="staff-input">Nama Staff <span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                                 id="staff-input" value="{{ old('name') }}">
                             @error('name')

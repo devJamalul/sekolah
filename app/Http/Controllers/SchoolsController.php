@@ -56,6 +56,8 @@ class SchoolsController extends Controller
             $school->grade = $request->grade;
             $school->email = $request->email;
             $school->phone = $request->phone;
+            $school->foundation_head_name = $request->foundation_head_name;
+            $school->foundation_head_tlpn = $request->foundation_head_tlpn;
             $school->save();
 
             // PIC
@@ -66,9 +68,15 @@ class SchoolsController extends Controller
             $user->password = bcrypt($user->email);
             $user->save();
 
+            //staff
+            $staff = new Staff();
+            $staff->school_id = $school->getKey();
+            $staff->user_id = $user->id;
+            $staff->name = $user->name;
+            $staff->save();
 
             // assign PIC
-            $school->owner_id = $user->getKey();
+            $school->staff_id = $staff->getKey();
             $school->save();
 
             // assign role
@@ -94,11 +102,10 @@ class SchoolsController extends Controller
     public function edit(School $school)
     {
 
-        $school->load('owner');
-        $schools = School::induk()->whereNotIn('id', [$school->getKey()])->get();
+        $school->load('staf.user');
         $title = "Ubah Sekolah";
         $grade_school =  School::GRADE_SCHOOL;
-        return view('pages.school.edit', compact('schools', 'school', 'title', 'grade_school'));
+        return view('pages.school.edit', compact('school', 'title', 'grade_school'));
     }
 
     /**
@@ -110,6 +117,7 @@ class SchoolsController extends Controller
 
         DB::beginTransaction();
         try {
+            // school
             $school->school_name = $request->school_name;
             $school->school_id = $request->school_id;
             $school->province = $request->province;
@@ -119,7 +127,21 @@ class SchoolsController extends Controller
             $school->grade = $request->grade;
             $school->email = $request->email;
             $school->phone = $request->phone;
+            $school->foundation_head_name = $request->foundation_head_name;
+            $school->foundation_head_tlpn = $request->foundation_head_tlpn;
             $school->save();
+
+            //staff
+            $staff = Staff::find($school->staff_id);
+            $staff->school_id = $school->getKey();
+            $staff->name = $request->name_pic;
+            $staff->save();
+
+            // user
+            $user = User::find($staff->user_id);
+            $user->name = $request->name_pic;
+            $user->email = $request->email_pic;
+            $user->save();
 
             DB::commit();
         } catch (Exception $th) {
