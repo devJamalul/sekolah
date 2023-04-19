@@ -122,7 +122,9 @@
 
                 },
                 columns: columns,
-                fixedColumns: true,
+                fixedColumns: {
+                    rightColumns: 1
+                },
                 columnDefs: [{
                         width: 300,
                         targets: 0
