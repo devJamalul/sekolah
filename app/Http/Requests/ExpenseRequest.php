@@ -36,12 +36,14 @@ class ExpenseRequest extends FormRequest
                 'required',
                 Rule::unique('expenses')->where(function ($q) {
                     $q->where('expense_number', $this->expense_number);
-                    $q->where('school_id',$this->school_id);
+                    $q->where('school_id',  session('school_id'));
+                    $q->whereNull('deleted_at');
                 })
             ],
             'expense_date' => 'required|date',
-            'requested_by' => 'required|exists:users,id',
-            'approved_by' => 'required|exists:users,id',
+            'status'        => 'nullable',
+            'requested_by' => 'nullable|exists:users,id',
+            'approved_by' => 'nullable|exists:users,id',
         ];
     }
 
@@ -49,9 +51,18 @@ class ExpenseRequest extends FormRequest
     {
 
         return [
+            'expense_number'   => [
+                'required',
+                Rule::unique('expenses')->where(function ($q) {
+                    $q->where('expense_number', $this->expense_number);
+                    $q->where('school_id', session('school_id'));
+                    $q->whereNull('deleted_at');
+                })->ignore($this->expense->id, 'id')
+            ],
             'expense_date' => 'required|date',
-            'requested_by' => 'required|exists:users,id',
-            'approved_by' => 'required|exists:users,id',
+            'status'        => 'nullable',
+            'requested_by' => 'nullable|exists:users,id',
+            'approved_by' => 'nullable|exists:users,id',
         ];
     }
 }

@@ -21,7 +21,7 @@
                         @method('PUT')
                         @csrf
                         <div class="form-group">
-                            <label for="grade-input">Tingkat</label>
+                            <label for="grade-input">Tingkat<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('grade_name') is-invalid @enderror" name="grade_name"
                                 value="{{ old('grade_name', $grade->grade_name) }}" id="grade-input" placeholder="1, 2, 3, dsb">
                             @error('grade_name')
