@@ -129,7 +129,31 @@
                         </div>
 
                         <div class="col-6">
-                            <p class="font-weight-bold h5">Informasi Pemilik Sekolah</p>
+                            <p class="font-weight-bold h5">Informasi Pimpinan Sekolah</p>
+                            <hr style="border-top: 1px dashed #2e3a61">
+                            <div class="form-group col-12">
+                                <label>Nama <small class="text-danger">*</small> </label>
+                                <input type="text"
+                                    class="form-control @error('foundation_head_name') is-invalid @enderror"
+                                    name="foundation_head_name" autocomplete="off">
+                                @error('foundation_head_name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-12">
+                                <label>No Tlpn <small class="text-danger">*</small> </label>
+                                <input type="text"
+                                    class="form-control @error('foundation_head_tlpn') is-invalid @enderror"
+                                    name="foundation_head_tlpn" autocomplete="off">
+                                @error('foundation_head_tlpn')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <p class="font-weight-bold h5">Informasi Penanggung Jawab</p>
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>

@@ -22,9 +22,9 @@
                         @method('PUT')
                         @csrf
                         <div class="form-group">
-                            <label for="tuition-type-select">Tipe Biaya</label>
-                            <select class="form-control  @error('tuition_type_id') is-invalid @enderror" name="tuition_type_id"
-                                id="tuition-type-select">
+                            <label for="tuition-type-select">Tipe Uang Sekolah</label>
+                            <select class="form-control  @error('tuition_type_id') is-invalid @enderror"
+                                name="tuition_type_id" id="tuition-type-select">
                                 <option value="">-</option>
                                 @foreach ($tuitionTypes as $tuitionType)
                                     <option value="{{ $tuitionType->id }}" @selected(old('tuition_type_id', $tuition->tuition_type_id) == $tuitionType->id)>
@@ -40,8 +40,8 @@
                         </div>
                         <div class="form-group">
                             <label for="academic-year-select">Tahun Akademik</label>
-                            <select class="form-control  @error('academic_year_id') is-invalid @enderror" name="academic_year_id"
-                                id="academic-year-select">
+                            <select class="form-control  @error('academic_year_id') is-invalid @enderror"
+                                name="academic_year_id" id="academic-year-select">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $academicYear)
                                     <option value="{{ $academicYear->id }}" @selected(old('academic_year_id', $tuition->academic_year_id) == $academicYear->id)>
@@ -75,7 +75,8 @@
                         <div class="form-group">
                             <label for="price-input">Nominal</label>
                             <input type="text" class="form-control  @error('price') is-invalid @enderror" name="price"
-                                value="{{ old('price', $tuition->price) }}" id="price-input" placeholder="" pattern="[0-9]+">
+                                value="{{ old('price', $tuition->price) }}" id="price-input" placeholder=""
+                                pattern="[0-9]+">
                             @error('period')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -84,8 +85,8 @@
                         </div>
                         <div class="form-group">
                             <label for="grade-select">Permintaan dari</label>
-                            <select class="form-control select2 @error('requested_by') is-invalid @enderror" name="requested_by"
-                                id="request-by-select">
+                            <select class="form-control select2 @error('requested_by') is-invalid @enderror"
+                                name="requested_by" id="request-by-select">
                                 <option value="">-</option>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}" @selected(old('requested_by', $tuition->request_by) == $user->id)>

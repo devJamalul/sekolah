@@ -134,13 +134,40 @@
                         </div>
 
                         <div class="col-6">
+                            <p class="font-weight-bold h5">Informasi Pimpinan Sekolah</p>
+                            <hr style="border-top: 1px dashed #2e3a61">
+                            <div class="form-group col-12">
+                                <label>Nama <small class="text-danger">*</small> </label>
+                                <input type="text"
+                                    class="form-control @error('foundation_head_name') is-invalid @enderror"
+                                    name="foundation_head_name" value="{{ $school->foundation_head_name }}"
+                                    autocomplete="off">
+                                @error('foundation_head_name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-12">
+                                <label>No Tlpn <small class="text-danger">*</small> </label>
+                                <input type="text"
+                                    class="form-control @error('foundation_head_tlpn') is-invalid @enderror"
+                                    name="foundation_head_tlpn" value="{{ $school->foundation_head_tlpn }}"
+                                    autocomplete="off">
+                                @error('foundation_head_tlpn')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
                             <p class="font-weight-bold h5">Informasi Penanggung Jawab</p>
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control @error('name_pic') is-invalid @enderror"
-                                    name="name_pic" value="{{ old('name_pic', $school->owner?->name) }}" autocomplete="off"
-                                    readonly>
+                                    name="name_pic" value="{{ $school->staf?->user?->name }}" readonly
+                                    autocomplete="off">
                                 @error('name_pic')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -149,9 +176,9 @@
                             </div>
                             <div class="form-group col-12">
                                 <label>Email <small class="text-danger">*</small> </label>
-                                <input type="email" class="form-control @error('email_pic') is-invalid @enderror"
-                                    name="email_pic" value="{{ old('email_pic', $school->owner?->email) }}"
-                                    autocomplete="off" readonly>
+                                <input type="email" value="{{ $school->staf?->user?->email }}"
+                                    class="form-control @error('email_pic') is-invalid @enderror" readonly
+                                    name="email_pic" autocomplete="off">
                                 @error('email_pic')
                                     <div class="invalid-feedback">
                                         {{ $message }}

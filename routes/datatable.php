@@ -49,4 +49,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('transaction-report', TransactionReportDatatables::class)->name('transaction-report');
 
     Route::get('wallet', [App\Http\Controllers\Datatables\WalletDatatables::class, 'index'])->name('wallet');
+
+    Route::get('report-school-finances', App\Http\Controllers\Datatables\ReportSchoolFinancesDatatables::class)->name('report-school-finances');
 });

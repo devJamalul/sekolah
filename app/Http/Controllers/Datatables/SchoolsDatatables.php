@@ -14,7 +14,7 @@ class SchoolsDatatables extends Controller
      */
     public function __invoke(Request $request)
     {
-        $academyYear = School::with('parent', 'owner');
+        $academyYear = School::with('parent', 'staf.user');
         return DataTables::of($academyYear)
             ->addColumn('action', function (School $row) {
                 $data = [
@@ -24,13 +24,20 @@ class SchoolsDatatables extends Controller
                 ];
                 return view('components.datatable-action', $data);
             })
-            ->addColumn('pic_name', fn ($row) => $row->owner?->name ?? '-')
-            ->addColumn('pic_email', fn ($row) => $row->owner?->email ?? '-')
-            ->editColumn('type', function ($row) {
-                return str($row->type)->title();
-            })
+            ->addColumn('pic_name', fn ($row) => $row->staf?->user?->name ?? '-')
+            ->addColumn('pic_email', fn ($row) => $row->staf?->user?->email ?? '-')
             ->editColumn('induk', function ($row) {
                 return $row?->parent?->school_name ?? '-';
+            })
+            ->filterColumn('pic_name', function ($query, $keyword) {
+                $query->whereHas('staf.user', function ($q) use ($keyword) {
+                    $q->where('name', 'like', '%' . $keyword . '%');
+                });
+            })
+            ->filterColumn('pic_email', function ($query, $keyword) {
+                $query->whereHas('staf.user', function ($q) use ($keyword) {
+                    $q->where('email', 'like', '%' . $keyword . '%');
+                });
             })
             ->startsWithSearch(false)
             ->toJson();
