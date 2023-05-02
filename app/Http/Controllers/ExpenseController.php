@@ -70,7 +70,7 @@ class ExpenseController extends Controller
     {
         $title = "Tambah Detail Pengeluaran Biaya";
         $wallets = Wallet::where('school_id', session('school_id'))->get();
-        $expenseDetails = ExpenseDetail::all();
+        $expenseDetails = $expense->expense_details;
         return view('pages.expense.detail.create', compact('title', 'wallets', 'expenseDetails', 'expense'));
     }
 

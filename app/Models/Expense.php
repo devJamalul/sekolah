@@ -28,7 +28,7 @@ class Expense extends Model
         static::addGlobalScope(new ExpenseScope);
     }
 
-    public function expense_detail(): HasMany
+    public function expense_details(): HasMany
     {
         return $this->hasMany(ExpenseDetail::class);
     }

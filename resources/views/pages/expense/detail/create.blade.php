@@ -22,7 +22,7 @@
                         @csrf
                         <div class="form-group">
                             <label for="wallet-input">Nama Dompet<span class="text-small text-danger">*</span></label>
-                            <select class="form-control select2 @error('wallet') is-invalid @enderror" name="wallet_id"
+                            <select class="form-control select2 @error('wallet_id') is-invalid @enderror" name="wallet_id"
                             id="requested-by-select">
                             <option value="">-</option>
                             @foreach ($wallets as $wallet)
@@ -31,7 +31,7 @@
                                 </option>
                             @endforeach
                             </select>
-                            @error('wallet')
+                            @error('wallet_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
