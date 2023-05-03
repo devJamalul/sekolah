@@ -16,13 +16,19 @@ class Expense extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+    
+    const STATUS_APPROVED   = "approved";
+
+    const STATUS_PENDING    = "pending";
+
+    const STATUS_REJECTED   = "rejected";
 
     protected static function booted()
     {
         static::addGlobalScope(new ExpenseScope);
     }
 
-    public function expense_detail(): HasMany
+    public function expense_details(): HasMany
     {
         return $this->hasMany(ExpenseDetail::class);
     }

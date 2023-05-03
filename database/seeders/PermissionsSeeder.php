@@ -21,6 +21,8 @@ use Database\Seeders\Permissions\SchoolSelectorSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
+use Database\Seeders\Permissions\InvoiceDetailSeeder;
+use Database\Seeders\Permissions\InvoiceSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
 use Database\Seeders\Permissions\TransactionReportSeeder;
 
@@ -63,7 +65,9 @@ class PermissionsSeeder extends Seeder
             AssignClassroomStaffSeeder::class,
             ExpenseSeeder::class,
             TransactionReportSeeder::class,
-            WalletSeeder::class
+            WalletSeeder::class,
+            InvoiceSeeder::class,
+            InvoiceDetailSeeder::class,
         ]);
     }
 }

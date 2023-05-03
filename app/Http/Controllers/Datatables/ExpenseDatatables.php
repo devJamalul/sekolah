@@ -17,8 +17,12 @@ class ExpenseDatatables extends Controller
             ->editColumn('request_by', function ($row){
                 return $row->requested_by->name;
             })
-            ->editColumn('approval_by', function ($row){
-                return $row->approved_by->name;
+            ->editColumn('status', function ($row){
+                return match ($row->status) {
+                    Expense::STATUS_APPROVED => '<span class="badge badge-success">Disetujui</span>',
+                    Expense::STATUS_PENDING => '<span class="badge badge-warning">Pending</span>',
+                    Expense::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>'
+                };
             })
             ->editColumn('is_sempoa_processed', function ($row){
                 return $row->is_sempoa_processed == 0 ? 'Belum' : 'Sudah';
@@ -33,10 +37,13 @@ class ExpenseDatatables extends Controller
                         [
                             'label' => 'Detail',
                             'url' => route('expense.show', ['expense' => $row->id])
-                        ]
+                        ],
                     ]
                 ];
                 return view('components.datatable-action', $data);
-            })->toJson();
+                
+            })
+            ->rawColumns(['status', 'action'])
+            ->toJson();
     }
 }

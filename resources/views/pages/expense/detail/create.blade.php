@@ -21,8 +21,8 @@
                         <input type="hidden" name="expense_id" id="expense_id" value="{{ $expense->id }}">
                         @csrf
                         <div class="form-group">
-                            <label for="wallet-input">Nama Dompet</label>
-                            <select class="form-control select2 @error('wallet') is-invalid @enderror" name="wallet_id"
+                            <label for="wallet-input">Nama Dompet<span class="text-small text-danger">*</span></label>
+                            <select class="form-control select2 @error('wallet_id') is-invalid @enderror" name="wallet_id"
                             id="requested-by-select">
                             <option value="">-</option>
                             @foreach ($wallets as $wallet)
@@ -31,14 +31,14 @@
                                 </option>
                             @endforeach
                             </select>
-                            @error('wallet')
+                            @error('wallet_id')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="item-name-input">Nama Barang</label>
+                            <label for="item-name-input">Nama Barang<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('item_name') is-invalid @enderror" name="item_name"
                                 id="item-name-input" placeholder="">
                             @error('item_name')
@@ -48,7 +48,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="quantity-input">Kuantitas Barang</label>
+                            <label for="quantity-input">Kuantitas Barang<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('quantity') is-invalid @enderror" name="quantity"
                                 id="quantity-input" placeholder="">
                             @error('quantity')
@@ -58,7 +58,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="price-input">Harga Barang</label>
+                            <label for="price-input">Harga Barang<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
                                 id="price-input" placeholder="" pattern="[0-9]+">
                             @error('price')

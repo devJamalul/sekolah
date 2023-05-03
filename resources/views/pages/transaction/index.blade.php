@@ -6,7 +6,7 @@
   <div class="row">
 
     {{-- start table schools --}}
-    <div class="col-lg-12">
+    <div class="col-lg-6">
       <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
       </div>
