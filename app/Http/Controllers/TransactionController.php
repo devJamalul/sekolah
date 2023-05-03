@@ -22,7 +22,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $data['title'] = "Transaksi";
+        $data['title'] = "Transaksi Pembayaran Sekolah";
         return view('pages.transaction.index', $data);
     }
 
@@ -49,7 +49,7 @@ class TransactionController extends Controller
         );
         session(['transaction_keyword' => $request->name]);
 
-        $data['title'] = "Keyword : " . $request->name;
+        $data['title'] = "Transaksi Pembayaran Sekolah | Keyword : " . $request->name;
         return view('pages.transaction.list', $data);
     }
 
@@ -58,7 +58,7 @@ class TransactionController extends Controller
      */
     public function show(Student $transaction)
     {
-        $data['title'] = "Transaksi : " . $transaction->name;
+        $data['title'] = "Transaksi Pembayaran Sekolah : " . $transaction->name;
         $data['student'] = $transaction;
         $data['student_tuitions'] = $transaction->student_tuitions()->whereIn('status', [
             StudentTuition::STATUS_PENDING, StudentTuition::STATUS_PARTIAL
