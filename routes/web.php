@@ -25,6 +25,7 @@ use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Reports\StudentReport;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,13 +61,8 @@ Route::group([], function () {
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
     Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
-
-    Route::get('students/export', [StudentsController::class, 'export'])->name('students.export');
-    Route::post('students/export/report', [StudentsController::class, 'exportStudentReport'])->name('students.exportStudentReport');
-
     Route::resource('students', StudentsController::class);
     Route::resource('students/{id}/tuition-master', StudentTuitionMasterController::class);
-    // End Student
 
     // Tuition Type
     Route::resource("tuition-type", TuitionTypeController::class)->except(['show']);
@@ -119,6 +115,15 @@ Route::group([], function () {
     Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances');
     Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances');
     Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('export-report-school-finances');
+});
+
+Route::prefix('reports')->group(function () {
+
+    // Report Student
+    Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
+    Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
+    Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
+
 });
 
 Route::group([], function () {

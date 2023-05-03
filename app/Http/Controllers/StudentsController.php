@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Excel;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
@@ -284,40 +285,5 @@ class StudentsController extends Controller
             DB::rollBack();
             return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data siswa!");
         }
-    }
-
-    public function export()
-    {
-        $academicYears = AcademicYear::where('school_id', session('school_id'))->get();
-        $grades = Grade::where('school_id', session('school_id'))->get();
-        $classrooms = Classroom::where('school_id', session('school_id'))->get();
-
-        $data = [
-            'academic_years' => $academicYears,
-            'grades' => $grades,
-            'classrooms' => $classrooms,
-            'title' => "Ekspor Data Siswa",
-        ];
-
-        return view('pages.students.export', $data);
-    }
-
-    public function exportStudentReport(Request $request)
-    {
-        // dd($request->all());
-        $student  = Student::where('school_id', session('school_id'));
-
-        $student->when($request->academic_year, function($query, $academic_year){
-            $query->where('academic_year', $academic_year);
-        });
-
-        // $student->when($request->academic_year, function($query, $academic_year){
-        //     $query->where('academic_year', $academic_year);
-        // });
-
-        $student->get();
-        dd($student);
-
-        return "Berhasil";
     }
 }

@@ -18,7 +18,7 @@
     {{-- Content --}}
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('students.exportStudentReport') }}" method="post">
+            <form action="{{ route('reports.students.export') }}" method="post">
               @csrf
 
               {{-- Academic Year Select --}}
@@ -60,15 +60,10 @@
               {{-- End Grade Select --}}
 
               {{-- Classroom Select --}}
-              <div class="col">
+              <div id="classroomSection" class="col d-none">
                 <div class="form-group">
                   <label for="classroom">Berdasarkan Ruang Kelas</label>
-                  <select id="classroom" name="classroom" class="select2 form-control">
-                    <option value="" selected>--- Pilih ---</option>
-                    @foreach ($classrooms as $classroom)
-                      <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
-                    @endforeach
-                  </select>
+                  <select id="classroom" name="classroom" class="select2 form-control"></select>
                   @error('classroom')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -79,8 +74,8 @@
               {{-- End Classroom Select --}}
 
               <div>
-                <button type="submit" class="btn btn-primary">Ekspor Excel</button>
-                <button type="submit" class="btn btn-primary">Ekspor PDF</button>
+                <button type="submit" name="action" value="excel" class="btn btn-primary">Ekspor Excel</button>
+                <button type="submit" name="action" value="pdf" class="btn btn-primary">Ekspor PDF</button>
               </div>
 
             </form>
@@ -92,18 +87,59 @@
 
   @push('js')
   <script>
-    // var academicYearSection = $('#select_academic_year_section')
-    // var gradeSection = $('#select_grade_section')
+    const classroomSection = $('#classroomSection')
 
-    // $('#academic_year').on('select2:select', function (e) {
-    //     var data = e.params.data;
-    //     console.log(e.params.data.id != "");
-    //     if (e.params.data.id) {
-    //       gradeSection.removeClass('d-none')
-    //     } else {
-    //       gradeSection.addClass('d-none')
-    //     }
-    // });
+    var academicYearValue = ""
+    var gradeValue = ""
+    var classroomValue = ""
+
+    $('#academic_year').on('select2:select', function (e) {
+        academicYearValue = e.params.data.id;
+        getClassroomData()
+    });
+
+    $('#grade').on('select2:select', function (e) {
+        gradeValue = e.params.data.id;
+        getClassroomData()
+    });
+
+    async function getClassroomData(){
+      if (academicYearValue != "" || gradeValue != "") classroomSection.removeClass('d-none') // Show Classroom Input Section
+      if (academicYearValue == "" && gradeValue == "") classroomSection.addClass('d-none') // Hide Classroom Input Section
+
+      const getData = await fetch(route('reports.students.getClassroomByFilter'), {
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "data": 'asdasd',
+          academic_year: academicYearValue,
+          grade: gradeValue,
+          classroom: classroomValue,
+        })
+      })
+      const response = await getData.json()
+
+      // Remove all Classroom Options
+      $('#classroom')
+        .empty()
+        .append('<option value="" selected>--- Pilih ---</option>')
+      // End Remove all Classroom Options
+
+      // Populate Select Option 
+      if (response?.classrooms?.length > 0) {
+        response.classrooms.forEach(classroom => {
+          $('#classroom')
+            .append($("<option></option>")
+              .attr("value", classroom.id)
+              .text(classroom.name));
+        });
+      }
+      // End Populate Select Option 
+      
+    }
   </script>
   @endpush
     

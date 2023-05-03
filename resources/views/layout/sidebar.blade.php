@@ -162,6 +162,12 @@
                         Transaksi
                     </a>
                 @endcan
+                @can('students.report')
+                    <a href="{{ route('reports.students') }}"
+                        class="collapse-item {{ Request::is('reports.students') || Request::is('reports.students/*') ? 'active' : '' }}">
+                        Siswa
+                    </a>
+                @endcan
             </div>
         </div>
     </li>

@@ -12,7 +12,6 @@
             <div>
                 <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
                 <a href="{{ route('students.import') }}" class="btn btn-success btn-sm mr-2">Impor Excel</a>
-                <a href="{{ route('students.export') }}" class="btn btn-warning btn-sm">Ekspor</a>
             </div>
         </div>
         
