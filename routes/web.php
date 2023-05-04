@@ -17,6 +17,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\ExpenseDetailController;
+use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\TransactionReportController;
@@ -101,6 +102,7 @@ Route::group([], function () {
     // Expense
     Route::resource('expense', ExpenseController::class);
     Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
+    Route::resource("expense-report", ExpenseReportController::class)->only(['index', 'store']);
 
     //staff
     Route::resource("staff", StaffController::class)->except(['show']);
