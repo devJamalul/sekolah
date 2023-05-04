@@ -125,17 +125,21 @@
       // Remove all Classroom Options
       $('#classroom')
         .empty()
-        .append('<option value="" selected>--- Pilih ---</option>')
       // End Remove all Classroom Options
 
       // Populate Select Option 
       if (response?.classrooms?.length > 0) {
+        $('#classroom').append(`<option value="" selected>--- Pilih ---</option>`)
+
         response.classrooms.forEach(classroom => {
           $('#classroom')
             .append($("<option></option>")
               .attr("value", classroom.id)
               .text(classroom.name));
-        });
+          });
+      } else {
+        $('#classroom')
+          .append(`<option value="" selected>Tidak ada data</option>`)
       }
       // End Populate Select Option 
       
