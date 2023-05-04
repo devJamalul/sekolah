@@ -59,7 +59,7 @@
         endDate: end,
         ranges: {
           'Hari Ini': [moment(), moment()],
-          'Kemaren': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
           '7 Hari Terakhir': [moment().subtract(6, 'days'), moment()],
           '30 Hari Terakhir': [moment().subtract(29, 'days'), moment()],
           'Bulan Ini': [moment().startOf('month'), moment().endOf('month')],
