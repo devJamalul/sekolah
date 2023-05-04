@@ -61,7 +61,7 @@
                   <div class="col">
                     <div class="form-group">
                       <label for="dob">Tanggal Lahir<span class="text-small text-danger">*</span> </label>
-                      <input type="date" name="dob" id="dob" value="{{ old('dob', $student->dob) }}" class="form-control @error('dob') is-invalid @enderror" required>
+                      <input type="date" name="dob" id="dob" value="{{ old('dob', \Carbon\Carbon::parse($student->dob)->format('Y-m-d')) }}" class="form-control @error('dob') is-invalid @enderror" required>
                       @error('dob')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -282,6 +282,10 @@
                       <div class="form-group">
                         <label for="father_address">Alamat Ayah</label>
                         <textarea name="father_address" id="father_address" rows="4" class="form-control @error('father_address') is-invalid @enderror">{{ old('father_address', $student->father_address) }}</textarea>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="father_address_checkbox" id="father_address_checkbox">
+                          <label class="form-check-label" for="father_address_checkbox">Alamat Ayah sama dengan Alamat Siswa </label>
+                        </div>
                         @error('father_address')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -338,6 +342,10 @@
                       <div class="form-group">
                         <label for="mother_address">Alamat Ibu</label>
                         <textarea name="mother_address" id="mother_address" rows="4" class="form-control @error('mother_address') is-invalid @enderror">{{ old('mother_address', $student->mother_address) }}</textarea>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="mother_address_checkbox" id="mother_address_checkbox">
+                          <label class="form-check-label" for="mother_address_checkbox">Alamat Ibu sama dengan Alamat Siswa </label>
+                        </div>
                         @error('mother_address')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -394,6 +402,10 @@
                       <div class="form-group">
                         <label for="guardian_address">Alamat Wali</label>
                         <textarea name="guardian_address" id="guardian_address" rows="4" class="form-control @error('guardian_address') is-invalid @enderror">{{ old('guardian_address', $student->guardian_address) }}</textarea>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="guardian_address_checkbox" id="guardian_address_checkbox">
+                          <label class="form-check-label" for="guardian_address_checkbox">Alamat Wali sama dengan Alamat Siswa </label>
+                        </div>
                         @error('guardian_address')
                           <div class="invalid-feedback">
                               {{ $message }}
@@ -440,8 +452,6 @@
                       <label for="file_photo" class="font-weight-bold">Foto Siswa</label>
                     </div>
 
-                    {{-- @if ($student->file_photo)
-                    @endif --}}
                     <img src="{{ $student->file_photo }}" id="file_photo_preview" class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
 
                     <div class="custom-file">
@@ -464,9 +474,6 @@
                     </div>
                     
                     <img src="{{ $student->file_birth_certificate }}" id="file_birth_certificate_preview" class="img-thumbnail img-fluid col-md-3" alt="Student's Birth Certificate">
-                    {{-- @if ($student->file_birth_certificate)
-                    @endif --}}
-                    
                     <div class="custom-file">
                       <input type="file" accept="image/*" class="custom-file-input @error('file_birth_certificate') is-invalid @enderror" name="file_birth_certificate" id="file_birth_certificate">
                       <label class="custom-file-label" for="file_birth_certificate" id="birth_certificate_label" data-browse="Pilih Berkas">Unggah Berkas...</label>
@@ -487,9 +494,6 @@
                     </div>
                     
                     <img src="{{ $student->file_family_card }}" id="file_family_card_preview" class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
-                    {{-- @if ($student->file_family_card)
-                    @endif --}}
-                    
                     <div class="custom-file">
                       <input type="file" accept="image/*" class="custom-file-input @error('file_family_card') is-invalid @enderror" name="file_family_card" id="file_family_card">
                       <label class="custom-file-label" for="file_family_card" data-browse="Pilih Berkas">Unggah Berkas...</label>
@@ -521,32 +525,108 @@
 
   @push('js')
   <script>
-    document.querySelector('#file_birth_certificate').addEventListener('change',function(e){
-      var file = document.getElementById("file_birth_certificate").files[0];
 
-      const preview = document.querySelector('#file_birth_certificate_preview')
-      preview.src = URL.createObjectURL(file)
+    // Track Addresses
+      var studentAddressValue = ""
 
-      e.target.nextElementSibling.innerText = file.name
-    })
+      const studentAddressInput = document.querySelector('#address')
+      const fatherAddressInput = document.querySelector('#father_address')
+      const fatherAddressCheckbox = document.querySelector('#father_address_checkbox')
+      const motherAddressInput = document.querySelector('#mother_address')
+      const motherAddressCheckbox = document.querySelector('#mother_address_checkbox')
+      const guardianAddressInput = document.querySelector('#guardian_address')
+      const guardianAddressCheckbox = document.querySelector('#guardian_address_checkbox')
 
-    document.querySelector('#file_photo').addEventListener('change',function(e){
-      var file = document.getElementById("file_photo").files[0];
+      studentAddressInput.addEventListener('change', (event) => {
+        studentAddressValue = event.target.value
 
-      const preview = document.querySelector('#file_photo_preview')
-      preview.src = URL.createObjectURL(file)
+        if (fatherAddressCheckbox.checked) fatherAddressInput.value = studentAddressValue
+        if (motherAddressCheckbox.checked) motherAddressInput.value = studentAddressValue
+        if (guardianAddressCheckbox.checked) guardianAddressInput.value = studentAddressValue
+      })
 
-      e.target.nextElementSibling.innerText = file.name
-    })
-    
-    document.querySelector('#file_family_card').addEventListener('change',function(e){
-      var file = document.getElementById("file_family_card").files[0];
+      fatherAddressCheckbox.addEventListener('change', (event) => {
+        fatherAddressInput.value = studentAddressValue;
 
-      const preview = document.querySelector('#file_family_card_preview')
-      preview.src = URL.createObjectURL(file)
+        if (event.target.checked) {
+          fatherAddressInput.disabled = true
+        } else {
+          fatherAddressInput.disabled = false
+          fatherAddressInput.value = ""
+        }
+      })
+      
+      motherAddressCheckbox.addEventListener('change', (event) => {
+        motherAddressInput.value = studentAddressValue;
 
-      e.target.nextElementSibling.innerText = file.name
-    })
+        if (event.target.checked) {
+          motherAddressInput.disabled = true
+        } else {
+          motherAddressInput.disabled = false
+          motherAddressInput.value = ""
+        }
+      })
+
+      guardianAddressCheckbox.addEventListener('change', (event) => {
+        guardianAddressInput.value = studentAddressValue;
+
+        if (event.target.checked) {
+          guardianAddressInput.disabled = true
+        } else {
+          guardianAddressInput.disabled = false
+          guardianAddressInput.value = ""
+        }
+      })
+    // Track Addresses
+
+    // Files Input
+      document.querySelector('#file_birth_certificate').addEventListener('change',function(e){
+        var file = document.getElementById("file_birth_certificate").files[0];
+
+        const preview = document.querySelector('#file_birth_certificate_preview')
+        preview.src = URL.createObjectURL(file)
+
+        e.target.nextElementSibling.innerText = file.name
+      })
+
+      document.querySelector('#file_photo').addEventListener('change',function(e){
+        var file = document.getElementById("file_photo").files[0];
+
+        const preview = document.querySelector('#file_photo_preview')
+        preview.src = URL.createObjectURL(file)
+
+        e.target.nextElementSibling.innerText = file.name
+      })
+      
+      document.querySelector('#file_family_card').addEventListener('change',function(e){
+        var file = document.getElementById("file_family_card").files[0];
+
+        const preview = document.querySelector('#file_family_card_preview')
+        preview.src = URL.createObjectURL(file)
+
+        e.target.nextElementSibling.innerText = file.name
+      })
+    // End Files Input
+
+    function init(params) {
+      studentAddressValue = studentAddressInput.value
+      if (fatherAddressInput.value == studentAddressValue) {
+        fatherAddressInput.value = studentAddressValue
+        fatherAddressCheckbox.checked = true
+        fatherAddressInput.disabled = true
+      } 
+      if (motherAddressInput.value == studentAddressValue) {
+        motherAddressInput.value = studentAddressValue
+        motherAddressCheckbox.checked = true
+        motherAddressInput.disabled = true
+      }
+      if (guardianAddressInput.value == studentAddressValue) {
+        guardianAddressInput.value = studentAddressValue
+        guardianAddressCheckbox.checked = true
+        guardianAddressInput.disabled = true
+      }
+    }
+    init()
   </script>
   @endpush
     
