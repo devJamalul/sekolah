@@ -140,9 +140,14 @@ class StudentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Student $student)
     {
-        //
+        $data = [
+            'student' => $student,
+            'title' => "Ubah Data Siswa",
+        ];
+
+        return view('pages.students.detail', $data);
     }
 
     /**
