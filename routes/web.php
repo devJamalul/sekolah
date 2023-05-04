@@ -26,6 +26,7 @@ use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\InvoiceDetailController;
@@ -127,6 +128,8 @@ Route::group([], function () {
     Route::get('invoices/{invoice}/publish', PublishInvoiceController::class)->name('invoices.publish');
     Route::get('invoices/{invoice}/pay', [PayInvoiceController::class, 'index'])->name('invoices.pay');
     Route::post('invoices/{invoice}/pay', [PayInvoiceController::class, 'store'])->name('invoices.payment')->middleware('password.confirm');
+    Route::get('invoices/{invoice}/void', [VoidInvoiceController::class, 'index'])->name('invoices.void');
+    Route::post('invoices/{invoice}/void', [VoidInvoiceController::class, 'store'])->name('invoices.voidment')->middleware('password.confirm');
     Route::controller(InvoiceDetailController::class)->prefix('invoices')->name('invoice-details.')->group(function () {
         Route::get('/{invoice}/detail', 'index')->name('index');
         Route::post('/{invoice}/detail', 'store')->name('store');

@@ -13,6 +13,7 @@
 <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('vendor/select2/select2.min.js') }}"></script>
+<script src="{{ asset('js/autoNumeric.js') }}"></script>
 
 <script>
     $(".select2").select2({

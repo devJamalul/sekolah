@@ -37,7 +37,11 @@ class InvoiceDatatables extends Controller
                         [
                             'label' => 'Bayar',
                             'url' => route('invoices.pay', ['invoice' => $row->id]),
-                        ]
+                        ],
+                        [
+                            'label' => 'Void',
+                            'url' => route('invoices.void', ['invoice' => $row->id]),
+                        ],
                     ]
                 ];
                 return view('components.datatable-action', $data);
@@ -52,6 +56,7 @@ class InvoiceDatatables extends Controller
                     Invoice::STATUS_PAID => '<span class="badge badge-success">Lunas</span>',
                     Invoice::STATUS_PENDING => '<span class="badge badge-secondary">Belum Lunas</span>',
                     Invoice::STATUS_PARTIAL => '<span class="badge badge-primary">Partial</span>',
+                    Invoice::VOID => '<span class="badge badge-dark">Void</span>',
                 };
 
                 $result .= match ($invoice->due_date < now() && $invoice->is_posted != Invoice::POSTED_DRAFT && $invoice->payment_status != Invoice::STATUS_PAID) {
@@ -66,6 +71,7 @@ class InvoiceDatatables extends Controller
                     Invoice::POSTED_DRAFT => '<span class="badge badge-secondary">Draft</span',
                     Invoice::POSTED_PUBLISHED => '<span class="badge badge-success">Terbit</span',
                     Invoice::POSTED_SENT => '<span class="badge badge-success">Terbit & Terkirim</span',
+                    Invoice::VOID => '<span class="badge badge-dark">Void</span>',
                 };
             })
             ->rawColumns(['invoice_number', 'payment_status', 'is_posted'])

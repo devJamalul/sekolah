@@ -35,16 +35,16 @@ class WalletController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $wallet                 = new Wallet();
             $wallet->school_id      = session('school_id');
             $wallet->name           = $request->name;
-            $wallet->init_value     = $request->init_value;
+            $wallet->init_value     = formatAngka($request->init_value);
             $wallet->last_balance   = 0;
             $wallet->save();
 
             DB::commit();
-            
+
 
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -79,7 +79,7 @@ class WalletController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $wallet->school_id  = session('school_id');
             $wallet->name       = $request->name;
             $wallet->save();
@@ -102,7 +102,7 @@ class WalletController extends Controller
        DB::beginTransaction();
 
        try {
-        
+
         $wallet->delete();
         DB::commit();
 

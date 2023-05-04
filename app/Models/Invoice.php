@@ -20,6 +20,8 @@ class Invoice extends Model
     const POSTED_PUBLISHED = "terbit";
     const POSTED_SENT = "terkirim";
 
+    const VOID = "void";
+
     protected $guarded = [];
 
     protected $with = [
@@ -28,6 +30,7 @@ class Invoice extends Model
 
     protected $casts = [
         'sempoa_processed' => 'boolean',
+        'is_original' => 'boolean',
         'invoice_date' => 'datetime:Y-m-d',
         'due_date' => 'datetime:Y-m-d',
         'price' => 'integer'

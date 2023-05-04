@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="price-input">Harga Barang<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
-                                id="price-input" placeholder="" pattern="[0-9]+" value="{{ $expenseDetail->price }}">
+                                id="price-input" placeholder="" value="{{ $expenseDetail->price }}">
                             @error('price')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -78,3 +78,10 @@
     {{-- END ROW --}}
 
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#price-input')
+    formatAngka('#quantity-input')
+  </script>
+@endpush

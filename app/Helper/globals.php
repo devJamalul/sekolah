@@ -11,7 +11,7 @@ function getConfigBySchool($code,$school_id){
             'status' => 200,
             'data' =>$data
         ];
-        
+
     }else{
         $result = [
             'status' => 404,
@@ -19,4 +19,9 @@ function getConfigBySchool($code,$school_id){
         ];
     }
     return json_encode($result);
+}
+
+function formatAngka(string $nominal): int
+{
+    return (int) str_replace(".", "", $nominal);
 }

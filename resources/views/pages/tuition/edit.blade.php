@@ -75,8 +75,7 @@
                         <div class="form-group">
                             <label for="price-input">Nominal<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('price') is-invalid @enderror" name="price"
-                                value="{{ old('price', $tuition->price) }}" id="price-input" placeholder=""
-                                pattern="[0-9]+">
+                                value="{{ old('price', $tuition->price) }}" id="price-input">
                             @error('period')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -93,3 +92,9 @@
     </div>
     {{-- END ROW --}}
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#price-input')
+  </script>
+@endpush

@@ -45,7 +45,7 @@
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label for="invoice_number">No. Invoice<span class="text-small text-danger">*</span></label>
+                  <label for="invoice_number">No. Invoice</label>
                   <input type="text" class="form-control @error('invoice_number') is-invalid @enderror" name="invoice_number"
                     id="invoice_number" value="{{ old('invoice_number') }}" autocomplete="off" tabindex="2">
                   @error('invoice_number')

@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="price-input">Harga Barang<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
-                                id="price-input" placeholder="" pattern="[0-9]+">
+                                id="price-input">
                             @error('price')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -84,6 +84,10 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                            $jumlahBarang = 0;
+                            $totalHarga = 0;
+                        @endphp
                         @foreach ($expenseDetails as $expenseDetail)
                             <tr>
                                 <td>{{$expenseDetail->wallet->name}}</td>
@@ -91,17 +95,28 @@
                                 <td>{{ number_format($expenseDetail->quantity, 0, ',', '.') }}</td>
                                 <td>Rp. {{ number_format($expenseDetail->price, 0, ',', '.') }}</td>
                                 <td>
-                                    <a class="btn btn-warning" href="{{ route('expense-detail.edit', $expenseDetail->id) }}">Ubah</a> 
-                                    <button class="btn btn-danger" 
-                                    onclick="softDelete(this)" 
-                                    value="{{ $expenseDetail->id }}" 
+                                    <a class="btn btn-warning" href="{{ route('expense-detail.edit', $expenseDetail->id) }}">Ubah</a>
+                                    <button class="btn btn-danger"
+                                    onclick="softDelete(this)"
+                                    value="{{ $expenseDetail->id }}"
                                     data-redirect="{{ route('expense.show', $expenseDetail->expense->id) }}"
                                     data-url="{{ route('expense-detail.destroy', $expenseDetail->id) }}">Hapus</button>
                                 </td>
                             </tr>
+                            @php
+                                $jumlahBarang += $expenseDetail->quantity;
+                                $totalHarga += $expenseDetail->price;
+                            @endphp
                         @endforeach
                     </tbody>
-                </table> 
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" class="text-right text-primary font-weight-bold">Total</td>
+                            <td class="text-primary font-weight-bold">{{ number_format($jumlahBarang, 0, ',', '.') }}</td>
+                            <td class="text-primary font-weight-bold">Rp. {{ number_format($totalHarga, 0, ',', '.') }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
 
@@ -115,11 +130,11 @@
 <script>
 
     function softDelete(e) {
-    
+
         const url = $(e).data('url')
         const name = $(e).data('name') ?? ''
         const redirect = $(e).data('redirect')
-    
+
         Swal.fire({
             title: 'Apakah anda yakin?',
             text: 'Untuk menghapus data ' + name,
@@ -164,9 +179,9 @@
             }
         })
     }
-    
-    
-    
+
+
+
     function toastMessage(status, msg) {
         Swal.fire({
             "title": msg,
@@ -196,7 +211,14 @@
             "icon": status,
             "position": "top-end"
         })
-    
+
     }
 </script>
+@endpush
+
+@push('js')
+  <script>
+    formatAngka('#price-input')
+    formatAngka('#quantity-input')
+  </script>
 @endpush

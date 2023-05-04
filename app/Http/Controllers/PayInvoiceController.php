@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PayInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Wallet;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -16,7 +15,6 @@ class PayInvoiceController extends Controller
      */
     public function index(Invoice $invoice)
     {
-        // dd($invoice->invoice_details);
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya masih DRAFT
@@ -36,14 +34,6 @@ class PayInvoiceController extends Controller
         $data['invoice'] = $invoice;
         $data['wallets'] = Wallet::all();
         return view('pages.invoices.payment.index', $data);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -83,37 +73,5 @@ class PayInvoiceController extends Controller
             return redirect()->back()->withToastError('Ups, terjadi kesalahan saat publish invoice!');
         }
         return to_route('invoices.index')->withToastSuccess('Invoice berhasil dibayarkan!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Invoice $invoice)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Invoice $invoice)
-    {
-        //
     }
 }
