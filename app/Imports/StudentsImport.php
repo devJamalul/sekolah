@@ -13,13 +13,6 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 
 class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
 {
-    private $school_id;
-
-    public function __construct(string $school_id)
-    {
-        $this->school_id = $school_id;
-    }
-
     /**
     * @param Collection $collection
     */
@@ -30,11 +23,12 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
             foreach ($collection as $key => $item) {
                 // Save Student
                     $student                            = new Student;
-                    $student->school_id                 = $this->school_id;
+                    $student->school_id                 = session('school_id');
     
                     $student->name                      = $item['nama'];
                     $student->gender                    = $item['jenis_kelamin'];
                     $student->address                   = $item['alamat'];
+                    $student->email                     = $item['email'];
                     $student->dob                       = date('Y-m-d H:i:s', strtotime($item['tanggal_lahir']));
                     $student->religion                  = $item['agama'];
                     $student->phone_number              = $item['nomor_telepon'];
@@ -73,12 +67,6 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
                 
                 return redirect()->route('students.index')->withToastError("Terjadi kesalahan pada Baris $row, Kolom $column, dengan pesan $error[0]");
             }
-        } catch (ValidationException $ex) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->withToastError($ex->errors());
-        } catch (Exception $ex) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data siswa!");
         }
     }
 
@@ -87,7 +75,7 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
         return [
             'nama' => 'required',
             'tanggal_lahir' => 'required',
-            'jenis_kelamin' => 'required|max:1',
+            'jenis_kelamin' => 'required|max:1|in:L,P',
             'alamat' => 'required',
             'agama' => 'required',
             'no_telepon' => 'nullable|max:20',

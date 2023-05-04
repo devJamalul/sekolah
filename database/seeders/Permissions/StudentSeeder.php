@@ -33,7 +33,7 @@ class StudentSeeder extends Seeder
             'update' => 'students.update',
             'destroy' => 'students.destroy',
             'restore' => 'students.restore',
-            'export' => 'students.export',
+            'report' => 'students.report',
         ];
 
         // index student
@@ -92,9 +92,9 @@ class StudentSeeder extends Seeder
         ]);
         $permission->syncRoles([$super_admin, $ops_admin]);
 
-        // export student
+        // student Report
         $permission = Permission::firstOrCreate([
-            'name' => $roles['export'],
+            'name' => $roles['report'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
