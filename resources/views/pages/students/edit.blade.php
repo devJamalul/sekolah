@@ -61,7 +61,7 @@
                   <div class="col">
                     <div class="form-group">
                       <label for="dob">Tanggal Lahir<span class="text-small text-danger">*</span> </label>
-                      <input type="date" name="dob" id="dob" value="{{ old('dob', \Carbon\Carbon::parse($student->dob)->format('Y-m-d')) }}" class="form-control @error('dob') is-invalid @enderror" required>
+                      <input type="date" name="dob" id="dob" value="{{ old('dob', $student->dob->format('Y-m-d')) }}" class="form-control @error('dob') is-invalid @enderror" required>
                       @error('dob')
                         <div class="invalid-feedback">
                             {{ $message }}
