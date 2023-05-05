@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class ExpenseSeeder extends Seeder
+class ExpenseDetailSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -24,12 +24,12 @@ class ExpenseSeeder extends Seeder
         $kepala_sekolah = Role::whereName(User::ROLE_KEPALA_SEKOLAH)->first();
 
         $roles = [
-            'index' => 'expense.index',
-            'create' => 'expense.create',
-            'store' => 'expense.store',
-            'edit' => 'expense.edit',
-            'update' => 'expense.update',
-            'destroy' => 'expense.destroy'
+            'index' => 'expense-detail.index',
+            'create' => 'expense-detail.create',
+            'store' => 'expense-detail.store',
+            'edit' => 'expense-detail.edit',
+            'update' => 'expense-detail.update',
+            'destroy' => 'expense-detail.destroy'
         ];
 
           // index
