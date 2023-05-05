@@ -8,6 +8,7 @@ use Database\Seeders\Permissions\GradeSeeder;
 use Database\Seeders\Permissions\SchoolSeeder;
 use Database\Seeders\Permissions\WalletSeeder;
 use Database\Seeders\Permissions\ExpenseSeeder;
+use Database\Seeders\Permissions\InvoiceSeeder;
 use Database\Seeders\Permissions\StudentSeeder;
 use Database\Seeders\Permissions\TuitionSeeder;
 use Database\Seeders\Permissions\ClassroomSeeder;
@@ -17,14 +18,15 @@ use Database\Seeders\Permissions\TuitionTypeSeeder;
 use Database\Seeders\Permissions\AcademicYearSeeder;
 use Database\Seeders\Permissions\MasterConfigSeeder;
 use Database\Seeders\Permissions\SchoolConfigSeeder;
+use Database\Seeders\Permissions\ExpenseDetailSeeder;
+use Database\Seeders\Permissions\ExpenseReportSeeder;
+use Database\Seeders\Permissions\InvoiceDetailSeeder;
 use Database\Seeders\Permissions\SchoolSelectorSeeder;
+use Database\Seeders\Permissions\TransactionReportSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
-use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
-use Database\Seeders\Permissions\InvoiceDetailSeeder;
-use Database\Seeders\Permissions\InvoiceSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
-use Database\Seeders\Permissions\TransactionReportSeeder;
+use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -60,14 +62,15 @@ class PermissionsSeeder extends Seeder
             TuitionSeeder::class,
             PaymentTypeSeeder::class,
             AssignClassroomStaffSeeder::class,
-            ExpenseSeeder::class,
             StudentTuitionMasterSeeder::class,
             AssignClassroomStaffSeeder::class,
-            ExpenseSeeder::class,
             TransactionReportSeeder::class,
             WalletSeeder::class,
             InvoiceSeeder::class,
             InvoiceDetailSeeder::class,
+            ExpenseSeeder::class,
+            ExpenseDetailSeeder::class,
+            ExpenseReportSeeder::class
         ]);
     }
 }

@@ -77,3 +77,9 @@
   </div>
   {{-- END ROW --}}
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#price')
+  </script>
+@endpush

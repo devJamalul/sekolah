@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\InvoiceDetailRequest;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceDetailController extends Controller
@@ -24,14 +23,6 @@ class InvoiceDetailController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(InvoiceDetailRequest $request, Invoice $invoice)
@@ -43,22 +34,17 @@ class InvoiceDetailController extends Controller
             $invoiceDetail = new InvoiceDetail();
             $invoiceDetail->invoice_id = $invoice->getKey();
             $invoiceDetail->item_name = $request->item_name;
-            $invoiceDetail->price = $request->price;
+            $invoiceDetail->price = formatAngka($request->price);
             $invoiceDetail->save();
+
+            $invoiceDetail->invoice->total_amount = $invoiceDetail->invoice->invoice_details()->sum('price');
+            $invoiceDetail->push();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
         return redirect()->back()->withToastSuccess('Berhasil menambah baris invoice!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(InvoiceDetail $invoiceDetail)
-    {
-        //
     }
 
     /**
@@ -84,8 +70,11 @@ class InvoiceDetailController extends Controller
         DB::beginTransaction();
         try {
             $invoiceDetail->item_name = $request->item_name;
-            $invoiceDetail->price = $request->price;
+            $invoiceDetail->price = formatAngka($request->price);
             $invoiceDetail->save();
+
+            $invoiceDetail->invoice->total_amount = $invoiceDetail->invoice->invoice_details()->sum('price');
+            $invoiceDetail->push();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();

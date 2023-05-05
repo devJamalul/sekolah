@@ -47,7 +47,7 @@ class InvoiceDetailRequest extends FormRequest
                     $q->whereNull('deleted_at');
                 })
             ],
-            'price' => 'required|numeric|min:0',
+            'price' => 'required|min:0',
         ];
     }
 
@@ -62,7 +62,7 @@ class InvoiceDetailRequest extends FormRequest
                     $q->whereNull('deleted_at');
                 })->ignore($this->invoice_detail->id, 'id')
             ],
-            'price' => 'required|numeric|min:0',
+            'price' => 'required|min:0',
         ];
     }
 }

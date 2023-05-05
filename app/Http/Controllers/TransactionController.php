@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Invoice\AddToInvoice;
 use App\Models\PaymentType;
 use App\Models\Student;
 use App\Models\StudentTuition;
@@ -78,13 +79,13 @@ class TransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Student $transaction)
+    public function update(Request $request, Student $transaction, AddToInvoice $addToInvoice)
     {
         $request->validate(
             [
                 'student_tuition_id' => 'required|exists:student_tuitions,id',
                 'payment_type_id' => 'required|exists:payment_types,id',
-                'nominal' => 'required|numeric|min:1',
+                'nominal' => 'required|min:1',
             ],
             [
                 'student_tuition_id.required' => 'Tagihan biaya harus dipilih',
@@ -129,9 +130,12 @@ class TransactionController extends Controller
             // input histori
             StudentTuitionPaymentHistory::create([
                 'student_tuition_id' => $student_tuition->getKey(),
-                'price' => $request->nominal,
+                'price' => formatAngka($request->nominal),
                 'payment_type_id' => $request->payment_type_id,
             ]);
+
+            // input invoice
+            $addToInvoice->handle($student_tuition);
 
             DB::commit();
 

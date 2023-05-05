@@ -92,9 +92,9 @@
                 <th>Nama Barang</th>
                 <th style="width: 30%">Harga</th>
                 @if ($invoice->payment_status == App\Models\Invoice::STATUS_PENDING)
-                <th style="width: 20%">Aksi</th>
+                  <th style="width: 20%">Aksi</th>
                 @else
-                <th style="width: 20%">Metode Pembayaran</th>
+                  <th style="width: 20%">Metode Pembayaran</th>
                 @endif
               </tr>
             </thead>
@@ -111,24 +111,24 @@
                   <td>{{ $detail->item_name }}</td>
                   <td>Rp. {{ number_format($detail->price, 0, ',', '.') }}</td>
                   @if ($invoice->payment_status == App\Models\Invoice::STATUS_PENDING)
-                  <td>
-                    <div class="d-flex gap-2">
-                      <a href="{{ route('invoice-details.edit', ['invoice' => $invoice->getKey(), 'invoice_detail' => $detail->getKey()]) }}"
-                        name="ubah{{ $key }}" id="ubah{{ $key }}" class="btn btn-primary btn-sm mr-1"
-                        role="button">Ubah</a>
-                      <form action="{{ route('invoice-details.destroy', [$invoice->getKey(), $detail->getKey()]) }}"
-                        method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" name="hapus{{ $key }}" id="hapus{{ $key }}"
-                          class="btn btn-danger btn-sm" href="#" role="button">Hapus</button>
-                      </form>
-                    </div>
-                  </td>
+                    <td>
+                      <div class="d-flex gap-2">
+                        <a href="{{ route('invoice-details.edit', ['invoice' => $invoice->getKey(), 'invoice_detail' => $detail->getKey()]) }}"
+                          name="ubah{{ $key }}" id="ubah{{ $key }}"
+                          class="btn btn-primary btn-sm mr-1" role="button">Ubah</a>
+                        <form action="{{ route('invoice-details.destroy', [$invoice->getKey(), $detail->getKey()]) }}"
+                          method="post">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" name="hapus{{ $key }}" id="hapus{{ $key }}"
+                            class="btn btn-danger btn-sm" href="#" role="button">Hapus</button>
+                        </form>
+                      </div>
+                    </td>
                   @else
-                  <td>
-                    {{ $detail->wallet->name }}
-                  </td>
+                    <td>
+                      {{ $detail->wallet->name }}
+                    </td>
                   @endif
                 </tr>
               @empty
@@ -152,3 +152,9 @@
   </div>
   {{-- END ROW --}}
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#price')
+  </script>
+@endpush

@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Grade;
-use App\Models\School;
 use App\Models\Tuition;
 use App\Models\TuitionType;
 use App\Models\AcademicYear;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TuitionRequest;
@@ -60,7 +58,7 @@ class TuitionController extends Controller
             $tuition->tuition_type_id   = $request->tuition_type_id;
             $tuition->academic_year_id  = $request->academic_year_id;
             $tuition->grade_id          = $request->grade_id;
-            $tuition->price             = $request->price;
+            $tuition->price             = formatAngka($request->price);
             $tuition->request_by        = Auth::id();
             $tuition->save();
 
@@ -115,7 +113,7 @@ class TuitionController extends Controller
             $tuition->tuition_type_id       = $request->tuition_type_id;
             $tuition->academic_year_id      = $request->academic_year_id;
             $tuition->grade_id              = $request->grade_id;
-            $tuition->price                 = $request->price;
+            $tuition->price                 = formatAngka($request->price);
             $tuition->request_by            = Auth::id();
             $tuition->save();
 

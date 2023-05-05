@@ -71,7 +71,7 @@
                         </div>
                         <div class="form-group">
                             <label for="price">Nominal<span class="text-small text-danger">*</span></label>
-                            <input type="text" name="price" id="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" required pattern="[0-9]+">
+                            <input type="text" name="price" id="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" required>
                             @error('price')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -88,3 +88,9 @@
     </div>
     {{-- END ROW --}}
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#price')
+  </script>
+@endpush

@@ -32,15 +32,15 @@ class ExpenseDetailController extends Controller
     public function store(ExpenseDetailRequest $request)
     {
         DB::beginTransaction();
-        
+
         try {
-            
+
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $request->expense_id;
             $expenseDetail->wallet_id   = $request->wallet_id;
             $expenseDetail->item_name   = $request->item_name;
-            $expenseDetail->quantity    = $request->quantity;
-            $expenseDetail->price       = $request->price;
+            $expenseDetail->quantity    = formatAngka($request->quantity);
+            $expenseDetail->price       = formatAngka($request->price);
             $expenseDetail->save();
 
             DB::commit();
@@ -79,11 +79,11 @@ class ExpenseDetailController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $expenseDetail->wallet_id       = $request->wallet_id;
             $expenseDetail->item_name       = $request->item_name;
-            $expenseDetail->quantity        = $request->quantity;
-            $expenseDetail->price           = $request->price;
+            $expenseDetail->quantity        = formatAngka($request->quantity);
+            $expenseDetail->price           = formatAngka($request->price);
             $expenseDetail->save();
 
             DB::commit();
@@ -92,7 +92,7 @@ class ExpenseDetailController extends Controller
             DB::rollBack();
             return redirect()->route('expense.show', $expenseDetail->expense_id)->withToastError('Eror Simpan Detail Pengeluaran Biaya!');
         }
-        
+
         return redirect()->route('expense.show', $expenseDetail->expense_id)->withToastSuccess('Berhasil Simpan Detail Pengeluaran Biaya!');
     }
 
@@ -104,7 +104,7 @@ class ExpenseDetailController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $expenseDetail->delete();
             DB::commit();
 
