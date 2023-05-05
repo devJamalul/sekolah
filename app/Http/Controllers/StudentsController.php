@@ -140,11 +140,26 @@ class StudentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Student $student)
+    public function show(Student $student, Request $request)
     {
+        $student_tuitions = [];
+
+        $academic_years = AcademicYear::where('school_id', session('school_id'))->orderByDesc('created_at')->get();
+        $selected_academic_year = $request->get('academic_year') ?? null;
+        if ($selected_academic_year) {
+            $student_tuitions = StudentTuition::with('student_tuition_details.tuition')
+                                        ->where('student_id', $student->getKey())
+                                        ->whereHas('student_tuition_details.tuition', function($query) use($selected_academic_year) {
+                                            $query->where('academic_year_id', $selected_academic_year);
+                                        })->get();
+        }
+
         $data = [
+            'title' => "Biaya $student->name",
             'student' => $student,
-            'title' => "Ubah Data Siswa",
+            'student_tuitions' => $student_tuitions,
+            'academic_years' => $academic_years,
+            'selected_academic_year' => $selected_academic_year,
         ];
 
         return view('pages.students.detail', $data);

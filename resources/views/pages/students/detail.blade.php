@@ -84,28 +84,46 @@
 							<span>Biaya Siswa</span>
 							<div class="d-flex align-items-center" style="width: 40%; height: 100%;">
 								<label for="selectAcademicYears" class="mt-2" style="width: 100%">Tahun Akademik:</label>
-								<select name="" id="selectAcademicYears" class="select2">
-									<option value="1" selected> Test</option>
-									<option value="2"> Test 2</option>
-									<option value="3"> 2002 - 2030</option>
-								</select>
+                  <select name="" id="selectAcademicYears" class="select2">
+                    <option value="">--- Pilih ---</option>
+                    @foreach ($academic_years as $academic_year)
+                      <option value="{{ $academic_year->getKey() }}" @selected($selected_academic_year == $academic_year->getKey()) >{{ $academic_year->academic_year_name }}</option>
+                    @endforeach
+                  </select>
 							</div>
             </div>
             <div class="card-body">
               <div class="row">
-								<x-datatable
-                    :tableId="'student-tuitions'" 
-                    :tableHeaders="['NIK', 'Nama', 'Jenis Kelamin', 'Alamat', 'Tanggal lahir', 'Action']" 
-                    :tableColumns="[
-                        ['data' => 'nik'], 
-                        ['data' => 'name'], 
-                        ['data' => 'gender'],
-                        ['data' => 'address'],
-                        ['data' => 'dob'],
-                        ['data' => 'action']
-                    ]" 
-                    :getDataUrl="route('datatable.students')" 
-                />
+                <div class="col-12">
+                  <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                          <th>No</th>
+                          <th>Nama Biaya</th>
+                          <th>Nominal</th>
+                          <th>Status</th>
+                          <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      @forelse ($student_tuitions as $key => $student_tuition)
+                      <tr>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $student_tuition->note }} {{ $student_tuition->period->format('F Y') }} </td>
+                        <td>{{ 'Rp. ' . number_format($student_tuition->grand_total, 0, ',', '.') }}</td>
+                        <td><span class="text-capitalize badge badge-danger text-white">{{ $student_tuition->status == 'pending' ? "Belum lunas" : "Lunas" }}</span></td>
+                        <td>
+                          <a href="{{ route('transactions.show', $student_tuition->student_id) }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Bayar</a>
+                        </td>
+                      </tr>
+                      @empty
+                      <tr>
+                        <td colspan="5" align="center">Tidak memiliki Bayaran</td>
+                      </tr>
+                      @endforelse
+                    </tbody>
+                </table>
+                </div>
               </div>
             </div>
           </div>
@@ -118,8 +136,9 @@
 
 		@push('js')
 		<script>
-				$(selectAcademicYears).on('change', () => location.reload())
-				console.log($(selectAcademicYears).val());
+				$(selectAcademicYears).on('change', (event) => {
+          window.location.href = `${window.location.pathname}?academic_year=${event.target.value}`
+        })
 			</script>
 		@endpush
     
