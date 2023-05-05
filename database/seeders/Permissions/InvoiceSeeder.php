@@ -34,6 +34,8 @@ class InvoiceSeeder extends Seeder
             'payment' => 'invoices.payment',
             'publish' => 'invoices.publish',
             'void' => 'invoices.void',
+            'report' => 'invoices.report',
+            'report-result' => 'invoices.report-result',
         ];
 
         // index
@@ -94,6 +96,18 @@ class InvoiceSeeder extends Seeder
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['void'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+
+        // report
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['report'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['report-result'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);

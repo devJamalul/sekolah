@@ -26,6 +26,7 @@ use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Invoice\InvoiceReportController;
 use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\InvoiceController;
@@ -137,6 +138,8 @@ Route::group([], function () {
         Route::put('/{invoice}/detail/{invoice_detail}', 'update')->name('update');
         Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
     });
+    Route::get('reports/invoices', [InvoiceReportController::class, 'index'])->name('invoices.report');
+    Route::post('reports/invoices', [InvoiceReportController::class, 'store'])->name('invoices.report-result');
 });
 
 Route::prefix('reports')->group(function () {
