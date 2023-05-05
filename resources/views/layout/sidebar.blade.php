@@ -1,6 +1,6 @@
 @php
   $menuAdministrasi = Request::is('schools') || Request::is('schools/*') || Request::is('users') || Request::is('users/*') ? 'show' : '';
-  $menuKeuangan = Request::is('tuition-type') || Request::is('tuition-type/*') || Request::is('tuition') || Request::is('tuition/*') || Request::is('expense') || Request::is('expense/*') || Request::is('wallet') || Request::is('wallet/*') ? 'show' : '';
+  $menuKeuangan = Request::is('tuition-type') || Request::is('tuition-type/*') || Request::is('tuition') || Request::is('tuition/*') || Request::is('expense') || Request::is('expense/*') || Request::is('wallet') || Request::is('wallet/*') || Request::is('payment-type') || Request::is('payment-type/*') ? 'show' : '';
   $menuSekolah = Request::is('grade') || Request::is('grade/*') || Request::is('academy-year') || Request::is('academy-year/*') || Request::is('students') || Request::is('students/*') || Request::is('classroom') || Request::is('classroom/*') || Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'show' : '';
   $menuKonfigurasi = Request::is('config') || Request::is('config/*') || Request::is('master-configs') || Request::is('master-configs/*') ? 'show' : '';
   $menuTransaksi = Request::is('transactions') || Request::is('transactions/*') || Request::is('invoices') || Request::is('invoices/*') ? 'show' : '';
@@ -78,6 +78,11 @@
         @can('expense.index')
           <a href="{{ route('expense.index') }}" class="collapse-item {{ Request::is('expense') || Request::is('expense/*') ? 'active' : '' }}">
             Pengeluaran Biaya
+          </a>
+        @endcan
+        @can('payment-type.index')
+          <a href="{{ route('payment-type.index') }}" class="collapse-item {{ Request::is('payment-type') || Request::is('payment-type/*') ? 'active' : '' }}">
+            Tipe Pembayaran
           </a>
         @endcan
         @can('wallet.index')
@@ -175,6 +180,12 @@
             Pembayaran Sekolah
           </a>
         @endcan
+                @can('students.report')
+                    <a href="{{ route('reports.students') }}"
+                        class="collapse-item {{ Request::is('reports.students') || Request::is('reports.students/*') ? 'active' : '' }}">
+                        Siswa
+                    </a>
+                @endcan
       </div>
     </div>
   </li>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\School;
+use App\Models\Scopes\PaymentTypeScope;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +17,10 @@ class PaymentType extends Model
 
     protected $guarded = [];
 
+    protected static function booted()
+    {
+        static::addGlobalScope(new PaymentTypeScope);
+    }
 
     public function transactions(): HasMany
     {

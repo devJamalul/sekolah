@@ -29,6 +29,14 @@ class PaymentTypeRequest extends FormRequest
         };
     }
 
+    public function attributes()
+    {
+        return [
+            'name' => 'tipe pembayaran',
+            'wallet_id' => 'wallet'
+        ];
+    }
+
     public function postMethod(): array
     {
         return [

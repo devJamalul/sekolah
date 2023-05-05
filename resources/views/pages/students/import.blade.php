@@ -3,36 +3,54 @@
 @section('title', $title)
 
 @section('content')
-    <h1 class="h3 mb-4 text-gray-800">Impor Data Siswa</h1>
 
-    {{-- start Datatable --}}
-    <div class="col-lg-10">
-        <div class="card">
-            <div class="card-header d-flex">
-                <h6 class="mr-auto font-weight-bold text-primary">{{ $title }}</h6>
-                <div class="">
-                    <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm">Tambah</a>
-                    {{-- <a href="{{ route('students.import') }}" class="btn btn-success btn-sm">Impor Excel</a> --}}
-                </div>
-            </div>
+  <div class="col-lg-6">
 
-            <div class="card-body">
-                <x-datatable 
-                    :tableId="'students'" 
-                    :tableHeaders="['NIK', 'Nama', 'Jenis Kelamin', 'Alamat', 'Tanggal lahir', 'Action']" 
-                    :tableColumns="[
-                        ['data' => 'nik'], 
-                        ['data' => 'name'], 
-                        ['data' => 'gender'],
-                        ['data' => 'address'],
-                        ['data' => 'dob'],
-                        ['data' => 'action']
-                    ]" 
-                    :getDataUrl="route('datatable.students')" 
-                />
-            </div>
+    {{-- Header --}}
+    <div class="d-sm-flex align-items-center justify-content-between">
+        <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
+        <div>
+            <a href="{{ route('students.index') }}" class="btn btn-primary btn-sm mr-2">Kembali</a>
         </div>
     </div>
-    {{-- END Datatable --}}
+    {{-- End Header --}}
+
+    {{-- Content --}}
+    <div class="card">
+        <div class="card-body">
+            <form action="{{ route('students.importStudentByExcel') }}" enctype="multipart/form-data" method="post">
+              @csrf
+
+              <div class="form-group">
+                    <label for="excel_file">Unggah File Excel</label>
+                    <div class="custom-file">
+                            <input type="file" accept="image/*" class="custom-file-input @error('excel_file') is-invalid @enderror" name="excel_file" id="excel_file">
+                            <label class="custom-file-label" for="excel_file" data-browse="Pilih Berkas">Unggah Berkas...</label>
+                    </div>
+
+                    @error('excel_file')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+              </div>
+
+              <div>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+              </div>
+
+            </form>
+        </div>
+    </div>
+    {{-- End Content --}}
+
+  </div>
+
+  @push('js')
+  <script>
+    document.querySelector('#excel_file').addEventListener('change',function(e){
+      var file = document.getElementById("excel_file").files[0];
+      e.target.nextElementSibling.innerText = file.name
+    })
+  </script>
+  @endpush
     
 @endsection

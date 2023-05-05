@@ -26,6 +26,8 @@ use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Invoice\VoidInvoiceController;
+use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\InvoiceDetailController;
 use App\Http\Controllers\PayInvoiceController;
@@ -126,6 +128,8 @@ Route::group([], function () {
     Route::get('invoices/{invoice}/publish', PublishInvoiceController::class)->name('invoices.publish');
     Route::get('invoices/{invoice}/pay', [PayInvoiceController::class, 'index'])->name('invoices.pay');
     Route::post('invoices/{invoice}/pay', [PayInvoiceController::class, 'store'])->name('invoices.payment')->middleware('password.confirm');
+    Route::get('invoices/{invoice}/void', [VoidInvoiceController::class, 'index'])->name('invoices.void');
+    Route::post('invoices/{invoice}/void', [VoidInvoiceController::class, 'store'])->name('invoices.voidment')->middleware('password.confirm');
     Route::controller(InvoiceDetailController::class)->prefix('invoices')->name('invoice-details.')->group(function () {
         Route::get('/{invoice}/detail', 'index')->name('index');
         Route::post('/{invoice}/detail', 'store')->name('store');
@@ -133,6 +137,15 @@ Route::group([], function () {
         Route::put('/{invoice}/detail/{invoice_detail}', 'update')->name('update');
         Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
     });
+});
+
+Route::prefix('reports')->group(function () {
+
+    // Report Student
+    Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
+    Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
+    Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
+
 });
 
 Route::group([], function () {

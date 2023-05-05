@@ -42,7 +42,7 @@ class InvoiceRequest extends FormRequest
     {
         return [
             'invoice_number' => [
-                'required',
+                'nullable',
                 Rule::unique('invoices')->where(function ($q) {
                     $q->where('invoice_number', $this->invoice_number);
                     $q->where('school_id', session('school_id'));

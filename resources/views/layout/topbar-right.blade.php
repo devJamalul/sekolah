@@ -1,11 +1,16 @@
-<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+{{-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
   <div class="input-group">
     <input type="text" class="form-control bg-light border-0 small"
-      placeholder="Tahun Ajaran {{ session('academic_year_name') ?? "N/A" }} | PPDB {{ session('ppdb_academic_year_name') ?? "N/A"}}" disabled>
+      placeholder="" disabled>
   </div>
-</form>
+</form> --}}
+
 
 <ul class="navbar-nav ml-auto">
+
+  <li class="nav-item" style="display: flex; align-items: center">
+    <p style="padding-top: 18px">Tahun Ajaran {{ session('academic_year_name') ?? "N/A" }} | PPDB {{ session('ppdb_academic_year_name') ?? "N/A"}}</p>
+  </li>
 
   <!-- Nav Item - Alerts -->
   {{-- <li class="nav-item dropdown no-arrow mx-1">
