@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class ExpenseSeeder extends Seeder
+class ExpenseReportSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -24,12 +24,8 @@ class ExpenseSeeder extends Seeder
         $kepala_sekolah = Role::whereName(User::ROLE_KEPALA_SEKOLAH)->first();
 
         $roles = [
-            'index' => 'expense.index',
-            'create' => 'expense.create',
-            'store' => 'expense.store',
-            'edit' => 'expense.edit',
-            'update' => 'expense.update',
-            'destroy' => 'expense.destroy'
+            'index' => 'expense-report.index',
+            'store' => 'expense-report.store',
         ];
 
           // index
@@ -39,34 +35,8 @@ class ExpenseSeeder extends Seeder
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $admin_yayasan, $kepala_sekolah, $tata_usaha, $bendahara]);
 
-        // create school
-        $permission = Permission::firstOrCreate([
-            'name' => $roles['create'],
-            'guard_name' => 'web'
-        ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
-            'guard_name' => 'web'
-        ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
-
-        // update school
-        $permission = Permission::firstOrCreate([
-            'name' => $roles['edit'],
-            'guard_name' => 'web'
-        ]);
-        
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
-        $permission = Permission::firstOrCreate([
-            'name' => $roles['update'],
-            'guard_name' => 'web'
-        ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
-    
-        // destroy expense
-        $permission = Permission::firstOrCreate([
-            'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
