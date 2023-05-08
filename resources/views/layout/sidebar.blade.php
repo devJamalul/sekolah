@@ -136,6 +136,12 @@
             Rombongan Belajar
           </a>
         @endcan
+        @can('approvals.index')
+          <a href="{{ route('approvals.index') }}"
+            class="collapse-item {{ Request::is('approvals') || Request::is('approvals/*') ? 'active' : '' }}">
+            Persetujuan
+          </a>
+        @endcan
       </div>
     </div>
   </li>
