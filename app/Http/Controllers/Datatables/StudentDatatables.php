@@ -13,6 +13,9 @@ class StudentDatatables extends Controller
     {
         $students = Student::with('school')->latest('created_at');
         return DataTables::of($students)
+                        ->editColumn('name', function ($data) {
+                            return "<a href='" . route('students.show', $data->getKey()) . "'>{$data->name}</a>";
+                        })
                         ->editColumn('gender', function ($data) {
                             return strtolower($data->gender) == Student::GENDER_LAKI ? 'Laki-Laki' : 'Perempuan';
                         })
@@ -30,6 +33,7 @@ class StudentDatatables extends Controller
                                 ]
                             ];
                             return view('components.datatable-action', $data);
-                        })->toJson();
+                        })->rawColumns(['name'])
+                        ->toJson();
     }
 }
