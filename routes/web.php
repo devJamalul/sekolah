@@ -78,6 +78,7 @@ Route::group([], function () {
     Route::post('school_selector', SchoolSelectorController::class)->name('school_selector')->middleware('role:super admin|ops admin');
 
     // Assign Classroom student
+    Route::get('get-classroom', [AssignClassroomStudentController::class, 'classroom'])->name('get-classroom');
     Route::get('assign-classroom-student', AssignClassroomStudentController::class)->name(('assign-classroom-student.index'));
     Route::post('assign-classroom-student', [AssignClassroomStudentController::class, 'store'])->name(('assign-classroom-student.store'));
     Route::delete('assign-classroom-student', [AssignClassroomStudentController::class, 'destroy'])->name(('assign-classroom-student.destroy'));
@@ -148,7 +149,6 @@ Route::prefix('reports')->group(function () {
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
-
 });
 
 Route::group([], function () {
