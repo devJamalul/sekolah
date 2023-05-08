@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use App\Models\WalletLog;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
@@ -32,5 +33,15 @@ class ReportSchoolFinancesExport implements FromView
                 $q->where('cashflow_type', $request->cashflow_type);
             })->get();
         return view('exports.report-school-finance', compact('WalletLog'));
+    }
+
+    public function parseDate($tanggal): object
+    {
+        $tgl = explode(" - ", $tanggal);
+
+        return (object) [
+            'transaction_report_start' => Carbon::parse($tgl[0]),
+            'transaction_report_end' => Carbon::parse($tgl[1])
+        ];
     }
 }

@@ -19,8 +19,10 @@ class AssignClassroomStudentController extends Controller
     public function __invoke(Request $request)
     {
         $data['title'] = "Tetapkan Kelas";
-        $data['academy_year'] = AcademicYear::active()->first();
-        $data['classroom'] = Classroom::with('grade')->where('academic_year_id', $data['academy_year']?->id)->get();
+        $data['academy_years'] = AcademicYear::whereIn('status_years', [
+            AcademicYear::STATUS_STARTED,
+            AcademicYear::STATUS_REGISTRATION
+        ])->orderBy('status_years', 'desc')->get();
         return view('pages.assign-classroom-student.index', $data);
     }
 
@@ -69,5 +71,21 @@ class AssignClassroomStudentController extends Controller
         return redirect()
             ->route('assign-classroom-student.index')
             ->withToastSuccess('Berhasil Hapus Siswa');
+    }
+
+    public function classroom(Request $request)
+    {
+
+        try {
+            if ($request->has('academy_year_id')) {
+                $academicYear = $request->academy_year_id;
+                $classroom    = Classroom::with('grade')->where('academic_year_id', $academicYear)->get();
+                return response()->json(['msg' => 'Berhasil', 'classrooms' => $classroom], 200);
+            } else {
+                return response()->json(['msg' => 'Gagal', 'classrooms' => []], 201);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['msg' => 'Gagal'], 400);
+        }
     }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
 
         Schema::table('invoices', function (Blueprint $table) {
             $table->text('note')->nullable()->after('due_date');
-            $table->renameColumn('is_sempoa_processed', 'sempoa_processed');
+            $table->boolean('is_sempoa_processed')->nullable()->default(false)->renameTo('sempoa_processed')->change();
         });
     }
 
@@ -36,7 +36,7 @@ return new class extends Migration
 
         Schema::table('invoices', function (Blueprint $table) {
             $table->dropColumn('note');
-            $table->renameColumn('sempoa_processed', 'is_sempoa_processed');
+            $table->boolean('sempoa_processed')->nullable()->default(false)->renameTo('is_sempoa_processed')->change();
         });
     }
 };

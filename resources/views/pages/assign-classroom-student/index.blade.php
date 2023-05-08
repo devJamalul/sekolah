@@ -44,14 +44,33 @@
 
                 {{-- START SELECT CLASS  --}}
                 <div class="d-flex justify-content-between ">
-                    <div class="w-75 d-flex py-4">
-                        <h6 class="font-weight-bold">Tahun Ajaran : {{ $academy_year?->academic_year_name }}</h6>
+                    <div class="w-75 d-flex mt-4">
+                        {{-- START SELECT ACADEMY YEARS --}}
+                        <div class="form-group">
+                            <select
+                                class="form-control select2 @error('academy_year') is-invalid
+                                             @enderror"
+                                name="academy_year" id="academy_year">
+                                @foreach ($academy_years as $key => $years)
+                                    <option value="{{ $years->id }}"
+                                        {{ session('academy_year') == $years->id ? 'selected' : '' }}>
+                                        {{ $years->academic_year_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('classroom_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        {{-- END SELECT ACADEMY YEARS --}}
                     </div>
                     {{--  START SELECT CLASS COMPONENT TETAPKAN KELAS DAN HAPUS KELAS --}}
                     <div class="w-75 ml-5  d-flex flex-column">
                         <div class="row d-flex  mt-4 justify-content-between">
                             <div class="col-8">
 
+                                <input type="hidden" id="session_classroom" value="{{ session('classroom_id') }}">
                                 {{-- START FORM TETAPKAN KELAS --}}
                                 <form action="{{ route('assign-classroom-student.store') }}" class="row" method="post">
                                     <div class="col-6">
@@ -65,12 +84,7 @@
                                                          @enderror"
                                                 name="classroom_id" id="classroom_id">
                                                 <option value="">Kelas</option>
-                                                @foreach ($classroom as $key => $class)
-                                                    <option value="{{ $class->id }}"
-                                                        {{ session('classroom_id') == $class->id ? 'selected' : '' }}>
-                                                        {{ $class->grade->grade_name }} -
-                                                        {{ $class->name }}</option>
-                                                @endforeach
+
                                             </select>
                                             @error('classroom_id')
                                                 <div class="invalid-feedback">
