@@ -524,6 +524,62 @@
 
   @push('js')
   <script>
+
+    // Track Student Address
+    var studentAddressValue = ""
+
+    const studentAddressInput = document.querySelector('#address')
+    const fatherAddressInput = document.querySelector('#father_address')
+    const fatherAddressCheckbox = document.querySelector('#father_address_checkbox')
+    const motherAddressInput = document.querySelector('#mother_address')
+    const motherAddressCheckbox = document.querySelector('#mother_address_checkbox')
+    const guardianAddressInput = document.querySelector('#guardian_address')
+    const guardianAddressCheckbox = document.querySelector('#guardian_address_checkbox')
+
+    studentAddressInput.addEventListener('change', (event) => {
+      studentAddressValue = event.target.value
+
+      if (fatherAddressCheckbox.checked) fatherAddressInput.value = studentAddressValue
+      if (motherAddressCheckbox.checked) motherAddressInput.value = studentAddressValue
+      if (guardianAddressCheckbox.checked) guardianAddressInput.value = studentAddressValue
+
+    })
+
+    fatherAddressCheckbox.addEventListener('change', (event) => {
+      fatherAddressInput.value = studentAddressValue;
+
+      if (event.target.checked) {
+        fatherAddressInput.disabled = true
+      } else {
+        fatherAddressInput.disabled = false
+        fatherAddressInput.value = ""
+      }
+    })
+    
+    motherAddressCheckbox.addEventListener('change', (event) => {
+      motherAddressInput.value = studentAddressValue;
+
+      if (event.target.checked) {
+        motherAddressInput.disabled = true
+      } else {
+        motherAddressInput.disabled = false
+        motherAddressInput.value = ""
+      }
+    })
+
+    guardianAddressCheckbox.addEventListener('change', (event) => {
+      guardianAddressInput.value = studentAddressValue;
+
+      if (event.target.checked) {
+        guardianAddressInput.disabled = true
+      } else {
+        guardianAddressInput.disabled = false
+        guardianAddressInput.value = ""
+      }
+    })
+
+
+    // Files Input
     document.querySelector('#file_birth_certificate').addEventListener('change',function(e){
       var file = document.getElementById("file_birth_certificate").files[0];
 
@@ -553,6 +609,8 @@
 
       e.target.nextElementSibling.innerText = file.name
     })
+    // End Files Input
+
   </script>
   @endpush
     
