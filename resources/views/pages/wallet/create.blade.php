@@ -2,7 +2,6 @@
 
 
 @section('content')
-
     {{-- start ROW --}}
 
     <div class="row">
@@ -22,7 +21,7 @@
                         <div class="form-group">
                             <label for="name-input">Nama Dompet<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                                id="name-input" placeholder="">
+                                id="name-input" value="{{ old('name') }}">
                             @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -30,9 +29,9 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="init-value-input">Pemasukan Saldo<span class="text-small text-danger">*</span></label>
-                            <input type="text" class="form-control @error('init_value') is-invalid @enderror" name="init_value"
-                                id="init_value-input">
+                            <label for="init-value-input">Saldo Awal<span class="text-small text-danger">*</span></label>
+                            <input type="text" class="form-control @error('init_value') is-invalid @enderror"
+                                name="init_value" id="init_value-input" value="{{ old('init_value') }}">
                             @error('init_value')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -48,11 +47,10 @@
         {{-- END table Wallet --}}
     </div>
     {{-- END ROW --}}
-
 @endsection
 
 @push('js')
-  <script>
-    formatAngka('#init_value-input')
-  </script>
+    <script>
+        formatAngka('#init_value-input')
+    </script>
 @endpush

@@ -82,6 +82,7 @@ class WalletController extends Controller
 
             $wallet->school_id  = session('school_id');
             $wallet->name       = $request->name;
+            $wallet->init_value = formatAngka($request->init_value);
             $wallet->save();
 
             DB::commit();

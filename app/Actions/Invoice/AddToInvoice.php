@@ -2,6 +2,7 @@
 
 namespace App\Actions\Invoice;
 
+use App\Actions\Wallet\WalletTransaction;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
 use App\Models\StudentTuition;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class AddToInvoice
 {
-    public function handle(StudentTuition $studentTuition): void
+    public function handle(StudentTuition $studentTuition, $nominal = null): void
     {
         $status_pembayaran = match ($studentTuition->status) {
             StudentTuition::STATUS_PAID => Invoice::STATUS_PAID,
@@ -36,7 +37,7 @@ class AddToInvoice
                 ]
             );
 
-            InvoiceDetail::updateOrCreate(
+            $inv_detail = InvoiceDetail::updateOrCreate(
                 [
                     'invoice_id' => $invoice->getKey()
                 ],
@@ -48,6 +49,10 @@ class AddToInvoice
             );
 
             DB::commit();
+
+            $invoice->refresh();
+            $inv_detail->refresh();
+            WalletTransaction::increment($inv_detail->wallet_id, $nominal, $invoice->note);
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Store invoice via Transaction (SPP)',
