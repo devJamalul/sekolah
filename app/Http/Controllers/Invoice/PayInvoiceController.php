@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PayInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Wallet;
@@ -24,6 +25,10 @@ class PayInvoiceController extends Controller
         // cek pembayaran dan kembalikan jika pembayarannya sudah LUNAS
         if ($invoice->payment_status == Invoice::STATUS_PAID)
         return redirect()->back()->withToastError('Ups! Invoice sudah dinyatakan lunas.');
+
+        // cek pembayaran dan kembalikan jika invoice tidak dibuat dari halaman invoice
+        if ($invoice->is_original == false)
+        return redirect()->back()->withToastError('Ups! Pembayaran tidak bisa dilakukan. Invoice berasal dari transaksi lain.');
 
         // cek harus memiliki invoice_details
         if (count($invoice->invoice_details) == 0)

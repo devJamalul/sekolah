@@ -19,31 +19,30 @@ class InvoiceDatatables extends Controller
     {
         $invoice = Invoice::with('invoice_details')->latest('created_at');
         return DataTables::of($invoice)
-            ->addColumn('action', function ($row) {
+            ->addColumn('action', function ($invoice) {
                 $data = [
-                    'edit_url'     => route('invoices.edit', ['invoice' => $row->id]),
-                    'delete_url'   => route('invoices.destroy', ['invoice' => $row->id]),
+                    // 'edit_url'     => route('invoices.edit', ['invoice' => $invoice->id]),
+                    // 'delete_url'   => route('invoices.destroy', ['invoice' => $invoice->id]),
                     'redirect_url' => route('invoices.index'),
+                    'invoice' => $invoice,
                     'resource'     => 'invoices',
                     'custom_links' => [
-                        [
-                            'label' => 'Terbitkan',
-                            'url' => route('invoices.publish', ['invoice' => $row->id]),
-                        ],
-                        // [
-                        //     'label' => 'Terbitkan & Kirim',
-                        //     'url' => route('invoices.publish', ['invoice' => $row->id, 'sent' => true]),
-                        // ],
-                        [
-                            'label' => 'Bayar',
-                            'url' => route('invoices.pay', ['invoice' => $row->id]),
-                        ],
-                        [
-                            'label' => 'Void',
-                            'url' => route('invoices.void', ['invoice' => $row->id]),
-                        ],
                     ]
                 ];
+
+                if ($invoice->is_posted == Invoice::POSTED_DRAFT) {
+                    array_push($data['custom_links'], ['label' => 'Ubah', 'url' => route('invoices.edit', ['invoice' => $invoice->id])]);
+                    array_push($data['custom_links'], ['label' => 'Terbitkan', 'url' => route('invoices.publish', ['invoice' => $invoice->id])]);
+                }
+
+                if ($invoice->payment_status == Invoice::STATUS_PENDING && $invoice->is_posted == Invoice::POSTED_PUBLISHED && $invoice->is_original == true) {
+                    array_push($data['custom_links'], ['label' => 'Bayar', 'url' => route('invoices.pay', ['invoice' => $invoice->id])]);
+                }
+
+                if ($invoice->is_posted != Invoice::VOID and $invoice->is_posted != Invoice::POSTED_DRAFT) {
+                    array_push($data['custom_links'], ['label' => 'Void', 'url' => route('invoices.void', ['invoice' => $invoice->id])]);
+                }
+
                 return view('components.datatable-action', $data);
             })
             ->editColumn('invoice_number', function ($invoice) {
@@ -59,7 +58,7 @@ class InvoiceDatatables extends Controller
                     Invoice::VOID => '<span class="badge badge-dark">Void</span>',
                 };
 
-                $result .= match ($invoice->due_date < now() && $invoice->is_posted != Invoice::POSTED_DRAFT && $invoice->payment_status != Invoice::STATUS_PAID) {
+                $result .= match ($invoice->due_date < now()&& $invoice->is_posted != Invoice::POSTED_DRAFT && $invoice->is_posted != Invoice::VOID && $invoice->payment_status != Invoice::STATUS_PAID) {
                     true => ' <span class="badge badge-danger">Overdue</span>',
                     false => '',
                 };
