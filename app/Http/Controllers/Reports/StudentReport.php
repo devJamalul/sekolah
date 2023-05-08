@@ -26,7 +26,7 @@ class StudentReport extends Controller
             'title' => "Ekspor Data Siswa",
         ];
 
-        return view('pages.students.export', $data);
+        return view('pages.report.student.index', $data);
     }
 
     public function getClassroomByFilter(Request $request)

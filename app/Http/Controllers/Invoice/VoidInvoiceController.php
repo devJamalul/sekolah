@@ -17,10 +17,6 @@ class VoidInvoiceController extends Controller
     {
         if ($invoice->school_id != session('school_id')) abort(404);
 
-        // cek status dan kembalikan jika statusnya masih DRAFT
-        if ($invoice->is_posted == Invoice::POSTED_DRAFT)
-            return redirect()->back()->withToastError('Ups! Invoice tidak bisa di-void-kan.');
-
         // cek status dan kembalikan jika statusnya sudah VOID
         if ($invoice->is_posted == Invoice::VOID)
             return redirect()->back()->withToastError('Ups! Invoice tidak bisa di-void-kan kembali.');
@@ -37,10 +33,6 @@ class VoidInvoiceController extends Controller
     public function store(Invoice $invoice)
     {
         if ($invoice->school_id != session('school_id')) abort(404);
-
-        // cek status dan kembalikan jika statusnya masih DRAFT
-        if ($invoice->is_posted == Invoice::POSTED_DRAFT)
-            return redirect()->back()->withToastError('Ups! Invoice tidak bisa di-void-kan.');
 
         // cek status dan kembalikan jika statusnya sudah VOID
         if ($invoice->is_posted == Invoice::VOID)
