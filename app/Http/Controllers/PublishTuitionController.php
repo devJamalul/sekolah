@@ -39,7 +39,7 @@ class PublishTuitionController extends Controller
 
             $tuitions = $request->tuitions;
             $student = Student::all();
-            
+
             foreach ($tuitions as $key => $valueTuition) {
 
                 $tuition = Tuition::where('id', $valueTuition)->first();
@@ -57,7 +57,7 @@ class PublishTuitionController extends Controller
                         continue;
                     }
 
-                    $transaction = Transaction::updateOrCreate(
+                    Transaction::updateOrCreate(
                         [
                             'school_id' => session('school_id'),
                             'tuition_id' => $tuition->id,
@@ -71,7 +71,7 @@ class PublishTuitionController extends Controller
             }
 
             DB::commit();
-            
+
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('publish-tuition.index')->withToastError('Eror Terbitkan Biaya!');

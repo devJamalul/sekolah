@@ -122,3 +122,9 @@
   </div>
   {{-- END ROW --}}
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#nominal')
+  </script>
+@endpush

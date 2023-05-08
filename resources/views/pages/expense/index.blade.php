@@ -15,13 +15,12 @@
             <div class="card">
                 <div class="card-body">
                     <x-datatable :tableId="'expense'" 
-                    :tableHeaders="['No Pengeluaran', 'Tanggal Pengeluaran', 'Diproses Sempoa', 'Permintaan dari', 'Disetujui Oleh', 'Aksi']" 
+                    :tableHeaders="['No Pengeluaran', 'Tanggal Pengeluaran', 'Diproses Sempoa', 'Status', 'Aksi']" 
                     :tableColumns="[
                         ['data' => 'expense_number'],
                         ['data' => 'expense_date'],
                         ['data' => 'is_sempoa_processed'],
-                        ['data' => 'request_by'], 
-                        ['data' => 'approval_by'],  
+                        ['data' => 'status'], 
                         ['data' => 'action']]" 
                     :getDataUrl="route('datatable.expense')" />
                 </div>

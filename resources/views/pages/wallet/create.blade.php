@@ -20,7 +20,7 @@
                     <form action="{{ route('wallet.store') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label for="name-input">Nama Dompet</label>
+                            <label for="name-input">Nama Dompet<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                                 id="name-input" placeholder="">
                             @error('name')
@@ -30,9 +30,9 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="init-value-input">Pemasukan Saldo</label>
+                            <label for="init-value-input">Pemasukan Saldo<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('init_value') is-invalid @enderror" name="init_value"
-                                id="init_value-input" placeholder="" pattern="[0-9]+">
+                                id="init_value-input">
                             @error('init_value')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -50,3 +50,9 @@
     {{-- END ROW --}}
 
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#init_value-input')
+  </script>
+@endpush

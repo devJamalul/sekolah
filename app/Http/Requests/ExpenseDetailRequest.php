@@ -35,8 +35,8 @@ class ExpenseDetailRequest extends FormRequest
             'expense_id' => 'required|exists:expenses,id',
             'wallet_id' => 'required|exists:wallets,id',
             'item_name' => 'required',
-            'quantity' => 'required|numeric|gt:0',
-            'price' => 'required|numeric|gt:0',
+            'quantity' => 'required|min:0',
+            'price' => 'required|min:0',
         ];
     }
 
@@ -45,8 +45,8 @@ class ExpenseDetailRequest extends FormRequest
         return [
             'wallet_id' => 'required|exists:wallets,id',
             'item_name' => 'required',
-            'quantity' => 'required|numeric|gt:0',
-            'price' => 'required|numeric|gt:0',
+            'quantity' => 'required|min:0',
+            'price' => 'required|min:0',
         ];
     }
 }

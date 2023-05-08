@@ -83,5 +83,9 @@ class FortifyServiceProvider extends ServiceProvider
                 return $user;
             }
         });
+
+        Fortify::confirmPasswordView(function () {
+            return view('pages.confirm-password');
+        });
     }
 }

@@ -40,9 +40,9 @@ class WalletRequest extends FormRequest
                     $q->whereNull('deleted_at');
                 })
             ],
-            'init_value'    => 'required|numeric|gt:0',
+            'init_value'    => 'required|min:0',
         ];
-        
+
     }
 
     public function putMethod(): array

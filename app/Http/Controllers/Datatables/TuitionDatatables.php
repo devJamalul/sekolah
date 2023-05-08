@@ -31,7 +31,7 @@ class TuitionDatatables extends Controller
                 return $row->requested_by->name;
             })
             ->editColumn('approval_by', function ($row) {
-                return $row->approved_by->name;
+                return $row->approved_by ? $row->approved_by->name : '-';
             })
             ->addColumn('action', function (Tuition $row) {
                 $data = [

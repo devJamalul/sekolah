@@ -88,7 +88,8 @@
                                 window.location = redirect;
                             }, 1000)
                         },
-                        error: function(xhr, status, error) {
+                        error: function(response) {
+                            var err = JSON.parse(response.responseText);
                             toastMessage("error", err.msg)
                         }
                     })

@@ -23,7 +23,7 @@
                         <input type="hidden" name="academic_year_id" value="{{ $academicYears?->id }}">
                         @csrf
                         <div class="form-group">
-                            <label for="grade-select">Tingkat</label>
+                            <label for="grade-select">Tingkat<span class="text-small text-danger">*</span></label>
                             <select class="form-control  @error('grade_id') is-invalid @enderror" name="grade_id"
                                 id="grade-select">
                                 <option value="">-</option>
@@ -41,7 +41,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="classroom-input">Kelas</label>
+                            <label for="classroom-input">Kelas<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('name') is-invalid @enderror" name="name"
                                 value="{{ $classroom->name }}" id="classroom-input" placeholder="">
                             @error('name')
