@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
 use App\Actions\Invoice\CreateNewInvoiceNumber;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
@@ -110,7 +111,7 @@ class InvoiceController extends Controller
             DB::rollBack();
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->route('invoices.index')->withToastSuccess('Berhasil mengubah invoice!');
+        return redirect()->route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil mengubah invoice!');
     }
 
     /**

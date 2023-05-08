@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceDetailRequest;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
@@ -19,6 +20,12 @@ class InvoiceDetailController extends Controller
         $data['title'] = "Invoice " . $invoice->invoice_number;
         $data['details'] = $invoice->invoice_details;
         $data['invoice'] = $invoice;
+
+        // cek status dan bedakan view-nya jika statusnya bukan DRAFT
+        if ($invoice->is_posted != Invoice::POSTED_DRAFT) {
+            return view('pages.invoices.detail.show', $data);
+        }
+
         return view('pages.invoices.detail.index', $data);
     }
 

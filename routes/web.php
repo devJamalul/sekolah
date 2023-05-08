@@ -26,13 +26,13 @@ use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Invoice\InvoiceController;
+use App\Http\Controllers\Invoice\InvoiceDetailController;
 use App\Http\Controllers\Invoice\InvoiceReportController;
+use App\Http\Controllers\Invoice\PayInvoiceController;
+use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Reports\StudentReport;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\InvoiceDetailController;
-use App\Http\Controllers\PayInvoiceController;
-use App\Http\Controllers\PublishInvoiceController;
 
 /*
 |--------------------------------------------------------------------------

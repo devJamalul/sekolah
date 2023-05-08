@@ -16,34 +16,29 @@
       </div>
       <div class="card">
         <div class="card-body">
-          <form action="{{ route('invoice-details.store', $invoice->getKey()) }}" method="post">
-            @csrf
-
-            <div class="row">
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="note">Deskripsi</label>
-                  <input type="text" class="form-control" id="note" aria-describedby="note"
-                    value="{{ old('note', $invoice->note) }}" readonly>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="invoice_date">Tanggal Invoice</label>
-                  <input type="text" class="form-control" id="invoice_date" aria-describedby="invoice_date"
-                    value="{{ old('invoice_date', Laraindo\TanggalFormat::DateIndo($invoice->invoice_date)) }}" readonly>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label for="due_date">Jatuh Tempo</label>
-                  <input type="text" class="form-control" id="due_date" aria-describedby="due_date"
-                    value="{{ old('due_date', Laraindo\TanggalFormat::DateIndo($invoice->due_date)) }}" readonly>
-                </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="note">Deskripsi</label>
+                <input type="text" class="form-control" id="note" aria-describedby="note"
+                  value="{{ old('note', $invoice->note) }}" readonly>
               </div>
             </div>
-
-          </form>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="invoice_date">Tanggal Invoice</label>
+                <input type="text" class="form-control" id="invoice_date" aria-describedby="invoice_date"
+                  value="{{ old('invoice_date', Laraindo\TanggalFormat::DateIndo($invoice->invoice_date)) }}" readonly>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="due_date">Jatuh Tempo</label>
+                <input type="text" class="form-control" id="due_date" aria-describedby="due_date"
+                  value="{{ old('due_date', Laraindo\TanggalFormat::DateIndo($invoice->due_date)) }}" readonly>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -52,15 +47,6 @@
           Baris Invoice
         </div>
         <div class="card-body">
-          @if ($errors->any())
-            <div class="alert alert-danger">
-              <ul>
-                @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                @endforeach
-              </ul>
-            </div>
-          @endif
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -78,12 +64,13 @@
                 @php
                   $total += $detail->price;
                 @endphp
-                <input type="hidden" name="invoice_detail_id[]" value="{{ $detail->getKey() }}">
                 <tr>
                   <td scope="row">{{ $loop->iteration }}</td>
                   <td>{{ $detail->item_name }}</td>
                   <td>Rp. {{ number_format($detail->price, 0, ',', '.') }}</td>
-                  <td>{{ $detail->wallet->name ?? "Belum dibayar" }}</td>
+                  <td>
+                    {{ $detail->wallet->name ?? "Belum dibayar" }}
+                  </td>
                 </tr>
               @empty
                 <tr>
@@ -95,12 +82,6 @@
               <tr>
                 <td colspan="2" class="text-right font-weight-bold">Total Harga</td>
                 <td class="font-weight-bolder text-primary">Rp. {{ number_format($total, 0, ',', '.') }}</td>
-                <td>
-                  <form action="{{ route('invoices.voidment', $invoice->getKey()) }}" method="post">
-                    @csrf
-                    <button type="submit" class="btn btn-danger btn-sm">Void</button>
-                  </form>
-                </td>
               </tr>
             </tfoot>
           </table>
@@ -112,3 +93,9 @@
   </div>
   {{-- END ROW --}}
 @endsection
+
+@push('js')
+  <script>
+    formatAngka('#price')
+  </script>
+@endpush
