@@ -175,7 +175,7 @@
 
     academy_year.change(function(){
         getClassroom($(this).val())
-        session_classroom.val('')
+        location.reload()
     })
     classroomId.change(function() {
         reloadajax(datatableStudentRoom)

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Exports\ExpenseExport;
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ExpenseReportController extends Controller
 {
@@ -36,5 +40,20 @@ class ExpenseReportController extends Controller
 
         session(['expense_report_start' => Carbon::parse($tgl[0])]);
         session(['expense_report_end' => Carbon::parse($tgl[1])]);
+    }
+
+    public function exportExpenseReport(Request $request)
+    {
+        $query = null;
+        $expense = Expense::with('expense_details')->where('school_id', session('school_id'))->get();
+
+        switch ($request->action) {
+            case 'excel':
+                return Excel::download(new ExpenseExport($expense), "data_pengeluaran_biaya_". Carbon::parse(now())->format('d-m-Y') .".xlsx");
+                break;
+            case 'pdf':
+                return PDF::loadView('exports.report-expense', compact('expense'))->download("data_pengeluaran_biaya_". Carbon::parse(now())->format('d-m-Y') .".pdf");
+                break;
+        }
     }
 }

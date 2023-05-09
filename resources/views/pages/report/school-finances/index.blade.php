@@ -41,7 +41,7 @@
             </div>
             <div class="card ">
                 <div class="card-body ">
-                    <form action="{{ 'report-school-finances' }}" method="post">
+                    <form action="{{ 'report-school-finances.show' }}" method="post">
                         @csrf
                         <div class="row p-3">
                             <div class="col-4 p-0">
