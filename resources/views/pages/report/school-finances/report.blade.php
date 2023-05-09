@@ -10,11 +10,11 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
                 <div class="btn-group">
-                    <a href="{{ route('export-report-school-finances', $queryParameter) }}"
+                    <a href="{{ route('report-school-finances.export', $queryParameter) }}"
                         class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm">
                         Export Excel
                     </a>
-                    <a href="{{ route('report-school-finances') }}"
+                    <a href="{{ route('report-school-finances.index') }}"
                         class="d-none d-sm-inline-block btn btn-sm btn-default shadow-sm">
                         Kembali
                     </a>

@@ -125,9 +125,9 @@ Route::group([], function () {
     Route::resource("wallet", WalletController::class)->except(['show']);
 
     // report school finances
-    Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances');
-    Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances');
-    Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('export-report-school-finances');
+    Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances.index');
+    Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances.show');
+    Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('report-school-finances.export');
 
     // Invoice
     Route::resource('invoices', InvoiceController::class);
@@ -161,7 +161,6 @@ Route::prefix('reports')->group(function () {
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
-
 });
 
 Route::group([], function () {
