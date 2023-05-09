@@ -12,7 +12,6 @@ use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
-use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
@@ -34,6 +33,7 @@ use App\Http\Controllers\Invoice\PayInvoiceController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Reports\StudentReport;
+use App\Http\Controllers\TuitionApprovalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ Route::group([], function () {
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
     // Approvals
-    Route::resource('approvals', ApprovalController::class);
+    Route::resource('tuition-approval', TuitionApprovalController::class);
 
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');

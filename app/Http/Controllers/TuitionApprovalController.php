@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ApprovalController extends Controller
+class TuitionApprovalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -12,10 +12,10 @@ class ApprovalController extends Controller
     public function index()
     {
         $data = [
-            'title' => "Persetujuan"
+            'title' => "Persetujuan Biaya"
         ];
 
-        return view('pages.approvals.index', $data);
+        return view('pages.tuition-approval.index', $data);
     }
 
     /**

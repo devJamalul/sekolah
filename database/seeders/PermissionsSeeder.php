@@ -27,6 +27,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
+use Database\Seeders\Permissions\TuitionApprovalSeeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -70,7 +71,8 @@ class PermissionsSeeder extends Seeder
             InvoiceDetailSeeder::class,
             ExpenseSeeder::class,
             ExpenseDetailSeeder::class,
-            ExpenseReportSeeder::class
+            ExpenseReportSeeder::class,
+            TuitionApprovalSeeder::class
         ]);
     }
 }

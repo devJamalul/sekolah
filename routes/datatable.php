@@ -8,6 +8,7 @@ use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\ExpenseReportDatatables;
 use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
+use App\Http\Controllers\Datatables\TuitionApprovalDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('academy-years', [App\Http\Controllers\Datatables\AcademyYearDatatables::class, 'index'])->name('academy-year');
@@ -29,6 +30,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('classroom', [App\Http\Controllers\Datatables\ClassroomDatatables::class, 'index'])->name('classroom');
 
     Route::get('tuition-type', [App\Http\Controllers\Datatables\TuitionTypeDatatables::class, 'index'])->name('tuition-type');
+
+    Route::get('tuition-approval', [TuitionApprovalDatatables::class, 'index'])->name('tuition-approval');
 
     Route::get('assign-classroom-student', App\Http\Controllers\Datatables\AssignClassroomStudentDatatables::class)->name('assign-classroom-student');
 

@@ -28,7 +28,7 @@
                 <option value="">--- Pilih Biaya Sekolah ---</option>
                 @foreach ($tuitions as $tuition)
                     <option value="{{ $tuition->id }}" @selected(old('tuition_id') == $tuition->id)>
-                        {{ $tuition->tuition_type->name }}
+                        {{ $tuition->tuition_type->name }} - {{ $tuition->grade->grade_name }}
                     </option>
                 @endforeach
             </select>

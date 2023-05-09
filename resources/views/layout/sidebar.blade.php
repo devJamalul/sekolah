@@ -79,6 +79,12 @@
             Biaya
           </a>
         @endcan
+        @can('tuition-approval.index')
+          <a href="{{ route('tuition-approval.index') }}"
+            class="collapse-item {{ Request::is('tuition-approval') || Request::is('tuition-approval/*') ? 'active' : '' }}">
+            Persetujuan Biaya
+          </a>
+        @endcan
         @can('payment-type.index')
           <a href="{{ route('payment-type.index') }}"
             class="collapse-item {{ Request::is('payment-type') || Request::is('payment-type/*') ? 'active' : '' }}">
@@ -134,12 +140,6 @@
           <a href="{{ route('assign-classroom-student.index') }}"
             class="collapse-item {{ Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'active' : '' }}">
             Rombongan Belajar
-          </a>
-        @endcan
-        @can('approvals.index')
-          <a href="{{ route('approvals.index') }}"
-            class="collapse-item {{ Request::is('approvals') || Request::is('approvals/*') ? 'active' : '' }}">
-            Persetujuan
           </a>
         @endcan
       </div>
