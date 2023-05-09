@@ -96,50 +96,56 @@
     </li>
     <!-- End Keuangan Menu -->
 
-    <!-- Sekolah Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah"
-            aria-expanded="true" aria-controls="menuSekolah">
-            <i class="fas fa-school"></i>
-            <span>Sekolah</span>
-        </a>
-        <div id="menuSekolah" class="collapse {{ $menuSekolah }}" aria-labelledby="menuSekolah"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                @can('grade.index')
-                    <a href="{{ route('grade.index') }}"
-                        class="collapse-item {{ Request::is('grade') || Request::is('grade/*') ? 'active' : '' }}">
-                        Tingkat
-                    </a>
-                @endcan
-                @can('academy-year.index')
-                    <a href="{{ route('academy-year.index') }}"
-                        class="collapse-item {{ Request::is('academy-year') || Request::is('academy-year/*') ? 'active' : '' }}">
-                        Tahun Akademik
-                    </a>
-                @endcan
-                @can('students.index')
-                    <a href="{{ route('students.index') }}"
-                        class="collapse-item {{ Request::is('students') || Request::is('students/*') ? 'active' : '' }}">
-                        Data Siswa
-                    </a>
-                @endcan
-                @can('classroom.index')
-                    <a href="{{ route('classroom.index') }}"
-                        class="collapse-item {{ Request::is('classroom') || Request::is('classroom/*') ? 'active' : '' }}">
-                        Ruang Kelas
-                    </a>
-                @endcan
-                @can('assign-classroom-student.index')
-                    <a href="{{ route('assign-classroom-student.index') }}"
-                        class="collapse-item {{ Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'active' : '' }}">
-                        Rombongan Belajar
-                    </a>
-                @endcan
-            </div>
-        </div>
-    </li>
-    <!-- End Sekolah Menu -->
+  <!-- Sekolah Menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah" aria-expanded="true"
+      aria-controls="menuSekolah">
+      <i class="fas fa-school"></i>
+      <span>Sekolah</span>
+    </a>
+    <div id="menuSekolah" class="collapse {{ $menuSekolah }}" aria-labelledby="menuSekolah"
+      data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        @can('grade.index')
+          <a href="{{ route('grade.index') }}"
+            class="collapse-item {{ Request::is('grade') || Request::is('grade/*') ? 'active' : '' }}">
+            Tingkat
+          </a>
+        @endcan
+        @can('academy-year.index')
+          <a href="{{ route('academy-year.index') }}"
+            class="collapse-item {{ Request::is('academy-year') || Request::is('academy-year/*') ? 'active' : '' }}">
+            Tahun Akademik
+          </a>
+        @endcan
+        @can('students.index')
+          <a href="{{ route('students.index') }}"
+            class="collapse-item {{ Request::is('students') || Request::is('students/*') ? 'active' : '' }}">
+            Data Siswa
+          </a>
+        @endcan
+        @can('classroom.index')
+          <a href="{{ route('classroom.index') }}"
+            class="collapse-item {{ Request::is('classroom') || Request::is('classroom/*') ? 'active' : '' }}">
+            Ruang Kelas
+          </a>
+        @endcan
+        @can('assign-classroom-student.index')
+          <a href="{{ route('assign-classroom-student.index') }}"
+            class="collapse-item {{ Request::is('assign-classroom-student') || Request::is('assign-classroom-student/*') ? 'active' : '' }}">
+            Rombongan Belajar
+          </a>
+        @endcan
+        @can('approvals.index')
+          <a href="{{ route('approvals.index') }}"
+            class="collapse-item {{ Request::is('approvals') || Request::is('approvals/*') ? 'active' : '' }}">
+            Persetujuan
+          </a>
+        @endcan
+      </div>
+    </div>
+  </li>
+  <!-- End Sekolah Menu -->
 
     <!-- Transaksi Menu -->
     <li class="nav-item">
