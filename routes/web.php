@@ -153,15 +153,9 @@ Route::prefix('reports')->group(function () {
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
-});
+    Route::post('expense', [ExpenseReportController::class, 'exportExpenseReport'])->name('reports.expense.export');
 
-Route::prefix('reports')->group(function () {
-
-    // Report Student
-    Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
-    Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
-    Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
-});
+}); 
 
 Route::group([], function () {
     Route::resource("master-configs", ConfigController::class)->except(['show']);

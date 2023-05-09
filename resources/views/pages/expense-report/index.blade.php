@@ -12,7 +12,7 @@
       </div>
       <div class="card">
         <div class="card-body">
-          <form action="{{ route('expense-report.store') }}" method="post">
+          <form action="{{ route('reports.expense.export') }}" method="post">
             @csrf
             <div class="form-group">
               <label for="reportrange">Pilih Periode</label>
@@ -24,8 +24,13 @@
                 </div>
               @enderror
             </div>
-            <input name="cari" id="cari" class="btn btn-primary" type="submit" value="Cari">
-            <button type="reset" class="btn btn-secondary">Batal</button>
+            
+            <div>
+              <button type="submit" name="action" value="excel" class="btn btn-primary">Ekspor Excel</button>
+              <button type="submit" name="action" value="pdf" class="btn btn-primary">Ekspor PDF</button>
+            </div>
+
+
           </form>
         </div>
       </div>
