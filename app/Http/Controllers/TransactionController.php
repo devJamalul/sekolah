@@ -91,7 +91,6 @@ class TransactionController extends Controller
                 'student_tuition_id.required' => 'Tagihan biaya harus dipilih',
                 'payment_type_id.required' => 'Metode pembayaran harus dipilih',
                 'nominal.required' => 'Nominal harus diisi',
-                'nominal.numeric' => 'Nominal harus diisi dengan angka saja',
                 'nominal.min' => 'Nominal tidak boleh diisi 0 (nol)'
             ]
         );
@@ -114,7 +113,7 @@ class TransactionController extends Controller
                 'student_tuition_id' => $student_tuition->getKey()
             ])->sum('price');
 
-            $total_payment = $request->nominal + $total_price;
+            $total_payment = formatAngka($request->nominal) + $total_price;
             if ($total_payment > $student_tuition->grand_total) {
                 $lebih = $total_payment - $student_tuition->grand_total;
                 throw new \ErrorException('Pembayaran kelebihan IDR ' . number_format($lebih, '0', ',', '.'));
@@ -134,17 +133,18 @@ class TransactionController extends Controller
                 'payment_type_id' => $request->payment_type_id,
             ]);
 
-            // input invoice
-            $addToInvoice->handle($student_tuition);
-
             DB::commit();
+
+            $student_tuition->refresh();
+            // input invoice
+            $addToInvoice->handle($student_tuition, formatAngka($request->nominal));
 
             if ($total_payment >= $student_tuition->grand_total) {
                 $delay = now()->addSeconds(30);
-                $transaction->notify((new PaidTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+                $transaction->user->notify((new PaidTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
             } else {
                 $delay = now()->addSeconds(30);
-                $transaction->notify((new PartialTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+                $transaction->user->notify((new PartialTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
             }
 
             return redirect()->route('transactions.show', $transaction->getKey())->withToastSuccess('Berhasil menambahkan data transaksi!');
