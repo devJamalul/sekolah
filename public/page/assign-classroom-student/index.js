@@ -12,6 +12,10 @@
 
     const setClassroomId = $("input[name='classroom_id']")
 
+    const academy_year = $("#academy_year")
+
+    const session_classroom = $("#session_classroom")
+
     const columns = [
         {"data": "id"},
         {"data": "nis"},
@@ -20,13 +24,37 @@
     ];
 
 
+
     var selectedStudentStore = new Set()
     var selectedStudentDelete = new Set()
     var classroomSetData = {}
 
+    var getClassroom = function(id){
+        let currentClassroom = session_classroom.val();
+        var result = null;
+        $.get(route('get-classroom')+'?academy_year_id='+id,function(data){
+            classroomId.empty();
+            classroomId.append('<option value="">Kelas</option>');
+            for (let i = 0; i < data.classrooms.length; i++) {
+                let isSelected = currentClassroom == data.classrooms[i].id ? 'selected="true"' : '';
+
+                classroomId.append(`
+                <option value="${data.classrooms[i].id}" ${isSelected}>
+                 ${data.classrooms[i].grade.grade_name} -
+                 ${data.classrooms[i].name}</option>
+                `);
+            }
+            result = data;
+        });
+        return result;
+    }
+
+    getClassroom(academy_year.val());
+
+
+
+
     var hideBtn = (id,data) =>{data.size >= 1 ? id.show() : id.hide() };
-
-
 
     var selectedStore = (e) => {
         let isSelected = $(e).is(":checked");
@@ -63,7 +91,13 @@
 
 
     var setDataClassroomID = ()=>{
+
         let classroom_id = classroomId.find(":selected").val()
+
+        if(classroom_id.trim() == 0  ){
+            classroom_id = session_classroom.val()
+
+        }
         setClassroomId.val(classroom_id)
         classroomSetData.classroom_id = classroom_id
 
@@ -139,6 +173,10 @@
     });
 
 
+    academy_year.change(function(){
+        getClassroom($(this).val())
+        location.reload()
+    })
     classroomId.change(function() {
         reloadajax(datatableStudentRoom)
     });

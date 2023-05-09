@@ -15,7 +15,7 @@ class WalletDatatables extends Controller
         $wallet = Wallet::latest('created_at');
         return DataTables::of($wallet)
             ->editColumn('last_balance', function ($row) {
-                return $row->balance;
+                return "Rp. ". number_format($row->balance, 0, ',', '.');
             })
             ->addColumn('action', function (Wallet $row) {
                 $data = [

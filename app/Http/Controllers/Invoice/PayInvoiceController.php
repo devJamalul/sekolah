@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Invoice;
 
+use App\Actions\Wallet\WalletTransaction;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PayInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Wallet;
@@ -19,11 +21,15 @@ class PayInvoiceController extends Controller
 
         // cek status dan kembalikan jika statusnya masih DRAFT
         if ($invoice->is_posted == Invoice::POSTED_DRAFT)
-        return redirect()->back()->withToastError('Ups! Pembayaran tidak bisa dilakukan. Invoice harus diterbitkan dahulu.');
+            return redirect()->back()->withToastError('Ups! Pembayaran tidak bisa dilakukan. Invoice harus diterbitkan dahulu.');
 
         // cek pembayaran dan kembalikan jika pembayarannya sudah LUNAS
         if ($invoice->payment_status == Invoice::STATUS_PAID)
-        return redirect()->back()->withToastError('Ups! Invoice sudah dinyatakan lunas.');
+            return redirect()->back()->withToastError('Ups! Invoice sudah dinyatakan lunas.');
+
+        // cek pembayaran dan kembalikan jika invoice tidak dibuat dari halaman invoice
+        if ($invoice->is_original == false)
+            return redirect()->back()->withToastError('Ups! Pembayaran tidak bisa dilakukan. Invoice berasal dari transaksi lain.');
 
         // cek harus memiliki invoice_details
         if (count($invoice->invoice_details) == 0)
@@ -63,6 +69,11 @@ class PayInvoiceController extends Controller
             $invoice->payment_status = Invoice::STATUS_PAID;
             $invoice->save();
             DB::commit();
+            $invoice->refresh();
+            foreach ($invoice->invoice_details as $key => $inv_detail) {
+                $note = "Pembayaran Invoice #" . $invoice->invoice_number . ", " . $inv_detail->item_name;
+                WalletTransaction::increment($inv_detail->wallet->id, $inv_detail->price, $note);
+            }
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Publish invoice',

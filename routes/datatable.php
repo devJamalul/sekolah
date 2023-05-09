@@ -54,6 +54,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('report-school-finances', App\Http\Controllers\Datatables\ReportSchoolFinancesDatatables::class)->name('report-school-finances');
 
     Route::get('expense-report', ExpenseReportDatatables::class)->name('expense-report');
-    
+
     Route::get('invoices', App\Http\Controllers\Datatables\InvoiceDatatables::class)->name('invoices');
 });

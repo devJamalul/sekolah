@@ -26,7 +26,7 @@
                 <div class="form-group">
                   <label for="academic_year">Berdasarkan Tahun Akademik</label>
                   <select id="academic_year" name="academic_year" class="select2 form-control">
-                    <option value="" selected>--- Pilih ---</option>
+                    <option value="" selected>--- Semua ---</option>
                     @foreach ($academic_years as $academic_year)
                       <option value="{{ $academic_year->id }}">{{ $academic_year->academic_year_name }}</option>
                     @endforeach
@@ -45,7 +45,7 @@
                 <div class="form-group">
                   <label for="grade">Berdasarkan Tingkatan</label>
                   <select id="grade" name="grade" class="select2 form-control">
-                    <option value="" selected>--- Pilih ---</option>
+                    <option value="" selected>--- Semua ---</option>
                     @foreach ($grades as $grade)
                       <option value="{{ $grade->id }}">{{ $grade->grade_name }}</option>
                     @endforeach
@@ -129,7 +129,7 @@
 
       // Populate Select Option 
       if (response?.classrooms?.length > 0) {
-        $('#classroom').append(`<option value="" selected>--- Pilih ---</option>`)
+        $('#classroom').append(`<option value="" selected>--- Semua ---</option>`)
 
         response.classrooms.forEach(classroom => {
           $('#classroom')

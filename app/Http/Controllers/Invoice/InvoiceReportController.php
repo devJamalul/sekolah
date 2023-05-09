@@ -39,11 +39,13 @@ class InvoiceReportController extends Controller
 
         $invoices = Invoice::query()
             ->where('is_posted', '!=', Invoice::POSTED_DRAFT)
-            ->where('payment_status', $request->payment_status)
             ->whereBetween('invoice_date', [
                 session('invoice_report_start')->startOfDay()->format('Y-m-d H:i:s'),
                 session('invoice_report_end')->endOfDay()->format('Y-m-d H:i:s'),
             ])
+            ->when($request->payment_status != "*", function ($query) use ($request) {
+                $query->where('payment_status', $request->payment_status);
+            })
             ->orderBy('invoice_date')
             ->orderBy('payment_status')
             ->get();

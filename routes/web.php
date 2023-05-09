@@ -12,6 +12,7 @@ use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
@@ -26,13 +27,13 @@ use App\Http\Controllers\ReportSchoolFinancesController;
 use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Invoice\InvoiceController;
+use App\Http\Controllers\Invoice\InvoiceDetailController;
 use App\Http\Controllers\Invoice\InvoiceReportController;
+use App\Http\Controllers\Invoice\PayInvoiceController;
+use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Reports\StudentReport;
-use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\InvoiceDetailController;
-use App\Http\Controllers\PayInvoiceController;
-use App\Http\Controllers\PublishInvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,9 @@ Route::group([], function () {
     // Classroom
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
+    // Approvals
+    Route::resource('approvals', ApprovalController::class);
+
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
     Route::post('students/import-excel', [StudentsController::class, 'importStudentByExcel'])->name('students.importStudentByExcel');
@@ -78,6 +82,7 @@ Route::group([], function () {
     Route::post('school_selector', SchoolSelectorController::class)->name('school_selector')->middleware('role:super admin|ops admin');
 
     // Assign Classroom student
+    Route::get('get-classroom', [AssignClassroomStudentController::class, 'classroom'])->name('get-classroom');
     Route::get('assign-classroom-student', AssignClassroomStudentController::class)->name(('assign-classroom-student.index'));
     Route::post('assign-classroom-student', [AssignClassroomStudentController::class, 'store'])->name(('assign-classroom-student.store'));
     Route::delete('assign-classroom-student', [AssignClassroomStudentController::class, 'destroy'])->name(('assign-classroom-student.destroy'));
@@ -120,9 +125,9 @@ Route::group([], function () {
     Route::resource("wallet", WalletController::class)->except(['show']);
 
     // report school finances
-    Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances');
-    Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances');
-    Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('export-report-school-finances');
+    Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances.index');
+    Route::post('report-school-finances', [ReportSchoolFinancesController::class, 'report'])->name('report-school-finances.show');
+    Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('report-school-finances.export');
 
     // Invoice
     Route::resource('invoices', InvoiceController::class);
@@ -148,7 +153,6 @@ Route::prefix('reports')->group(function () {
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
-
 });
 
 Route::prefix('reports')->group(function () {
@@ -157,7 +161,6 @@ Route::prefix('reports')->group(function () {
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
-
 });
 
 Route::group([], function () {
