@@ -4,6 +4,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceDetail;
 use App\Models\School;
 use App\Models\User;
+use RealRashid\SweetAlert\Facades\Alert;
 
 beforeEach(function () {
     session(['school_id' => 2]);
@@ -124,6 +125,7 @@ test('can store new invoice with empty invoice number', function () {
     $this->assertDatabaseHas('invoices', $data);
     $invoice = Invoice::firstWhere('note', $inv_number);
     $response->assertRedirectContains($invoice->getKey() . '/detail');
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 });
 
 test('can store new invoice with invoice number', function () {
@@ -142,6 +144,7 @@ test('can store new invoice with invoice number', function () {
     $this->assertDatabaseHas('invoices', $data);
     $invoice = Invoice::firstWhere('invoice_number', $inv_number);
     $response->assertRedirectContains($invoice->getKey() . '/detail');
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 });
 
 // READ
@@ -158,7 +161,6 @@ test('can render invoice page as Sempoa Staff', function (User $user) {
     ->with('sempoa_staff');
 
 test('can render invoice page as School Staff', function (User $user) {
-    info(session('school_id'));
     $response = $this
         ->actingAs($user)
         ->get(route('invoices.index'));
@@ -272,7 +274,6 @@ test('update invoice validation - note', function () {
     $response->assertOk();
 
     // update
-    $new_note = "updated #" . str()->random(10);
     $data = [
         'invoice_number' => $invoice->invoice_number,
         'invoice_date' => $invoice->invoice_date,
@@ -407,6 +408,7 @@ test('can update invoice', function (User $user) {
 
     $this->assertDatabaseHas('invoices', $data);
     $invoice = Invoice::firstWhere('note', $inv_number);
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 
     // edit
     $response = $this
@@ -428,6 +430,8 @@ test('can update invoice', function (User $user) {
         ->put(route('invoices.update', ['invoice' => $invoice->getKey()]), $data);
 
     $this->assertDatabaseHas('invoices', $data);
+    $invoice->refresh();
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 })
     ->with([
         User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
@@ -440,3 +444,160 @@ test('can update invoice', function (User $user) {
 test('D E L E T E', function () {
     expect(true)->toBeTrue();
 });
+
+// VOID
+test('V O I D', function () {
+    expect(true)->toBeTrue();
+});
+
+test('can render void invoice page', function (User $user) {
+    $inv_number = str()->random(10);
+    $data = [
+        'school_id' => session('school_id'),
+        'note' => $inv_number,
+        'invoice_date' => now()->format('Y-m-d'),
+        'due_date' => now()->addDay()->format('Y-m-d')
+    ];
+    $response = $this
+        ->actingAs($user)
+        ->post(route('invoices.store', $data));
+
+    $this->assertDatabaseHas('invoices', $data);
+    $invoice = Invoice::firstWhere('note', $inv_number);
+
+    // void
+    $response = $this
+        ->actingAs($user)
+        ->get(route('invoices.void', ['invoice' => $invoice->getKey()]));
+
+    $response->assertOk();
+})
+    ->with([
+        User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
+        User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
+        User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+        User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+    ]);
+
+test('can void invoice', function (User $user) {
+    $inv_number = str()->random(10);
+    $data = [
+        'school_id' => session('school_id'),
+        'note' => $inv_number,
+        'invoice_date' => now()->format('Y-m-d'),
+        'due_date' => now()->addDay()->format('Y-m-d')
+    ];
+    $response = $this
+        ->actingAs($user)
+        ->post(route('invoices.store', $data));
+
+    $this->assertDatabaseHas('invoices', $data);
+    $invoice = Invoice::firstWhere('note', $inv_number);
+
+    // void
+    $this->actingAs($user)
+        ->get(route('invoices.void', ['invoice' => $invoice->getKey()]));
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('invoices.voidment', ['invoice' => $invoice->getKey()]));
+
+    // password confirmation
+    $response->assertRedirectContains('user/confirm-password');
+    $this->actingAs($user)->post(route('password.confirm'), ['password' => 'password']);
+    // $response->assertRedirectContains('void');
+
+    $response = $this
+        ->actingAs($user)
+        ->post(route('invoices.voidment', ['invoice' => $invoice->getKey()]));
+
+    // asserts
+    $invoice->refresh();
+    $this->assertDatabaseHas('invoices', $data);
+    $this->assertNotSoftDeleted($invoice);
+    expect($invoice->is_posted)->toBe(Invoice::VOID);
+    $this->assertTrue(session()->has('alert'));
+    info(session('alert'));
+    // $this->assertEquals('success', session('alert')['type']);
+})
+    ->with([
+        User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
+        User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
+        User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+        User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+    ]);
+
+test('can not void a voided invoice', function () {
+    $inv_number = str()->random(10);
+    $data = [
+        'school_id' => session('school_id'),
+        'note' => $inv_number,
+        'invoice_date' => now()->format('Y-m-d'),
+        'due_date' => now()->addDay()->format('Y-m-d')
+    ];
+    $this->actingAs($this->superAdmin)
+        ->post(route('invoices.store', $data));
+
+    $invoice = Invoice::firstWhere('note', $inv_number);
+
+    // void
+    $response = $this->actingAs($this->superAdmin)
+        ->post(route('invoices.voidment', ['invoice' => $invoice->getKey()]));
+
+    // password confirmation
+    $response->assertRedirectContains('user/confirm-password');
+    $this->actingAs($this->superAdmin)->post(route('password.confirm'), ['password' => 'password']);
+
+    // void confirmation
+    $response = $this->actingAs($this->superAdmin)
+        ->post(route('invoices.voidment', ['invoice' => $invoice->getKey()]));
+
+    $invoice->refresh();
+    expect($invoice->is_posted)->toBe(Invoice::VOID);
+
+    // re-void
+    $this->actingAs($this->superAdmin)
+        ->post(route('invoices.voidment', ['invoice' => $invoice->getKey()]));
+
+    // assert error
+    $this->assertTrue(session()->has('alert'));
+    info(session('alert'));
+    // $this->assertEquals('error', session('alert')['type']);
+})->todo();
+
+// PUBLISH
+test('P U B L I S H', function () {
+    expect(true)->toBeTrue();
+});
+
+test('can not publish invoice', function (User $user) {
+    $inv_number = str()->random(10);
+    $data = [
+        'school_id' => session('school_id'),
+        'note' => $inv_number,
+        'invoice_date' => now()->format('Y-m-d'),
+        'due_date' => now()->addDay()->format('Y-m-d')
+    ];
+    $response = $this
+        ->actingAs($user)
+        ->post(route('invoices.store', $data));
+
+    $this->assertDatabaseHas('invoices', $data);
+    $invoice = Invoice::firstWhere('note', $inv_number);
+    $response->assertRedirectToRoute('invoices.detail', ['invoice' => $invoice->getKey()]);
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
+
+    // publish
+    $response = $this
+        ->actingAs($user)
+        ->get(route('invoices.publish', ['invoice' => $invoice->getKey()]));
+
+    // assert
+    $response->assertRedirectToRoute('invoices.index');
+})
+    ->with([
+        User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
+        User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
+        User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+        User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+    ]);
