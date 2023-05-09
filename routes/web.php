@@ -107,9 +107,9 @@ Route::group([], function () {
     Route::delete('assign-classroom-staff', [AssignClassroomStaffController::class, 'destroy'])->name(('assign-classroom-staff.destroy'));
 
     // Expense
-    // Route::resource('expense', ExpenseController::class);
-    // Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
-    // Route::resource("expense-report", ExpenseReportController::class)->only(['index', 'store']);
+    Route::resource('expense', ExpenseController::class);
+    Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
+    Route::resource("expense-report", ExpenseReportController::class)->only(['index', 'store']);
 
     //staff
     Route::resource("staff", StaffController::class)->except(['show']);
