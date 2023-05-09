@@ -12,6 +12,7 @@ use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
@@ -64,6 +65,9 @@ Route::group([], function () {
     Route::resource('schools', SchoolsController::class)->except('show');
     // Classroom
     Route::resource("classroom", ClassroomController::class)->except(['show']);
+
+    // Approvals
+    Route::resource('approvals', ApprovalController::class);
 
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');
