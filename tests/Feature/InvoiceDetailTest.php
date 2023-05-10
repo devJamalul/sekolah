@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Invoice;
+use App\Models\InvoiceDetail;
 use App\Models\User;
+use App\Models\Wallet;
 
 beforeEach(function () {
     session(['school_id' => 2]);
@@ -35,19 +37,8 @@ test('C R E A T E', function () {
 });
 
 test('store invoice detail validation - item_name', function () {
-    $note = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'invoice_number' => $note,
-        'note' => $note,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d'),
-    ];
-    $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $invoice = Invoice::firstWhere('invoice_number', $note);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // invoice detail
     $data = [
@@ -62,19 +53,8 @@ test('store invoice detail validation - item_name', function () {
 });
 
 test('store invoice detail validation - price', function () {
-    $note = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'invoice_number' => $note,
-        'note' => $note,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d'),
-    ];
-    $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $invoice = Invoice::firstWhere('invoice_number', $note);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // invoice detail
     $item_name = "Barang #" . str()->random(2);
@@ -89,7 +69,7 @@ test('store invoice detail validation - price', function () {
     $response->assertInvalid(['price']);
 });
 
-test('can store new invoice with details', function () {
+test('can store new invoice with details', function (User $user) {
     $inv_number = str()->random(10);
     $data = [
         'school_id' => session('school_id'),
@@ -99,7 +79,7 @@ test('can store new invoice with details', function () {
         'due_date' => now()->addDay()->format('Y-m-d')
     ];
     $response = $this
-        ->actingAs($this->bendahara)
+        ->actingAs($user)
         ->post(route('invoices.store', $data));
 
     $this->assertDatabaseHas('invoices', $data);
@@ -114,7 +94,40 @@ test('can store new invoice with details', function () {
         'price' => 15000
     ];
     $response = $this
-        ->actingAs($this->bendahara)
+        ->actingAs($user)
         ->post(route('invoice-details.store', $invoice->getKey()), $data);
     $this->assertDatabaseHas('invoice_details', $data);
+})->with([
+    User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
+    User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
+    User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+    User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+]);
+
+// R E A D
+test('R E A D', function () {
+    expect(true)->toBeTrue();
 });
+
+test('can render invoice detail page', function (User $user) {
+    Wallet::factory()->create();
+    $invoice = Invoice::factory()->create();
+
+    $details = InvoiceDetail::factory()
+        ->count(3)
+        ->for($invoice)
+        ->create();
+    $invoice->refresh();
+
+    $response = $this
+        ->actingAs($user)
+        ->get(route('invoice-details.index', $invoice->getKey()));
+
+    $response->assertOk();
+})->with([
+    User::ROLE_KEPALA_SEKOLAH => [fn () => $this->superAdmin],
+    User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
+    User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+    User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+    User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
+]);

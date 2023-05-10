@@ -43,7 +43,7 @@ class InvoiceSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $admin_yayasan, $kepala_sekolah, $tata_usaha, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha, $bendahara]);
 
         // create school
         $permission = Permission::firstOrCreate([
@@ -105,11 +105,11 @@ class InvoiceSeeder extends Seeder
             'name' => $roles['report'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $admin_sekolah, $kepala_sekolah, $admin_yayasan]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['report-result'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $admin_sekolah, $kepala_sekolah, $admin_yayasan]);
     }
 }
