@@ -48,7 +48,7 @@ class ExpenseController extends Controller
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
-            $expense->status            = Expense::STATUS_PENDING;
+            $expense->status            = Expense::STATUS_REJECTED;
             $expense->note              = $request->note;
             $expense->request_by        = Auth::id();
             $expense->save();
