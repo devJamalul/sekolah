@@ -15,12 +15,11 @@
                 <div class="card-body">
                     <x-datatable 
                         :tableId="'tuition_approval'" 
-                        :tableHeaders="['Nama Biaya', 'Nominal', 'Dibuat oleh', 'Disetujui oleh', 'Aksi']" 
+                        :tableHeaders="['Nama Biaya', 'Nominal', 'Status', 'Aksi']" 
                         :tableColumns="[
                             ['data' => 'tuition_name'],
                             ['data' => 'price'],
-                            ['data' => 'created_by'],
-                            ['data' => 'approved_by'],
+                            ['data' => 'status'],
                             ['data' => 'action'] 
                         ]" 
                         :getDataUrl="route('datatable.tuition-approval')"

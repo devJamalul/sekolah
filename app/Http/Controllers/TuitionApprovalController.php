@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tuition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TuitionApprovalController extends Controller
 {
@@ -37,9 +39,14 @@ class TuitionApprovalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Tuition $tuition)
     {
-        //
+        // dd($tuition);
+        $data = [
+            'title' => "Persetujuan Biaya ".$tuition->id,
+            'tuition' => $tuition->withTrashed()->first(),
+        ];
+        return view('pages.tuition-approval.detail', $data);
     }
 
     /**
@@ -53,9 +60,18 @@ class TuitionApprovalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Tuition $tuition)
     {
-        //
+        dump("asdasdasd");
+        dump($request->all());
+        dd();
+        try {
+            $tuition->approval_by = Auth::user()->id;
+            $tuition->save();
+            return redirect()->route('pages.tuition-approval.index')->withToastSuccess('Berhasil mengubah Status!');
+        } catch (\Throwable $th) {
+            return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
+        }
     }
 
     /**

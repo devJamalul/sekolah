@@ -27,25 +27,37 @@ class TuitionApprovalDatatables extends Controller
                             return 'Rp. ' . number_format($row->price, 0, ',', '.');
                         })
                         ->addColumn('status', function ($row) {
-                            $createdBy = User::where('id', $row->request_by)->first() ?? '-';
-                            return $createdBy?->name ?? '-';
+                            if ($row->deleted_at) 
+                                return '<span class="badge badge-danger">Ditolak</span>';
+
+                            if ($row->approval_by)
+                                return '<span class="badge badge-success">Disetujui</span>';
+                            
+                            return '<span class="badge badge-primary">Menunggu Persetujuan</span>';
                         })  
-                        ->addColumn('created_by', function ($row) {
-                            $createdBy = User::where('id', $row->request_by)->first() ?? '-';
-                            return $createdBy?->name ?? '-';
-                        })  
-                        ->addColumn('approved_by', function ($row) {
-                            $approvedBy = User::where('id', $row->approvel_by)->first();
-                            return $approvedBy?->name ?? '-';
-                        })
                         ->addColumn('action', function (Tuition $row) use($request) {
-                            // $data = [
-                            //     'edit_url'     => route('tuition-master.edit', ['id' => $request->id, 'tuition_master' => $row->student_tuition_masters_id]),
-                            //     'delete_url'   => route('tuition-master.destroy', ['id' => $request->id, 'tuition_master' => $row->student_tuition_masters_id]),
-                            //     'redirect_url' => route('tuition-master.index', ['id' => $request->id]),
-                            //     'resource'     => 'tuition-master',
-                            // ];
-                            // return view('components.datatable-action', $data);
-                        })->toJson();
+                            $data = [
+                                'redirect_url' => route('tuition-approval.index'),
+                                'resource'     => 'tuition-approval',
+                                'custom_links' => [
+                                    [
+                                        'label' => 'Detil',
+                                        'url' => route('tuition-approval.show', ['tuition_approval' => $row->getKey()]),
+                                    ]
+                                ]
+                            ];
+                            return view('components.datatable-action', $data);
+                        })
+                        ->rawColumns(['status'])
+                        ->toJson();
+
+                        // ->addColumn('created_by', function ($row) {
+                        //     $createdBy = User::where('id', $row->request_by)->first() ?? '-';
+                        //     return $createdBy?->name ?? '-';
+                        // })  
+                        // ->addColumn('approved_by', function ($row) {
+                        //     $approvedBy = User::where('id', $row->approve_by)->first();
+                        //     return $approvedBy?->name ?? '-';
+                        // })
     }
 }
