@@ -155,7 +155,8 @@ Route::prefix('reports')->group(function () {
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
     Route::post('expense', [ExpenseReportController::class, 'exportExpenseReport'])->name('reports.expense.export');
 
-}); 
+});
+
 
 Route::group([], function () {
     Route::resource("master-configs", ConfigController::class)->except(['show']);
