@@ -53,7 +53,7 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoices.index')->withToastError('Ups! ' . $th->getMessage());
         }
         return redirect()->route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
     }
@@ -67,11 +67,11 @@ class InvoiceController extends Controller
 
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
         if ($invoice->is_original == false)
-            return redirect()->back()->withToastError('Ups! Invoice tidak berhak diubah.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak diubah.');
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
         if ($invoice->is_posted != Invoice::POSTED_DRAFT)
-            return redirect()->back()->withToastError('Ups! Invoice tidak berhak untuk diubah.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
 
         $data['title'] = "Ubah " . $this->title;
         $data['invoice'] = $invoice;
@@ -87,11 +87,11 @@ class InvoiceController extends Controller
 
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
         if ($invoice->is_original == false)
-            return redirect()->back()->withToastError('Ups! Invoice tidak berhak diubah.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak diubah.');
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
         if ($invoice->is_posted != Invoice::POSTED_DRAFT)
-            return redirect()->back()->withToastError('Ups! Invoice tidak berhak untuk diubah.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
 
         DB::beginTransaction();
         try {
@@ -109,7 +109,7 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoices.index')->withToastError('Ups! ' . $th->getMessage());
         }
         return redirect()->route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil mengubah invoice!');
     }
