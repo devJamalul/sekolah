@@ -6,7 +6,7 @@
 
     const btnStore = $("#assign-classroom-store")
 
-    const btnDestroy = $("#assign-classroom-delete")
+    const btnDestroy = $(".btn-classroom-exist")
 
     const classroomId = $("#classroom_id")
 
@@ -15,6 +15,20 @@
     const academy_year = $("#academy_year")
 
     const session_classroom = $("#session_classroom")
+
+    const modalAssignClass = $("#assingclassroom-modal")
+
+    const labelStaffClass = $("#staff-class")
+
+    const labelAssignClass = $("#assingclassroom-modal-label")
+
+    const academy_year_modal = $("#academy-year-modal")
+
+    const setClassroomOptions = $("#list-classroom-modal")
+
+    const setTypeModal = $("input[name='type']")
+
+    const setClassroomIdOld = $("input[name='classroom_old']")
 
     const columns = [
         {"data": "id"},
@@ -29,17 +43,19 @@
     var selectedStudentDelete = new Set()
     var classroomSetData = {}
 
-    var getClassroom = function(id){
+    var getClassroom = function(id,setClassromList){
         let currentClassroom = session_classroom.val();
         var result = null;
         $.get(route('get-classroom')+'?academy_year_id='+id,function(data){
-            classroomId.empty();
-            classroomId.append('<option value="">Kelas</option>');
+            setClassromList.empty();
+            setClassromList.append('<option value="">Kelas</option>');
             for (let i = 0; i < data.classrooms.length; i++) {
+                let nameStaffClassroom = data.classrooms[i].staff.length >= 1 ? data.classrooms[i].staff[0].name : ""
                 let isSelected = currentClassroom == data.classrooms[i].id ? 'selected="true"' : '';
 
-                classroomId.append(`
-                <option value="${data.classrooms[i].id}" ${isSelected}>
+                setClassromList.append(`
+                <option value="${data.classrooms[i].id}" ${isSelected}
+                data-staff="${nameStaffClassroom}">
                  ${data.classrooms[i].grade.grade_name} -
                  ${data.classrooms[i].name}</option>
                 `);
@@ -49,8 +65,8 @@
         return result;
     }
 
-    getClassroom(academy_year.val());
-
+    getClassroom(academy_year.val(),classroomId);
+    getClassroom(academy_year_modal.val(),setClassroomOptions);
 
 
 
@@ -96,7 +112,6 @@
 
         if(classroom_id.trim() == 0  ){
             classroom_id = session_classroom.val()
-
         }
         setClassroomId.val(classroom_id)
         classroomSetData.classroom_id = classroom_id
@@ -158,6 +173,15 @@
                 'selectedDestroy'
             )
 
+    var assignclassroom = function(type,academyYearId,academyYearName){
+        let classroom_id = classroomId.find(":selected")
+        getClassroom(academyYearId,setClassroomOptions)
+        academy_year_modal.val(academyYearId)
+        setClassroomIdOld.val(classroom_id.val())
+        setTypeModal.val(type)
+        labelAssignClass.html(type+" Dari "+classroom_id.text()+" Tahun Ajaran :"+ academyYearName)
+        modalAssignClass.modal()
+    }
 
 
 
@@ -169,14 +193,23 @@
     });
 
     btnDestroy.click(()=>{
-        appenDataStudent(selectedStudentDelete,btnDestroy)
+        appenDataStudent(selectedStudentDelete,academy_year_modal)
     });
 
 
     academy_year.change(function(){
-        getClassroom($(this).val())
+        getClassroom($(this).val(),classroomId)
         location.reload()
     })
+
     classroomId.change(function() {
+        let classroom_id = $(this).val()
+        let nameStaff = $(this).find(":selected").data('staff')
+
+        if(classroom_id.trim() == 0  ){
+            let setSessionClassroom = session_classroom.val('')
+        }
+
+        labelStaffClass.html(nameStaff)
         reloadajax(datatableStudentRoom)
     });

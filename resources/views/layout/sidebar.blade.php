@@ -1,7 +1,7 @@
 @php
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*') ? 'show' : '';
     $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*') ? 'show' : '';
-    $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*') ? 'show' : '';
+    $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
     $menuLaporan = Request::is('report-student-tuition', 'report-student-tuition/*', 'expense-report', 'expense-report/*', 'reports/students', 'reports/students/*', 'reports/invoices', 'reports/invoices/*', 'report-school-finances') ? 'show' : '';
@@ -124,6 +124,12 @@
                         Data Siswa
                     </a>
                 @endcan
+                @can('students.index')
+                    <a href="{{ route('students.index') }}"
+                        class="collapse-item {{ Request::is('students', 'students/*') ? 'active' : '' }}">
+                        Data Guru
+                    </a>
+                @endcan
                 @can('classroom.index')
                     <a href="{{ route('classroom.index') }}"
                         class="collapse-item {{ Request::is('classroom', 'classroom/*') ? 'active' : '' }}">
@@ -134,6 +140,12 @@
                     <a href="{{ route('assign-classroom-student.index') }}"
                         class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">
                         Rombongan Belajar
+                    </a>
+                @endcan
+                @can('assign-classroom-staff.index')
+                    <a href="{{ route('assign-classroom-staff.index') }}"
+                        class="collapse-item {{ Request::is('assign-classroom-staff', 'assign-classroom-staff/*') ? 'active' : '' }}">
+                        Rombongan Wali Kelas
                     </a>
                 @endcan
                 @can('approvals.index')

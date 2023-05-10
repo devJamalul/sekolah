@@ -23,6 +23,13 @@ class AssignClassroomStudentController extends Controller
             AcademicYear::STATUS_STARTED,
             AcademicYear::STATUS_REGISTRATION
         ])->orderBy('status_years', 'desc')->get();
+
+
+        $data['academy_year'] = (object)[
+            'started' => $data['academy_years']?->where('status_years', AcademicYear::STATUS_STARTED)->first(),
+            'register' => $data['academy_years']?->where('status_years', AcademicYear::STATUS_REGISTRATION)->first()
+        ];
+
         return view('pages.assign-classroom-student.index', $data);
     }
 
@@ -31,9 +38,7 @@ class AssignClassroomStudentController extends Controller
         DB::beginTransaction();
 
         try {
-            $classroom = Classroom::find($request->classroom_id);
-            $classroom->students()->attach($request->id);
-            $classroom->save();
+            $this->setClassroom($request);
             DB::commit();
         } catch (\Throwable $th) {
             return redirect()
@@ -51,14 +56,16 @@ class AssignClassroomStudentController extends Controller
     public function destroy(AssignClassroomStudentRequest $request)
     {
 
-
-
-
         DB::beginTransaction();
         try {
-            $classroom = Classroom::find($request->classroom_id);
-            $classroom->students()->detach($request->id);
-            $classroom->save();
+            $isChangeClassroom = $request->type == 'Pindah Kelas';
+
+
+            if ($isChangeClassroom) {
+                $this->destroyClassroom($request);
+            }
+            $this->setClassroom($request);
+
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
@@ -79,7 +86,9 @@ class AssignClassroomStudentController extends Controller
         try {
             if ($request->has('academy_year_id')) {
                 $academicYear = $request->academy_year_id;
-                $classroom    = Classroom::with('grade')->where('academic_year_id', $academicYear)->get();
+                $classroom    = Classroom::with('grade', 'staff')
+                    ->where('academic_year_id', $academicYear)->get();
+
                 return response()->json(['msg' => 'Berhasil', 'classrooms' => $classroom], 200);
             } else {
                 return response()->json(['msg' => 'Gagal', 'classrooms' => []], 201);
@@ -87,5 +96,19 @@ class AssignClassroomStudentController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['msg' => 'Gagal'], 400);
         }
+    }
+
+    private function setClassroom($request)
+    {
+        $classroom = Classroom::find($request->classroom_id);
+        $classroom->students()->attach($request->id);
+        $classroom->save();
+    }
+
+    private function destroyClassroom($request)
+    {
+        $classroom = Classroom::find($request->classroom_old);
+        $classroom->students()->detach($request->id);
+        $classroom->save();
     }
 }
