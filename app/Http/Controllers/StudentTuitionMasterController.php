@@ -60,7 +60,7 @@ class StudentTuitionMasterController extends Controller
             $studentTuitionMaster                       = new StudentTuitionMaster;
             $studentTuitionMaster->student_id           = $request->id;
             $studentTuitionMaster->tuition_id           = $request->tuition_id;
-            $studentTuitionMaster->price                = $request->price;
+            $studentTuitionMaster->price                = formatAngka($request->price);
             $studentTuitionMaster->note                 = $request->note;
             $studentTuitionMaster->save();
             return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');
@@ -116,7 +116,7 @@ class StudentTuitionMasterController extends Controller
             $studentTuitionMaster = StudentTuitionMaster::findOrFail($request->tuition_master);
             $studentTuitionMaster->student_id           = $request->id;
             $studentTuitionMaster->tuition_id           = $request->tuition_id;
-            $studentTuitionMaster->price                = $request->price;
+            $studentTuitionMaster->price                = formatAngka($request->price);
             $studentTuitionMaster->note                 = $request->note;
             $studentTuitionMaster->save();
             return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');
