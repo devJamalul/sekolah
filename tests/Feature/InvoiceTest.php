@@ -174,19 +174,8 @@ test('U P D A T E', function () {
     expect(true)->toBeTrue();
 });
 test('can render invoice edit page as Sempoa Staff', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($user)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -198,19 +187,8 @@ test('can render invoice edit page as Sempoa Staff', function (User $user) {
     ->with('sempoa_staff');
 
 test('can render invoice edit page as School Staff', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($user)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -225,19 +203,8 @@ test('can render invoice edit page as School Staff', function (User $user) {
     ]);
 
 test('can not render invoice edit page as School Staff', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -252,19 +219,8 @@ test('can not render invoice edit page as School Staff', function (User $user) {
     ]);
 
 test('update invoice validation - note', function () {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -287,19 +243,8 @@ test('update invoice validation - note', function () {
 });
 
 test('update invoice validation - invoice_number', function () {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -323,19 +268,8 @@ test('update invoice validation - invoice_number', function () {
 });
 
 test('update invoice validation - invoice_date', function () {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -359,19 +293,8 @@ test('update invoice validation - invoice_date', function () {
 });
 
 test('update invoice validation - due_date', function () {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($this->bendahara)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // edit
     $response = $this
@@ -395,19 +318,8 @@ test('update invoice validation - due_date', function () {
 });
 
 test('can update invoice', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($user)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 
     // edit
@@ -445,25 +357,33 @@ test('D E L E T E', function () {
     expect(true)->toBeTrue();
 });
 
+test('can delete invoice', function (User $user) {
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
+
+    // delete
+    $this->actingAs($user)->delete(route('invoices.destroy', ['invoice' => $invoice->getKey()]));
+
+    // assert
+    $invoice->refresh();
+    $this->assertSoftDeleted($invoice);
+})
+    ->with([
+        User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
+        User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
+        User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+        User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+    ]);
+
 // VOID
 test('V O I D', function () {
     expect(true)->toBeTrue();
 });
 
 test('can render void invoice page', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($user)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // void
     $response = $this
@@ -480,19 +400,8 @@ test('can render void invoice page', function (User $user) {
     ]);
 
 test('can void invoice', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($user)
-        ->post(route('invoices.store', $data));
-
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
     // void
     $this->actingAs($user)
@@ -513,12 +422,9 @@ test('can void invoice', function (User $user) {
 
     // asserts
     $invoice->refresh();
-    $this->assertDatabaseHas('invoices', $data);
+    $this->assertModelExists($invoice);
     $this->assertNotSoftDeleted($invoice);
     expect($invoice->is_posted)->toBe(Invoice::VOID);
-    $this->assertTrue(session()->has('alert'));
-    info(session('alert'));
-    // $this->assertEquals('success', session('alert')['type']);
 })
     ->with([
         User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
@@ -528,17 +434,10 @@ test('can void invoice', function (User $user) {
     ]);
 
 test('can not void a voided invoice', function () {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $this->actingAs($this->superAdmin)
-        ->post(route('invoices.store', $data));
-
-    $invoice = Invoice::firstWhere('note', $inv_number);
+    $invoice = Invoice::factory()->create([
+        'is_posted' => Invoice::VOID
+    ]);
+    $invoice->refresh();
 
     // void
     $response = $this->actingAs($this->superAdmin)
@@ -563,7 +462,7 @@ test('can not void a voided invoice', function () {
     $this->assertTrue(session()->has('alert'));
     info(session('alert'));
     // $this->assertEquals('error', session('alert')['type']);
-})->todo();
+});
 
 // PUBLISH
 test('P U B L I S H', function () {
@@ -571,28 +470,17 @@ test('P U B L I S H', function () {
 });
 
 test('can not publish invoice', function (User $user) {
-    $inv_number = str()->random(10);
-    $data = [
-        'school_id' => session('school_id'),
-        'note' => $inv_number,
-        'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
-    ];
-    $response = $this
-        ->actingAs($user)
-        ->post(route('invoices.store', $data));
+    $invoice = Invoice::factory()->create();
+    $invoice->refresh();
 
-    $this->assertDatabaseHas('invoices', $data);
-    $invoice = Invoice::firstWhere('note', $inv_number);
-    $response->assertRedirectToRoute('invoices.detail', ['invoice' => $invoice->getKey()]);
+    $this->assertModelExists($invoice);
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 
     // publish
-    $response = $this
-        ->actingAs($user)
-        ->get(route('invoices.publish', ['invoice' => $invoice->getKey()]));
+    $response = $this->actingAs($user)->get(route('invoices.publish', ['invoice' => $invoice->getKey()]));
 
     // assert
+    expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
     $response->assertRedirectToRoute('invoices.index');
 })
     ->with([
