@@ -101,7 +101,7 @@
                                             <button type="submit" id="assign-classroom-store"
                                                 class="btn btn-primary btn-block">
                                                 <i class="fa fa-arrow-circle-right " aria-hidden="true"></i>
-                                                {{ $title }}
+                                                Tetapkan kelas
                                             </button>
                                         </div>
                                         {{-- END BUTTON TETAPKAN KELAS  --}}

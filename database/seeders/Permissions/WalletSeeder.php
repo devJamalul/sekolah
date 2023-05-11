@@ -31,6 +31,8 @@ class WalletSeeder extends Seeder
             'update' => 'wallet.update',
             'destroy' => 'wallet.destroy',
             'logs' => 'wallet.logs',
+            'topup.show' => 'wallet.topup.show',
+            'topup.store' => 'wallet.topup.store',
         ];
 
         // index
@@ -77,5 +79,17 @@ class WalletSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $kepala_sekolah]);
+
+        // topup Wallet
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['topup.show'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['topup.store'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
     }
 }

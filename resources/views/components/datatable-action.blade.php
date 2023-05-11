@@ -1,38 +1,44 @@
 @php
-    $tombolUbah = isset($edit_url) ? "<a class=\"dropdown-item\" href=\"$edit_url\">Ubah</a>" : "";
-    $tombolHapus = isset($delete_url) ? "<a class=\"dropdown-item\" data-url=\"$delete_url\" data-redirect=$redirect_url onclick=\"softDelete(this)\">Hapus</a>" : "";
+    $tombolUbah = isset($edit_url) ? "<a class=\"dropdown-item\" href=\"$edit_url\">Ubah</a>" : '';
+    $tombolHapus = isset($delete_url) ? "<a class=\"dropdown-item\" data-url=\"$delete_url\" data-redirect=$redirect_url onclick=\"softDelete(this)\">Hapus</a>" : '';
 @endphp
 <div class="btn-group">
-  <div class="dropdown">
-    <button class="btn btn-primary btn-sm dropdown-toggle shadow-sm" type="button" id="dropdownMenuButton"
-      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Opsi
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      @if (isset($resource))
-        @can("$resource.edit")
-          {!! $tombolUbah !!}
-        @endcan
-      @else
-        {!! $tombolUbah !!}
-      @endif
-      @if (isset($resource))
-        @can("$resource.destroy")
-          {!! $tombolHapus !!}
-        @endcan
-      @else
-        {!! $tombolHapus !!}
-      @endif
+    <div class="dropdown">
+        <button class="btn btn-primary btn-sm dropdown-toggle shadow-sm" type="button" id="dropdownMenuButton"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Opsi
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            @if (isset($resource))
+                @can("$resource.edit")
+                    {!! $tombolUbah !!}
+                @endcan
+            @else
+                {!! $tombolUbah !!}
+            @endif
+            @if (isset($resource))
+                @can("$resource.destroy")
+                    {!! $tombolHapus !!}
+                @endcan
+            @else
+                {!! $tombolHapus !!}
+            @endif
 
-      @if (isset($custom_links))
-            @foreach ($custom_links as $link)
-            <a class="dropdown-item" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
-            @endforeach
-      @endif
+            @if (isset($custom_links))
+                @foreach ($custom_links as $link)
+                    @if (isset($link['name']))
+                        @can($link['name'])
+                            <a class="dropdown-item" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                        @endcan
+                    @else
+                        <a class="dropdown-item" href="{{ $link['url'] }}">{{ $link['label'] }}</a>
+                    @endif
+                @endforeach
+            @endif
 
-      @stack('item')
+            @stack('item')
 
+        </div>
     </div>
-  </div>
-  @stack('opsi')
+    @stack('opsi')
 </div>

@@ -39,7 +39,7 @@ class TransactionSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
 
         // create
         $permission = Permission::firstOrCreate([

@@ -33,7 +33,8 @@ class WalletDatatables extends Controller
                     'custom_links' => [
                         [
                             'label' => 'Top Up',
-                            'url' => route('wallet.topup.show', $row->id)
+                            'url' => route('wallet.topup.show', $row->id),
+                            'name' => 'wallet.topup.show'
                         ]
                     ]
                 ];

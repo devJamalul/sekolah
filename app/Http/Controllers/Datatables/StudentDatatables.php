@@ -29,6 +29,7 @@ class StudentDatatables extends Controller
                                     [
                                         'label' => 'Biaya Khusus',
                                         'url' => route('tuition-master.index', ['id' => $row->id]),
+                                        'name' => 'tuition-master.index'
                                     ]
                                 ]
                             ];

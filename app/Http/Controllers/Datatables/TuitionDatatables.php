@@ -16,7 +16,7 @@ class TuitionDatatables extends Controller
         $tuition = Tuition::with('tuition_type', 'academic_year', 'grade', 'requested_by', 'approved_by');
         return DataTables::of($tuition)
             ->editColumn('tuition_type', function ($row) {
-                return $row->tuition_type ? $row->tuition_type->name : '-' ; 
+                return $row->tuition_type ? $row->tuition_type->name : '-' ;
             })
             ->editColumn('academic_year', function ($row) {
                 return $row->academic_year ? $row->academic_year->academic_year_name : '-' ;
@@ -37,7 +37,8 @@ class TuitionDatatables extends Controller
                 $data = [
                     'edit_url'     => route('tuition.edit', ['tuition' => $row->id]),
                     'delete_url'   => route('tuition.destroy', ['tuition' => $row->id]),
-                    'redirect_url' => route('tuition.index')
+                    'redirect_url' => route('tuition.index'),
+                    'resource' => 'tuition'
                 ];
                 return view('components.datatable-action', $data);
             })->toJson();

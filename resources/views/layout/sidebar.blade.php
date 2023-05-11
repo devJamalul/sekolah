@@ -24,7 +24,7 @@
     <li class="nav-item {{ Request::is('home', 'home/*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span>{{ \App\Models\School::find(session('school_id'))->school_name ?? 'Dashboard' }}</span></a>
     </li>
 
     <!-- Divider -->
@@ -57,6 +57,7 @@
     </li>
     <!-- End Administrasi Menu -->
 
+    @canany(['tuition-type.index', 'tuition.index', 'wallet.index', 'payment-type.index'])
     <!-- Keuangan Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKeuangan"
@@ -79,108 +80,117 @@
                         Biaya
                     </a>
                 @endcan
-                @can('payment-type.index')
-                    <a href="{{ route('payment-type.index') }}"
-                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
-                        Tipe Pembayaran
-                    </a>
-                @endcan
                 @can('wallet.index')
                     <a href="{{ route('wallet.index') }}"
                         class="collapse-item {{ Request::is('wallet', 'wallet/*') ? 'active' : '' }}">
                         Dompet
                     </a>
                 @endcan
+                @can('payment-type.index')
+                    <a href="{{ route('payment-type.index') }}"
+                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
+                        Tipe Pembayaran
+                    </a>
+                @endcan
             </div>
         </div>
     </li>
     <!-- End Keuangan Menu -->
+    @endcanany
 
-    <!-- Sekolah Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah"
-            aria-expanded="true" aria-controls="menuSekolah">
-            <i class="fas fa-school"></i>
-            <span>Sekolah</span>
-        </a>
-        <div id="menuSekolah" class="collapse {{ $menuSekolah }}" aria-labelledby="menuSekolah"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                @can('grade.index')
-                    <a href="{{ route('grade.index') }}"
-                        class="collapse-item {{ Request::is('grade', 'grade/*') ? 'active' : '' }}">
-                        Tingkat
-                    </a>
-                @endcan
-                @can('academy-year.index')
-                    <a href="{{ route('academy-year.index') }}"
-                        class="collapse-item {{ Request::is('academy-year', 'academy-year/*') ? 'active' : '' }}">
-                        Tahun Akademik
-                    </a>
-                @endcan
-                @can('students.index')
-                    <a href="{{ route('students.index') }}"
-                        class="collapse-item {{ Request::is('students', 'students/*') ? 'active' : '' }}">
-                        Data Siswa
-                    </a>
-                @endcan
-                @can('classroom.index')
-                    <a href="{{ route('classroom.index') }}"
-                        class="collapse-item {{ Request::is('classroom', 'classroom/*') ? 'active' : '' }}">
-                        Ruang Kelas
-                    </a>
-                @endcan
-                @can('assign-classroom-student.index')
-                    <a href="{{ route('assign-classroom-student.index') }}"
-                        class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">
-                        Rombongan Belajar
-                    </a>
-                @endcan
-                @can('approvals.index')
-                    <a href="{{ route('approvals.index') }}"
-                        class="collapse-item {{ Request::is('approvals', 'approvals/*') ? 'active' : '' }}">
-                        Persetujuan
-                    </a>
-                @endcan
+    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index', 'approvals.index'])
+        <!-- Sekolah Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah"
+                aria-expanded="true" aria-controls="menuSekolah">
+                <i class="fas fa-school"></i>
+                <span>Sekolah</span>
+            </a>
+            <div id="menuSekolah" class="collapse {{ $menuSekolah }}" aria-labelledby="menuSekolah"
+                data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    @can('grade.index')
+                        <a href="{{ route('grade.index') }}"
+                            class="collapse-item {{ Request::is('grade', 'grade/*') ? 'active' : '' }}">
+                            Tingkat
+                        </a>
+                    @endcan
+                    @can('academy-year.index')
+                        <a href="{{ route('academy-year.index') }}"
+                            class="collapse-item {{ Request::is('academy-year', 'academy-year/*') ? 'active' : '' }}">
+                            Tahun Akademik
+                        </a>
+                    @endcan
+                    @can('students.index')
+                        <a href="{{ route('students.index') }}"
+                            class="collapse-item {{ Request::is('students', 'students/*') ? 'active' : '' }}">
+                            Data Siswa
+                        </a>
+                    @endcan
+                    @can('classroom.index')
+                        <a href="{{ route('classroom.index') }}"
+                            class="collapse-item {{ Request::is('classroom', 'classroom/*') ? 'active' : '' }}">
+                            Ruang Kelas
+                        </a>
+                    @endcan
+                    @can('assign-classroom-student.index')
+                        <a href="{{ route('assign-classroom-student.index') }}"
+                            class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">
+                            Rombongan Belajar
+                        </a>
+                    @endcan
+                    @can('approvals.index')
+                        <a href="{{ route('approvals.index') }}"
+                            class="collapse-item {{ Request::is('approvals', 'approvals/*') ? 'active' : '' }}">
+                            Persetujuan
+                        </a>
+                    @endcan
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- End Sekolah Menu -->
+        </li>
+        <!-- End Sekolah Menu -->
+    @endcanany
 
-    <!-- Transaksi Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuTransaksi"
-            aria-expanded="true" aria-controls="menuTransaksi">
-            <i class="fas fa-chart-line"></i>
-            <span>Transaksi</span>
-        </a>
-        <div id="menuTransaksi" class="collapse {{ $menuTransaksi }}" aria-labelledby="menuTransaksi"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Pemasukan</h6>
-                @can('invoices.index')
-                    <a href="{{ route('invoices.index') }}"
-                        class="collapse-item {{ Request::is('invoices', 'invoices/*') ? 'active' : '' }}">
-                        Invoice
-                    </a>
-                @endcan
-                @can('transactions.index')
-                    <a href="{{ route('transactions.index') }}"
-                        class="collapse-item {{ Request::is('transactions', 'transactions/*') ? 'active' : '' }}">
-                        Pembayaran Sekolah
-                    </a>
-                @endcan
-                <h6 class="collapse-header">Pengeluaran</h6>
-                @can('expense.index')
-                    <a href="{{ route('expense.index') }}"
-                        class="collapse-item {{ Request::is('expense', 'expense/*') ? 'active' : '' }}">
-                        Pengeluaran Biaya
-                    </a>
-                @endcan
+    @canany(['invoices.index', 'transactions.index', 'expense.index'])
+        <!-- Transaksi Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuTransaksi"
+                aria-expanded="true" aria-controls="menuTransaksi">
+                <i class="fas fa-chart-line"></i>
+                <span>Transaksi</span>
+            </a>
+            <div id="menuTransaksi" class="collapse {{ $menuTransaksi }}" aria-labelledby="menuTransaksi"
+                data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    @canany(['invoices.index', 'transactions.index'])
+                        <h6 class="collapse-header">Pemasukan</h6>
+                        @can('invoices.index')
+                            <a href="{{ route('invoices.index') }}"
+                                class="collapse-item {{ Request::is('invoices', 'invoices/*') ? 'active' : '' }}">
+                                Invoice
+                            </a>
+                        @endcan
+                        @can('transactions.index')
+                            <a href="{{ route('transactions.index') }}"
+                                class="collapse-item {{ Request::is('transactions', 'transactions/*') ? 'active' : '' }}">
+                                Pembayaran Sekolah
+                            </a>
+                        @endcan
+                    @endcanany
+                    @canany(['expense.index'])
+                        <h6 class="collapse-header">Pengeluaran</h6>
+                        @can('expense.index')
+                            <a href="{{ route('expense.index') }}"
+                                class="collapse-item {{ Request::is('expense', 'expense/*') ? 'active' : '' }}">
+                                Pengeluaran Biaya
+                            </a>
+                        @endcan
+                    @endcanany
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- End Transaksi Menu -->
+        </li>
+        <!-- End Transaksi Menu -->
+    @endcanany
 
     <!-- Laporan Menu -->
     <li class="nav-item">
