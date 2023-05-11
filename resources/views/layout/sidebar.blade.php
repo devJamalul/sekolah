@@ -17,51 +17,6 @@
         <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
     </a>
 
-  <!-- Keuangan Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKeuangan" aria-expanded="true"
-      aria-controls="menuKeuangan">
-      <i class="fas fa-coins"></i>
-      <span>Keuangan</span>
-    </a>
-    <div id="menuKeuangan" class="collapse {{ $menuKeuangan }}" aria-labelledby="menuKeuangan"
-      data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        @can('tuition-type.index')
-          <a href="{{ route('tuition-type.index') }}"
-            class="collapse-item {{ Request::is('tuition-type') || Request::is('tuition-type/*') ? 'active' : '' }}">
-            Tipe Biaya
-          </a>
-        @endcan
-        @can('tuition.index')
-          <a href="{{ route('tuition.index') }}"
-            class="collapse-item {{ Request::is('tuition') || Request::is('tuition/*') ? 'active' : '' }}">
-            Biaya
-          </a>
-        @endcan
-        @can('tuition-approval.index')
-          <a href="{{ route('tuition-approval.index') }}"
-            class="collapse-item {{ Request::is('tuition-approval') || Request::is('tuition-approval/*') ? 'active' : '' }}">
-            Persetujuan Biaya
-          </a>
-        @endcan
-        @can('payment-type.index')
-          <a href="{{ route('payment-type.index') }}"
-            class="collapse-item {{ Request::is('payment-type') || Request::is('payment-type/*') ? 'active' : '' }}">
-            Tipe Pembayaran
-          </a>
-        @endcan
-        @can('wallet.index')
-          <a href="{{ route('wallet.index') }}"
-            class="collapse-item {{ Request::is('wallet') || Request::is('wallet/*') ? 'active' : '' }}">
-            Dompet
-          </a>
-        @endcan
-      </div>
-    </div>
-  </li>
-  <!-- End Keuangan Menu -->
-
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('home', 'home/*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
