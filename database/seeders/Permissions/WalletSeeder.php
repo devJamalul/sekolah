@@ -29,7 +29,8 @@ class WalletSeeder extends Seeder
             'store' => 'wallet.store',
             'edit' => 'wallet.edit',
             'update' => 'wallet.update',
-            'destroy' => 'wallet.destroy'
+            'destroy' => 'wallet.destroy',
+            'logs' => 'wallet.logs',
         ];
 
         // index
@@ -69,5 +70,12 @@ class WalletSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+
+        // Wallet logs
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['logs'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $kepala_sekolah]);
     }
 }

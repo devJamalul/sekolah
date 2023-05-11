@@ -14,13 +14,24 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'grade'" 
-                    :tableHeaders="['Nama Dompet', 'Saldo Akhir', 'Aksi']" 
+                    <x-datatable :tableId="'grade'"
+                    :tableHeaders="['Nama Dompet', 'Saldo Akhir', 'Aksi']"
                     :tableColumns="[
                         ['data' => 'name'],
-                        ['data' => 'last_balance'], 
-                        ['data' => 'action']]" 
+                        ['data' => 'last_balance'],
+                        ['data' => 'action']]"
                     :getDataUrl="route('datatable.wallet')" />
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    Keterangan
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <span class='text-small text-danger'>*</span> Dompet khusus Dana Bos
+                    </p>
                 </div>
             </div>
         </div>

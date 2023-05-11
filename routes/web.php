@@ -5,7 +5,6 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\TuitionController;
@@ -34,6 +33,9 @@ use App\Http\Controllers\Invoice\PayInvoiceController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Reports\StudentReport;
+use App\Http\Controllers\Wallet\TopUpWalletController;
+use App\Http\Controllers\Wallet\WalletController;
+use App\Http\Controllers\Wallet\WalletLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,6 +125,11 @@ Route::group([], function () {
 
     // Wallet
     Route::resource("wallet", WalletController::class)->except(['show']);
+    Route::get('wallet/{wallet}/logs', WalletLogController::class)->name('wallet.logs');
+    Route::controller(TopUpWalletController::class)->prefix('wallet')->name('wallet.')->group(function () {
+        Route::get('{wallet}/topup', 'show')->name('topup.show');
+        Route::post('{wallet}/topup', 'store')->name('topup.store');
+    });
 
     // report school finances
     Route::get('report-school-finances', [ReportSchoolFinancesController::class, 'index'])->name('report-school-finances.index');
