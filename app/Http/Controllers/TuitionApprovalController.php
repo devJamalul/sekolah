@@ -41,12 +41,11 @@ class TuitionApprovalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Tuition $tuition)
+    public function show(Tuition $tuition_approval)
     {
-        // dd($tuition);
         $data = [
-            'title' => "Persetujuan Biaya ".$tuition->id,
-            'tuition' => $tuition->withTrashed()->first(),
+            'title' => "Persetujuan Biaya",
+            'tuition' => $tuition_approval,
         ];
         return view('pages.tuition-approval.detail', $data);
     }
