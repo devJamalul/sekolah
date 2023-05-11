@@ -62,8 +62,10 @@ class WalletController extends Controller
      */
     public function edit(Wallet $wallet)
     {
-        $title = 'Ubah Dompet';
-        return view('pages.wallet.edit', compact('wallet', 'title'));
+        $data['title'] = 'Ubah Dompet';
+        $data['wallet'] = $wallet;
+        $data['danabos'] = Wallet::where('danabos', 1)->count();
+        return view('pages.wallet.edit', $data);
     }
 
     /**
@@ -77,6 +79,7 @@ class WalletController extends Controller
             $wallet->school_id  = session('school_id');
             $wallet->name       = $request->name;
             $wallet->init_value = formatAngka($request->init_value);
+            $wallet->danabos = $request->danabos ?? 0;
             $wallet->save();
 
             DB::commit();
