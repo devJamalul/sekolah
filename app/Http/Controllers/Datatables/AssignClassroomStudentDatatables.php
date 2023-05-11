@@ -27,7 +27,17 @@ class AssignClassroomStudentDatatables extends Controller
 
         $studentClassroom = ClassroomStudent::whereHas('classroom.academic_year', fn ($q) => $q->active())->pluck('student_id');
         $students = Student::with('school')
-            ->whereNotIn('id', $studentClassroom)->latest('created_at');
+            ->whereNotIn('id', $studentClassroom)
+            ->when($request->has('nis'), function ($q) use ($request) {
+                $q->where('nis', 'LIKE', '%' . $request->nis . '%');
+            })
+            ->when($request->has('name'), function ($q) use ($request) {
+                $q->where('name', 'LIKE', '%' . $request->name . '%');
+            })
+            ->when($request->has('dob'), function ($q) use ($request) {
+                $q->where('dob', 'LIKE', '%' . $request->dob . '%');
+            })
+            ->latest('created_at');
         return DataTables::of($students)->toJson();
     }
 }
