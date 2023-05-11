@@ -8,6 +8,7 @@ use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\ExpenseReportDatatables;
 use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
+use App\Http\Controllers\Datatables\WalletLogDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('academy-years', [App\Http\Controllers\Datatables\AcademyYearDatatables::class, 'index'])->name('academy-year');
@@ -50,6 +51,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('transaction-report', TransactionReportDatatables::class)->name('transaction-report');
 
     Route::get('wallet', [App\Http\Controllers\Datatables\WalletDatatables::class, 'index'])->name('wallet');
+    Route::get('wallet/{wallet}/logs', WalletLogDatatables::class)->name('wallet.logs');
 
     Route::get('report-school-finances', App\Http\Controllers\Datatables\ReportSchoolFinancesDatatables::class)->name('report-school-finances');
 

@@ -20,7 +20,8 @@ class PaymentTypeDatatables extends Controller
                 $data = [
                     'edit_url'     => route('payment-type.edit', ['payment_type' => $row->id]),
                     'delete_url'   => route('payment-type.destroy', ['payment_type' => $row->id]),
-                    'redirect_url' => route('payment-type.index')
+                    'redirect_url' => route('payment-type.index'),
+                    'resource' => 'payment-type'
                 ];
                 return view('components.datatable-action', $data);
             })->toJson();

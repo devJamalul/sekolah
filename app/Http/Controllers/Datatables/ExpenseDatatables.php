@@ -36,12 +36,13 @@ class ExpenseDatatables extends Controller
                     'custom_links' => [
                         [
                             'label' => 'Detail',
-                            'url' => route('expense.show', ['expense' => $row->id])
+                            'url' => route('expense.show', ['expense' => $row->id]),
+                            'name' => 'expense.show'
                         ],
                     ]
                 ];
                 return view('components.datatable-action', $data);
-                
+
             })
             ->rawColumns(['status', 'action'])
             ->toJson();
