@@ -64,7 +64,9 @@ class ExpenseDetailController extends Controller
             
             else{
 
-                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror Simpan Detail Pengeluaran!');
+                $walletName = Wallet::find($expenseDetail->wallet_id);
+
+                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet '. $walletName->name .' tidak mencukupi untuk melakukan pengeluaran ini!');
            
             }
 
