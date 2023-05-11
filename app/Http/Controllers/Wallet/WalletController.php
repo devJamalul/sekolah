@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Wallet;
 
+use App\Http\Controllers\Controller;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +24,9 @@ class WalletController extends Controller
      */
     public function create()
     {
-        $title = "Tambah Dompet";
-        return view('pages.wallet.create', compact('title'));
+        $data['title'] = "Tambah Dompet";
+        $data['danabos'] = Wallet::where('danabos', 1)->count();
+        return view('pages.wallet.create', $data);
     }
 
     /**
@@ -33,19 +35,20 @@ class WalletController extends Controller
     public function store(WalletRequest $request)
     {
         DB::beginTransaction();
+        $DanaBosCount = Wallet::where('danabos', 1)->count();
 
         try {
-
             $wallet                 = new Wallet();
             $wallet->school_id      = session('school_id');
             $wallet->name           = $request->name;
             $wallet->init_value     = formatAngka($request->init_value);
+            if ($request->has('danabos') and $DanaBosCount == 0) {
+                $wallet->danabos = true;
+            }
             $wallet->last_balance   = 0;
             $wallet->save();
 
             DB::commit();
-
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('wallet.index')->withToastError('Eror Simpan Dompet!');
@@ -55,20 +58,14 @@ class WalletController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Wallet $wallet)
     {
-        $title = 'Ubah Dompet';
-        return view('pages.wallet.edit', compact('wallet', 'title'));
+        $data['title'] = 'Ubah Dompet';
+        $data['wallet'] = $wallet;
+        $data['danabos'] = Wallet::where('danabos', 1)->count();
+        return view('pages.wallet.edit', $data);
     }
 
     /**
@@ -79,13 +76,13 @@ class WalletController extends Controller
         DB::beginTransaction();
 
         try {
-
             $wallet->school_id  = session('school_id');
             $wallet->name       = $request->name;
+            $wallet->init_value = formatAngka($request->init_value);
+            $wallet->danabos = $request->danabos ?? 0;
             $wallet->save();
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('wallet.index')->withToastError('Eror Simpan Dompet!');
@@ -101,15 +98,19 @@ class WalletController extends Controller
     {
        DB::beginTransaction();
 
-       try {
+       if ($wallet->balance > 0) {
+            return response()->json([
+                'msg' => 'Tidak bisa menghapus Dompet!'
+            ]);
+       }
 
+       try {
         $wallet->delete();
         DB::commit();
 
         return response()->json([
             'msg' => 'Berhasil Hapus Dompet!'
         ], 200);
-
        } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([

@@ -11,8 +11,10 @@
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
                 <div>
                     {{-- <a href="{{ route('publish-tuition.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TERBITKAN</a> --}}
-                    <a href="{{ route('tuition.create') }}"
-                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
+                    @can('tuition.create')
+                        <a href="{{ route('tuition.create') }}"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
+                    @endcan
                 </div>
             </div>
             <div class="card">

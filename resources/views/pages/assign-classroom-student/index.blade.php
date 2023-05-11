@@ -20,7 +20,7 @@
 
         {{-- START MENU FILTER CLASSROOM --}}
         <div class="col-lg-12">
-
+            <input type="hidden" id="session_classroom" value="{{ session('classroom_id') }}">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
             </div>
@@ -43,18 +43,43 @@
 
 
                 {{-- START SELECT CLASS  --}}
-                <div class="d-flex justify-content-between ">
-                    <div class="w-75 d-flex py-4">
-                        <h6 class="font-weight-bold">Tahun Ajaran : {{ $academy_year?->academic_year_name }}</h6>
+                <div class="d-flex justify-content-between " style="margin: -10px">
+                    <div class="w-75 d-flex mt-4">
+                        {{-- START SELECT ACADEMY YEARS --}}
+                        <div class="form-group ml-2">
+                            <select
+                                class="form-control select2 @error('academy_year') is-invalid
+                                             @enderror"
+                                name="academy_year" id="academy_year">
+                                @foreach ($academy_years as $key => $years)
+                                    <option value="{{ $years->id }}"
+                                        {{ session('academy_year') == $years->id ? 'selected' : '' }}>
+                                        {{ $years->academic_year_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('classroom_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="form-group ml-auto">
+                            <button class="btn btn-primary btn-sm filter">
+                                Filter
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        {{-- END SELECT ACADEMY YEARS --}}
                     </div>
                     {{--  START SELECT CLASS COMPONENT TETAPKAN KELAS DAN HAPUS KELAS --}}
                     <div class="w-75 ml-5  d-flex flex-column">
                         <div class="row d-flex  mt-4 justify-content-between">
-                            <div class="col-8">
+                            <div class="col-7">
+
 
                                 {{-- START FORM TETAPKAN KELAS --}}
                                 <form action="{{ route('assign-classroom-student.store') }}" class="row" method="post">
-                                    <div class="col-6">
+                                    <div class="col-5 ">
                                         @csrf
 
                                         {{-- START SELECT CLASSROOM --}}
@@ -65,18 +90,16 @@
                                                          @enderror"
                                                 name="classroom_id" id="classroom_id">
                                                 <option value="">Kelas</option>
-                                                @foreach ($classroom as $key => $class)
-                                                    <option value="{{ $class->id }}"
-                                                        {{ session('classroom_id') == $class->id ? 'selected' : '' }}>
-                                                        {{ $class->grade->grade_name }} -
-                                                        {{ $class->name }}</option>
-                                                @endforeach
+
                                             </select>
                                             @error('classroom_id')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
+                                            <small>
+                                                <b>Wali Kelas : <span id="staff-class"></span></b>
+                                            </small>
                                         </div>
                                         {{-- END SELECT CLASSROOM --}}
                                     </div>
@@ -85,9 +108,9 @@
                                         {{-- START BUTTON TETAPKAN KELAS --}}
                                         <div class="form-group ">
                                             <button type="submit" id="assign-classroom-store"
-                                                class="btn btn-primary btn-block">
+                                                class="btn btn-primary btn-block btn-sm">
                                                 <i class="fa fa-arrow-circle-right " aria-hidden="true"></i>
-                                                {{ $title }}
+                                                Tetapkan kelas
                                             </button>
                                         </div>
                                         {{-- END BUTTON TETAPKAN KELAS  --}}
@@ -96,19 +119,24 @@
                                 {{-- END FORM TETAPKAN KELAS --}}
 
                             </div>
-                            <div class="col-4">
+                            <div class="col-5">
 
                                 {{-- START FORM HAPUS KELAS --}}
-                                <form action="{{ route('assign-classroom-student.destroy') }}" class="form-group"
-                                    method="post">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="hidden" name="classroom_id">
-                                    <button type="submit" id="assign-classroom-delete" class="btn btn-danger btn-block ">
-                                        <i class="fa fa-trash " aria-hidden="true"></i>
-                                        <span>Hapus Siswa Terpilih</span>
+
+                                <input type="hidden" name="classroom_id">
+                                <div class="btn-group btn-block">
+                                    <button type="button" class="btn btn-sm btn-success btn-classroom-exist"
+                                        onclick="assignclassroom('Naik kelas','{{ $academy_year->register?->id }}','{{ $academy_year->register?->academic_year_name }}')">
+                                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                        <span>Naik Kelas</span>
                                     </button>
-                                </form>
+                                    <button type="button" class="btn btn-sm  btn-danger btn-classroom-exist"
+                                        onclick="assignclassroom('Pindah Kelas','{{ $academy_year->started?->id }}','{{ $academy_year->started?->academic_year_name }}')">
+                                        <span class="fa-fw select-all fas"></span>
+
+                                        <span>Pindah Kelas</span>
+                                    </button>
+                                </div>
                                 {{-- END FORM HAPUS KELAS --}}
 
 
@@ -135,12 +163,30 @@
                                 @endphp
                                 <table class="table table-bordered" id="students" width="100%" cellspacing="0">
                                     <thead>
+                                        <tr id="filter-wrap" style="display: none">
+                                            <th>
+                                                <a href="#" id="reset-filter">Reset</a>
+                                            </th>
+                                            <th>
+                                                <input type="text" class="form-control filter-student" placeholder="Cari NIS"
+                                                    id="nis">
+                                            </th>
+                                            <th>
+                                                <input type="text" class="form-control filter-student"
+                                                    placeholder="Cari Nama" id="name">
+                                            </th>
+                                            <th>
+                                                <input type="text" class="form-control filter-student" id="dob"
+                                                    placeholder="Cari Tanggal Lahir">
+                                            </th>
+                                        </tr>
                                         <tr>
                                             <th>ID</th>
                                             <th>NIS</th>
                                             <th>Nama</th>
                                             <th>Tanggal lahir</th>
                                         </tr>
+
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -155,7 +201,6 @@
 
                             </div>
                             <div class="w-75  d-flex flex-column">
-
                                 @php
                                     $tableColumns = [['data' => 'id'], ['data' => 'nis'], ['data' => 'name'], ['data' => 'dob']];
                                 @endphp
@@ -178,6 +223,50 @@
             </div>
             {{-- END ASSIGN CLASS --}}
         </div>
+
+        <div class="modal fade" id="assingclassroom-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="assingclassroom-modal-label"></h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="{{ route('assign-classroom-student.destroy') }}" class="form-group" method="post">
+                        <div class="modal-body">
+                            @csrf
+                            @method('DELETE')
+                            <div class="form-group ">
+                                <input type="hidden" name="classroom_old">
+                                <input type="hidden" name="type">
+                                <input type="hidden" id="academy-year-modal">
+                            </div>
+                            <div class="form-group">
+                                <select
+                                    class="form-control  @error('classroom_id')
+                                         is-invalid
+                                         @enderror"
+                                    name="classroom_id" id="list-classroom-modal">
+                                    <option value="">Kelas</option>
+
+                                </select>
+                                @error('classroom_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     @endsection
 
     @push('css')
@@ -188,4 +277,12 @@
         <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
         <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('page/assign-classroom-student/index.js') }}"></script>
+        <script>
+            $("#list-classroom-modal").select2({
+                dropdownParent: $("#assingclassroom-modal")
+            });
+            $(".filter").click(function() {
+                $("#filter-wrap").toggle();
+            })
+        </script>
     @endpush

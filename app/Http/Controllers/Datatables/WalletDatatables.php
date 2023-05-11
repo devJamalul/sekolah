@@ -14,8 +14,15 @@ class WalletDatatables extends Controller
     {
         $wallet = Wallet::latest('created_at');
         return DataTables::of($wallet)
+            ->editColumn('name', function ($row) {
+                $danabos = match ($row->danabos) {
+                    1 => "<span class='text-small text-danger'>*</span>",
+                    0 => '',
+                };
+                return "<a href='" . route('wallet.logs', $row->getKey()) . "'>" . $row->name . "</a> " . $danabos;
+            })
             ->editColumn('last_balance', function ($row) {
-                return $row->balance;
+                return "Rp. " . number_format($row->balance, 0, ',', '.');
             })
             ->addColumn('action', function (Wallet $row) {
                 $data = [
@@ -23,8 +30,15 @@ class WalletDatatables extends Controller
                     'delete_url'   => route('wallet.destroy', ['wallet' => $row->id]),
                     'redirect_url' => route('wallet.index'),
                     'resource'     => 'wallet',
+                    'custom_links' => [
+                        [
+                            'label' => 'Top Up',
+                            'url' => route('wallet.topup.show', $row->id),
+                            'name' => 'wallet.topup.show'
+                        ]
+                    ]
                 ];
                 return view('components.datatable-action', $data);
-            })->toJson();
+            })->rawColumns(['name'])->toJson();
     }
 }

@@ -1,18 +1,15 @@
 @extends('layout.master-page')
 
 @section('content')
-    {{-- start ROW --}}
 
+    {{-- start ROW --}}
     <div class="row">
 
-        {{-- start table Grade --}}
+        {{-- start table Approval --}}
         <div class="col-lg-10">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
-                @can('grade.create')
-                    <a href="{{ route('grade.create') }}"
-                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
-                @endcan
+                <a href="{{ route('grade.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
             </div>
             <div class="card">
                 <div class="card-body">
@@ -20,7 +17,9 @@
                 </div>
             </div>
         </div>
-        {{-- END table Grade --}}
+        {{-- END table Approval --}}
+        
     </div>
     {{-- END ROW --}}
+
 @endsection

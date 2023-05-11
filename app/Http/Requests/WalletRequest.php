@@ -29,6 +29,14 @@ class WalletRequest extends FormRequest
         };
     }
 
+    public function attributes()
+    {
+        return [
+            'name' => 'nama dompet',
+            'init_value' => 'saldo awal'
+        ];
+    }
+
     public function postMethod(): array
     {
         return [
@@ -56,6 +64,7 @@ class WalletRequest extends FormRequest
                     $q->whereNull('deleted_at');
                 })->ignore($this->wallet->id, 'id')
             ],
+            'init_value'    => 'required|min:0',
         ];
     }
 }

@@ -31,6 +31,25 @@
                                 </div>
                             @enderror
                         </div>
+
+                        @if ($wallet->danabos == 1 or $danabos == 0)
+                        <div class="form-check my-2">
+                            <input type="checkbox" class="form-check-input" name="danabos" value="1"
+                                @checked(old('danabos', $wallet->danabos) == '1') id="danabos-checkbox">
+                            <label class="form-check-label" for="danabos-checkbox">Dana Bos</label>
+                        </div>
+                        @endif
+
+                        <div class="form-group">
+                            <label for="init-value-input">Saldo Awal<span class="text-small text-danger">*</span></label>
+                            <input type="text" class="form-control @error('init_value') is-invalid @enderror"
+                                name="init_value" value="{{ old('init_value', $wallet->init_value) }}" id="init_value-input">
+                            @error('init_value')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                         <button type="submit" class="btn btn-primary">Ubah</button>
                     </form>
                 </div>
@@ -41,3 +60,9 @@
     </div>
     {{-- END ROW --}}
 @endsection
+
+@push('js')
+    <script>
+        formatAngka('#init_value-input')
+    </script>
+@endpush
