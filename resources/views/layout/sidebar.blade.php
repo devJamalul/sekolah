@@ -1,7 +1,7 @@
 @php
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*') ? 'show' : '';
     $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*') ? 'show' : '';
-    $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*') ? 'show' : '';
+    $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
     $menuLaporan = Request::is('report-student-tuition', 'report-student-tuition/*', 'expense-report', 'expense-report/*', 'reports/students', 'reports/students/*', 'reports/invoices', 'reports/invoices/*', 'report-school-finances') ? 'show' : '';
@@ -78,6 +78,12 @@
                     <a href="{{ route('tuition.index') }}"
                         class="collapse-item {{ Request::is('tuition', 'tuition/*') ? 'active' : '' }}">
                         Biaya
+                    </a>
+                @endcan
+                @can('payment-type.index')
+                    <a href="{{ route('payment-type.index') }}"
+                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
+                        Tipe Pembayaran
                     </a>
                 @endcan
                 @can('wallet.index')
