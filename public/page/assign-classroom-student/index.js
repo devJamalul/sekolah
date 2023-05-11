@@ -30,6 +30,10 @@
 
     const setClassroomIdOld = $("input[name='classroom_old']")
 
+    const filterStudent = $('.filter-student')
+
+    const resetFilterStudent = $('#reset-filter')
+
     const columns = [
         {"data": "id"},
         {"data": "nis"},
@@ -39,11 +43,17 @@
 
 
 
+
+
     var selectedStudentStore = new Set()
     var selectedStudentDelete = new Set()
     var classroomSetData = {}
 
-    var getClassroom = function(id,setClassromList){
+    var classroomList = [];
+
+    var setNameStaff = (label,nameStaff) => label.html(nameStaff)
+
+    var getClassroom = function(id,setClassromList,labelStaff,idClassroomOld = 0){
         let currentClassroom = session_classroom.val();
         var result = null;
         $.get(route('get-classroom')+'?academy_year_id='+id,function(data){
@@ -53,6 +63,14 @@
                 let nameStaffClassroom = data.classrooms[i].staff.length >= 1 ? data.classrooms[i].staff[0].name : ""
                 let isSelected = currentClassroom == data.classrooms[i].id ? 'selected="true"' : '';
 
+                if(isSelected !== ''){
+                    setNameStaff(labelStaff,nameStaffClassroom)
+                }
+
+                if(idClassroomOld>0 && idClassroomOld == data.classrooms[i].id){
+                    continue;
+                }
+
                 setClassromList.append(`
                 <option value="${data.classrooms[i].id}" ${isSelected}
                 data-staff="${nameStaffClassroom}">
@@ -60,13 +78,12 @@
                  ${data.classrooms[i].name}</option>
                 `);
             }
+            classroomList = data.classrooms
             result = data;
         });
         return result;
     }
 
-    getClassroom(academy_year.val(),classroomId);
-    getClassroom(academy_year_modal.val(),setClassroomOptions);
 
 
 
@@ -99,7 +116,6 @@
     }
 
     var reloadajax = (e) => {
-        setDataClassroomID()
         e.ajax.reload(null, false)
     }
 
@@ -114,11 +130,11 @@
             classroom_id = session_classroom.val()
         }
         setClassroomId.val(classroom_id)
-        classroomSetData.classroom_id = classroom_id
+        classroomSetData= { classroom_id :classroom_id}
 
     }
 
-    var datatableStudent = (table,url,dataSelected,selectedRowFun)  =>{
+    var datatableStudent = (table,url,dataSelected,selectedRowFun,isSearch =true)  =>{
         setDataClassroomID()
        return table.DataTable({
             processing: true,
@@ -129,6 +145,7 @@
                 },
                 url: url
             },
+            searching: isSearch,
             columns: columns,
             'columnDefs': [{
                 'targets': 0,
@@ -163,7 +180,8 @@
         tableStudents,
         route('datatable.assign-students'),
         selectedStudentStore,
-        'selectedStore'
+        'selectedStore',
+        false
         )
 
     var datatableStudentRoom = datatableStudent(
@@ -175,7 +193,7 @@
 
     var assignclassroom = function(type,academyYearId,academyYearName){
         let classroom_id = classroomId.find(":selected")
-        getClassroom(academyYearId,setClassroomOptions)
+        getClassroom(academyYearId,setClassroomOptions,labelStaffClass,classroom_id.val())
         academy_year_modal.val(academyYearId)
         setClassroomIdOld.val(classroom_id.val())
         setTypeModal.val(type)
@@ -187,6 +205,8 @@
 
     hideBtn(btnStore,selectedStudentStore)
     hideBtn(btnDestroy,selectedStudentDelete)
+    getClassroom(academy_year.val(),classroomId,labelStaffClass)
+    getClassroom(academy_year_modal.val(),setClassroomOptions,labelStaffClass)
 
     btnStore.click(()=>{
         appenDataStudent(selectedStudentStore,btnStore)
@@ -198,18 +218,41 @@
 
 
     academy_year.change(function(){
-        getClassroom($(this).val(),classroomId)
+        getClassroom($(this).val(),classroomId,labelStaffClass)
         location.reload()
     })
 
     classroomId.change(function() {
         let classroom_id = $(this).val()
         let nameStaff = $(this).find(":selected").data('staff')
-
         if(classroom_id.trim() == 0  ){
             let setSessionClassroom = session_classroom.val('')
         }
 
-        labelStaffClass.html(nameStaff)
+        setNameStaff(labelStaffClass,nameStaff)
+        setDataClassroomID()
         reloadajax(datatableStudentRoom)
     });
+
+
+
+filterStudent.keyup(function() {
+    let nis = $("#nis").val()
+    let name = $("#name").val()
+    let dob  = $("#dob").val()
+    classroomSetData={
+        nis:nis,
+        name:name,
+        dob:dob
+    }
+
+    reloadajax(datatableStudents)
+})
+
+resetFilterStudent.click(function(){
+    let nis = $("#nis").val('')
+    let name = $("#name").val('')
+    let dob  = $("#dob").val('')
+    classroomSetData={}
+    reloadajax(datatableStudents)
+});

@@ -72,12 +72,12 @@ class AssignClassroomStudentController extends Controller
             return redirect()
                 ->route('assign-classroom-student.index')
                 ->with('classroom_id', $request->classroom_id)
-                ->withToastError('Gagal Hapus Siswa ');
+                ->withToastError('Gagal ' . $request->type);
         }
 
         return redirect()
             ->route('assign-classroom-student.index')
-            ->withToastSuccess('Berhasil Hapus Siswa');
+            ->withToastSuccess('Berhasil ' . $request->type);
     }
 
     public function classroom(Request $request)

@@ -165,16 +165,19 @@
                                     <thead>
                                         <tr id="filter-wrap" style="display: none">
                                             <th>
-
+                                                <a href="#" id="reset-filter">Reset</a>
                                             </th>
                                             <th>
-                                                <input type="text" class="form-control" placeholder="Cari NIS">
+                                                <input type="text" class="form-control filter-student" placeholder="Cari NIS"
+                                                    id="nis">
                                             </th>
                                             <th>
-                                                <input type="text" class="form-control" placeholder="Cari Nama">
+                                                <input type="text" class="form-control filter-student"
+                                                    placeholder="Cari Nama" id="name">
                                             </th>
                                             <th>
-                                                <input type="text" class="form-control" placeholder="Cari Tanggal Lahir">
+                                                <input type="text" class="form-control filter-student" id="dob"
+                                                    placeholder="Cari Tanggal Lahir">
                                             </th>
                                         </tr>
                                         <tr>
@@ -242,7 +245,7 @@
                             </div>
                             <div class="form-group">
                                 <select
-                                    class="form-control  select2 @error('classroom_id')
+                                    class="form-control  @error('classroom_id')
                                          is-invalid
                                          @enderror"
                                     name="classroom_id" id="list-classroom-modal">
@@ -275,6 +278,9 @@
         <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
         <script src="{{ asset('page/assign-classroom-student/index.js') }}"></script>
         <script>
+            $("#list-classroom-modal").select2({
+                dropdownParent: $("#assingclassroom-modal")
+            });
             $(".filter").click(function() {
                 $("#filter-wrap").toggle();
             })
