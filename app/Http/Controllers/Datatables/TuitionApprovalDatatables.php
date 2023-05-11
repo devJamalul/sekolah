@@ -9,6 +9,7 @@ use App\Models\StudentTuitionMaster;
 use App\Models\Tuition;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TuitionApprovalDatatables extends Controller
 {
@@ -50,14 +51,5 @@ class TuitionApprovalDatatables extends Controller
                         })
                         ->rawColumns(['status'])
                         ->toJson();
-
-                        // ->addColumn('created_by', function ($row) {
-                        //     $createdBy = User::where('id', $row->request_by)->first() ?? '-';
-                        //     return $createdBy?->name ?? '-';
-                        // })  
-                        // ->addColumn('approved_by', function ($row) {
-                        //     $approvedBy = User::where('id', $row->approve_by)->first();
-                        //     return $approvedBy?->name ?? '-';
-                        // })
     }
 }

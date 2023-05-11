@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tuition;
+use App\Models\User;
+use App\Notifications\TuitionApprovalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,15 +62,23 @@ class TuitionApprovalController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tuition $tuition)
+    public function update(Request $request, Tuition $tuition_approval)
     {
-        dump("asdasdasd");
-        dump($request->all());
-        dd();
         try {
-            $tuition->approval_by = Auth::user()->id;
-            $tuition->save();
-            return redirect()->route('pages.tuition-approval.index')->withToastSuccess('Berhasil mengubah Status!');
+            switch ($request->action) {
+                case 'approve':
+                    $tuition_approval->approval_by = Auth::user()->id;
+                    break;
+                case 'reject':
+                    $tuition_approval->delete();
+                    break;
+            }
+            $tuition_approval->save();
+            
+            // Notification
+            $tuition_approval->requested_by->notify(new TuitionApprovalNotification($tuition_approval));
+
+            return redirect()->route('tuition-approval.index')->withToastSuccess('Berhasil mengubah Status!');
         } catch (\Throwable $th) {
             return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
         }
