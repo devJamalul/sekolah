@@ -18,7 +18,7 @@ class AssignClassroomStudentController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $data['title'] = "Tetapkan Kelas";
+        $data['title'] = "Penetapan Kelas";
         $data['academy_years'] = AcademicYear::whereIn('status_years', [
             AcademicYear::STATUS_STARTED,
             AcademicYear::STATUS_REGISTRATION

@@ -29,7 +29,10 @@ class WalletSeeder extends Seeder
             'store' => 'wallet.store',
             'edit' => 'wallet.edit',
             'update' => 'wallet.update',
-            'destroy' => 'wallet.destroy'
+            'destroy' => 'wallet.destroy',
+            'logs' => 'wallet.logs',
+            'topup.show' => 'wallet.topup.show',
+            'topup.store' => 'wallet.topup.store',
         ];
 
         // index
@@ -66,6 +69,25 @@ class WalletSeeder extends Seeder
         // destroy Wallet
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+
+        // Wallet logs
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['logs'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $kepala_sekolah]);
+
+        // topup Wallet
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['topup.show'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['topup.store'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
