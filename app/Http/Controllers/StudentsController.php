@@ -55,9 +55,9 @@ class StudentsController extends Controller
     {   
 
         if (
-            is_null($request->guardian_name) && is_null($request->guardian_phone_number) && is_null($request->guardian_address) &&
-            is_null($request->father_name) && is_null($request->father_phone_number) && is_null($request->father_address) &&
-            is_null($request->mother_name) && is_null($request->mother_phone_number) && is_null($request->mother_address)
+            is_null($request->guardian_name) && is_null($request->guardian_phone_number) && is_null($request->guardian_email) && is_null($request->guardian_address) &&
+            is_null($request->father_name) && is_null($request->father_phone_number) && is_null($request->father_email) && is_null($request->father_address) &&
+            is_null($request->mother_name) && is_null($request->mother_phone_number) && is_null($request->mother_email) && is_null($request->mother_address)
         ) {
             return redirect()->back()->withInput()->withToastError('Ayah/Ibu/Wali harus diisi');
         }
@@ -83,18 +83,21 @@ class StudentsController extends Controller
 
                 $student->father_name               = $request->father_name;
                 $student->father_phone_number       = $request->father_phone_number;
+                $student->father_email              = $request->father_email;
                 ($request->father_address_checkbox)
                     ? $student->father_address          = $request->address
                     : $student->father_address          = $request->father_address;
 
                 $student->mother_name                   = $request->mother_name;
                 $student->mother_phone_number           = $request->mother_phone_number;
+                $student->mother_email                  = $request->mother_email;
                 ($request->mother_address_checkbox)
                     ? $student->mother_address          = $request->address
                     : $student->mother_address          = $request->mother_address;
 
                 $student->guardian_name                 = $request->guardian_name;
                 $student->guardian_phone_number         = $request->guardian_phone_number;
+                $student->guardian_email                = $request->guardian_email;
                 ($request->guardian_address_checkbox)
                     ? $student->guardian_address        = $request->address
                     : $student->guardian_address        = $request->guardian_address;
@@ -202,15 +205,24 @@ class StudentsController extends Controller
 
                 $student->father_name               = $request->father_name;
                 $student->father_phone_number       = $request->father_phone_number;
-                $student->father_address            = $request->father_address;
+                $student->father_email              = $request->father_email;
+                ($request->father_address_checkbox)
+                    ? $student->father_address          = $request->address
+                    : $student->father_address          = $request->father_address;
 
                 $student->mother_name               = $request->mother_name;
                 $student->mother_phone_number       = $request->mother_phone_number;
-                $student->mother_address            = $request->mother_address;
+                $student->mother_email              = $request->mother_email;
+                ($request->mother_address_checkbox)
+                    ? $student->mother_address          = $request->address
+                    : $student->mother_address          = $request->mother_address;
 
                 $student->guardian_name             = $request->guardian_name;
                 $student->guardian_phone_number     = $request->guardian_phone_number;
-                $student->guardian_address          = $request->guardian_address;
+                $student->guardian_email            = $request->guardian_email;
+                ($request->guardian_address_checkbox)
+                    ? $student->guardian_address        = $request->address
+                    : $student->guardian_address        = $request->guardian_address;
 
                 // Upload Student's Photo
                 if ($request->hasFile('file_photo')) {

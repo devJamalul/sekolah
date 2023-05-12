@@ -17,6 +17,9 @@
         <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
     </a>
 
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('home', 'home/*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('home') }}">
