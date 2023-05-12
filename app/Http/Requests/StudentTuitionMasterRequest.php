@@ -46,4 +46,14 @@ class StudentTuitionMasterRequest extends FormRequest
             'note' => 'nullable',
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'student_id' => 'ID Siswa',
+            'tuition_id' => 'ID biaya',
+            'price' => 'Harga',
+            'note' => 'Catatan',
+        ];
+    }
 }
