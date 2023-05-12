@@ -38,7 +38,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'school_id'
+        'school_id',
+        'gender', 'religion', 'dob', 'phone_number',
+        'nik', 'nip', 'nidn'
     ];
 
     /**
