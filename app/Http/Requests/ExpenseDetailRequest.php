@@ -49,4 +49,14 @@ class ExpenseDetailRequest extends FormRequest
             'price' => 'required|min:0',
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'wallet_id' => 'Dompet',
+            'item_name' => 'Nama',
+            'quantity' => 'Kuantitas',
+            'price' => 'Harga',
+        ];
+    }
 }

@@ -63,4 +63,13 @@ class ClassroomRequest extends FormRequest
             ]
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'academic_year_id' => 'Tahun Akademik',
+            'grade_id' => 'Tingkatan',
+            'name' => 'Nama',
+        ];
+    }
 }
