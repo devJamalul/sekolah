@@ -33,7 +33,7 @@ class StudentTuitionMasterController extends Controller
         $student = Student::findOrFail($req->id);
         $academicYear = AcademicYear::where('status_years', 'started')->first();
         $selectedStudentTuitionMaster = StudentTuitionMaster::where('student_id', $student->id)->get();
-        $studentTuitionMaster = collect(Tuition::with('tuition_type')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get())
+        $studentTuitionMaster = collect(Tuition::with('tuition_type', 'grade')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get())
                                 ->reject(function($tuitionMasters) use($selectedStudentTuitionMaster){
                                     foreach ($selectedStudentTuitionMaster as $selectedTuition) {
 
@@ -60,7 +60,7 @@ class StudentTuitionMasterController extends Controller
             $studentTuitionMaster                       = new StudentTuitionMaster;
             $studentTuitionMaster->student_id           = $request->id;
             $studentTuitionMaster->tuition_id           = $request->tuition_id;
-            $studentTuitionMaster->price                = $request->price;
+            $studentTuitionMaster->price                = formatAngka($request->price);
             $studentTuitionMaster->note                 = $request->note;
             $studentTuitionMaster->save();
             return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');
@@ -116,7 +116,7 @@ class StudentTuitionMasterController extends Controller
             $studentTuitionMaster = StudentTuitionMaster::findOrFail($request->tuition_master);
             $studentTuitionMaster->student_id           = $request->id;
             $studentTuitionMaster->tuition_id           = $request->tuition_id;
-            $studentTuitionMaster->price                = $request->price;
+            $studentTuitionMaster->price                = formatAngka($request->price);
             $studentTuitionMaster->note                 = $request->note;
             $studentTuitionMaster->save();
             return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');

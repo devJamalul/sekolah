@@ -18,7 +18,7 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider">
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('home', 'home/*') ? 'active' : '' }}">

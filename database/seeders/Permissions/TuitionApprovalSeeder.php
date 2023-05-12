@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class StudentSeeder extends Seeder
+class TuitionApprovalSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -23,88 +23,73 @@ class StudentSeeder extends Seeder
         $tata_usaha = Role::whereName(User::ROLE_TATA_USAHA)->first();
         $kepala_sekolah = Role::whereName(User::ROLE_KEPALA_SEKOLAH)->first();
 
-        // students
+        // tuition approvals
         $roles = [
-            'index' => 'students.index',
-            'create' => 'students.create',
-            'store' => 'students.store',
-            'show' => 'students.show',
-            'edit' => 'students.edit',
-            'update' => 'students.update',
-            'destroy' => 'students.destroy',
-            'restore' => 'students.restore',
-            'import' => 'students.import',
-            'report' => 'students.report',
+            'index' => 'tuition-approval.index',
+            'create' => 'tuition-approval.create',
+            'store' => 'tuition-approval.store',
+            'show' => 'tuition-approval.show',
+            'edit' => 'tuition-approval.edit',
+            'update' => 'tuition-approval.update',
+            'destroy' => 'tuition-approval.destroy',
+            'restore' => 'tuition-approval.restore',
+            'report' => 'tuition-approval.report',
         ];
 
-        // index student
+        // index tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
 
-        // create student
+        // create tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
 
-        // store student
+        // store tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
 
-        // show student
+        // show tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['show'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
 
-        // edit student
+        // edit tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
 
-        // update student
+        // update tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
 
-        // destroy student
+        // destroy tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
 
-        // restore student
+        // restore tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['restore'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin]);
-
-        // student Import
-        $permission = Permission::firstOrCreate([
-            'name' => $roles['import'],
-            'guard_name' => 'web'
-        ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
-
-        // student Report
-        $permission = Permission::firstOrCreate([
-            'name' => $roles['report'],
-            'guard_name' => 'web'
-        ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
     }
 }

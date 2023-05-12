@@ -9,7 +9,7 @@
 			{{-- Header --}}
       <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
-        <a href="{{ route('transactions.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">Kembali</a>
+        <a href="{{ route('students.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">Kembali</a>
       </div>
 			{{-- End Header --}}
 
@@ -42,7 +42,7 @@
                       </tr>
                       <tr>
                           <td scope="row">Kelas</td>
-                          <td class="text-primary font-weight-bold">{{ $student?->classrooms()->latest()->first()?->grade->grade_name . " " . $student?->classrooms()->latest()->first()?->name }}</td>
+                          <td class="text-primary font-weight-bold">{{ $student?->classrooms()->latest()->first()?->grade->grade_name . " " . $student?->classrooms()->latest()->first()?->name ?? "Belum mendapat kelas" }}</td>
                       </tr>
                       <tr>
                           <td scope="row">Alamat</td>
