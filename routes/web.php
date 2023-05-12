@@ -39,6 +39,7 @@ use App\Http\Controllers\School\SchoolProfileController;
 use App\Http\Controllers\Wallet\TopUpWalletController;
 use App\Http\Controllers\Wallet\WalletController;
 use App\Http\Controllers\Wallet\WalletLogController;
+use App\Http\Middleware\School\RequireChangePassword;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +58,9 @@ Route::get('/', function () {
 
 Route::get('/home', function () {
     return view('pages.home');
-})->name('home')->middleware(['auth']);
+})->name('home')->middleware(['auth', 'password.changed']);
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'password.changed'])->group(function () {
     // Academy Year
     Route::resource("academy-year", AcademyYearController::class)->except(['show']);
 
@@ -163,10 +164,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Profile dan Password
     Route::apiSingleton('edit-profile', EditProfileController::class);
-    Route::apiSingleton('edit-password', EditPasswordController::class);
+    Route::apiSingleton('edit-password', EditPasswordController::class)->withoutMiddleware([RequireChangePassword::class]);
 });
 
-Route::prefix('reports')->group(function () {
+Route::middleware(['auth', 'password.changed'])->prefix('reports')->group(function () {
 
     // Report Student
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
@@ -177,11 +178,11 @@ Route::prefix('reports')->group(function () {
 });
 
 
-Route::group([], function () {
+Route::group(['middleware' => ['auth', 'password.changed']], function () {
     Route::resource("master-configs", ConfigController::class)->except(['show']);
 });
 
-Route::group(['prefix' => 'config', 'as' => 'config.'], function () {
+Route::group(['prefix' => 'config', 'as' => 'config.', 'middleware' => ['auth', 'password.changed']], function () {
     Route::get('/', [ConfigSchoolController::class, 'index'])->name('index');
     Route::post('/save', [ConfigSchoolController::class, 'save'])->name('save');
 });

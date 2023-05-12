@@ -28,6 +28,7 @@ class EditPasswordController extends Controller
     {
         $user = User::find(auth()->id());
         $user->password = bcrypt($request->password);
+        $user->new_password = false;
         $user->save();
 
         return to_route('edit-password.show')->withToastSuccess('Password berhasil diubah!');
