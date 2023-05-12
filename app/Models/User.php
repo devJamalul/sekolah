@@ -37,7 +37,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password', 'new_password',
         'school_id',
         'gender', 'religion', 'dob', 'phone_number',
         'nik', 'nip', 'nidn'
@@ -60,6 +60,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'new_password' => 'boolean'
     ];
 
     protected $append = [
