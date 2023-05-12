@@ -32,11 +32,15 @@ use App\Http\Controllers\Invoice\InvoiceReportController;
 use App\Http\Controllers\Invoice\PayInvoiceController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\Invoice\VoidInvoiceController;
+use App\Http\Controllers\Profile\EditPasswordController;
+use App\Http\Controllers\Profile\EditProfileController;
 use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\TuitionApprovalController;
+use App\Http\Controllers\School\SchoolProfileController;
 use App\Http\Controllers\Wallet\TopUpWalletController;
 use App\Http\Controllers\Wallet\WalletController;
 use App\Http\Controllers\Wallet\WalletLogController;
+use App\Http\Middleware\School\RequireChangePassword;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,9 +59,9 @@ Route::get('/', function () {
 
 Route::get('/home', function () {
     return view('pages.home');
-})->name('home')->middleware(['auth']);
+})->name('home')->middleware(['auth', 'password.changed']);
 
-Route::group([], function () {
+Route::middleware(['auth', 'password.changed'])->group(function () {
     // Academy Year
     Route::resource("academy-year", AcademyYearController::class)->except(['show']);
 
@@ -65,7 +69,12 @@ Route::group([], function () {
     Route::resource("grade", GradeController::class)->except(['show']);
 
     // School
+    Route::name('schools.')->prefix('school-profile')->controller(SchoolProfileController::class)->group(function () {
+        Route::get('/', 'index')->name('profile-index');
+        Route::put('/', 'update')->name('profile-update');
+    });
     Route::resource('schools', SchoolsController::class)->except('show');
+
     // Classroom
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
@@ -153,22 +162,28 @@ Route::group([], function () {
     });
     Route::get('reports/invoices', [InvoiceReportController::class, 'index'])->name('invoices.report');
     Route::post('reports/invoices', [InvoiceReportController::class, 'store'])->name('invoices.report-result');
+
+    // Profile dan Password
+    Route::apiSingleton('edit-profile', EditProfileController::class);
+    Route::apiSingleton('edit-password', EditPasswordController::class)->withoutMiddleware([RequireChangePassword::class]);
 });
 
-Route::prefix('reports')->group(function () {
+Route::middleware(['auth', 'password.changed'])->prefix('reports')->group(function () {
 
     // Report Student
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
     Route::post('expense', [ExpenseReportController::class, 'exportExpenseReport'])->name('reports.expense.export');
+
 });
 
-Route::group([], function () {
+
+Route::group(['middleware' => ['auth', 'password.changed']], function () {
     Route::resource("master-configs", ConfigController::class)->except(['show']);
 });
 
-Route::group(['prefix' => 'config', 'as' => 'config.'], function () {
+Route::group(['prefix' => 'config', 'as' => 'config.', 'middleware' => ['auth', 'password.changed']], function () {
     Route::get('/', [ConfigSchoolController::class, 'index'])->name('index');
     Route::post('/save', [ConfigSchoolController::class, 'save'])->name('save');
 });

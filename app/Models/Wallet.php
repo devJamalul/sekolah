@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\ExpenseDetail;
 use App\Models\Scopes\WalletScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,6 +19,10 @@ class Wallet extends Model
 
     protected $table = "wallets";
 
+    protected $casts = [
+        'danabos' => 'boolean'
+    ];
+
     protected static function booted()
     {
         static::addGlobalScope(new WalletScope);
@@ -26,6 +31,11 @@ class Wallet extends Model
     public function expense_detail(): HasMany
     {
         return $this->hasMany(ExpenseDetail::class);
+    }
+
+    public function scopeDanaBos(Builder $query)
+    {
+        $query->where('danabos', true);
     }
 
     public function getBalanceAttribute()
