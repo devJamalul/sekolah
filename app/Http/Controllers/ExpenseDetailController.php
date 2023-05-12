@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Wallet;
+use App\Models\Expense;
 use Illuminate\Http\Request;
 use App\Models\ExpenseDetail;
 use Illuminate\Support\Facades\DB;
@@ -35,13 +36,44 @@ class ExpenseDetailController extends Controller
 
         try {
 
+            $wallet         = Wallet::find($request->wallet_id);
+            $danaBOS        = Wallet::danaBos()->first();
+
+            $totalExpensePending    = ExpenseDetail::whereHas('expense', function($q) {
+                $q->where('status', Expense::STATUS_PENDING);
+            })->sum(DB::raw('price * quantity'));
+            
+            $walletBalance  = $wallet - $totalExpensePending;
+            $walletBos      = $danaBOS - $totalExpensePending;
+
+            
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $request->expense_id;
-            $expenseDetail->wallet_id   = $request->wallet_id;
-            $expenseDetail->item_name   = $request->item_name;
-            $expenseDetail->quantity    = formatAngka($request->quantity);
-            $expenseDetail->price       = formatAngka($request->price);
-            $expenseDetail->save();
+            
+            if(formatAngka($request->quantity) * formatAngka($request->price) < $walletBalance){
+
+                $expenseDetail->wallet_id   = $request->wallet_id;
+            
+            }
+            
+            else if(formatAngka($request->quantity) * formatAngka($request->price) < $walletBos){
+
+                $expenseDetail->wallet_id   = $danaBOS->id;
+
+            }
+            
+            else{
+
+                $walletName = Wallet::find($expenseDetail->wallet_id);
+
+                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet '. $walletName->name .' tidak mencukupi untuk melakukan pengeluaran ini!');
+           
+            }
+
+                $expenseDetail->item_name   = $request->item_name;
+                $expenseDetail->quantity    = formatAngka($request->quantity);
+                $expenseDetail->price       = formatAngka($request->price);
+                $expenseDetail->save();
 
             DB::commit();
 
