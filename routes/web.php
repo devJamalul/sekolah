@@ -105,6 +105,7 @@ Route::group([], function () {
 
     // Assign staff student
     Route::get('assign-classroom-staff', AssignClassroomStaffController::class)->name(('assign-classroom-staff.index'));
+    Route::get('assign-classroom-staff/create', [AssignClassroomStaffController::class, 'create'])->name(('assign-classroom-staff.create'));
     Route::post('assign-classroom-staff', [AssignClassroomStaffController::class, 'store'])->name(('assign-classroom-staff.store'));
     Route::delete('assign-classroom-staff', [AssignClassroomStaffController::class, 'destroy'])->name(('assign-classroom-staff.destroy'));
 

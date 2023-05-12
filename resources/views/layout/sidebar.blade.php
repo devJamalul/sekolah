@@ -58,53 +58,54 @@
     <!-- End Administrasi Menu -->
 
     @canany(['tuition-type.index', 'tuition.index', 'wallet.index', 'payment-type.index'])
-    <!-- Keuangan Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKeuangan"
-            aria-expanded="true" aria-controls="menuKeuangan">
-            <i class="fas fa-coins"></i>
-            <span>Keuangan</span>
-        </a>
-        <div id="menuKeuangan" class="collapse {{ $menuKeuangan }}" aria-labelledby="menuKeuangan"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                @can('tuition-type.index')
-                    <a href="{{ route('tuition-type.index') }}"
-                        class="collapse-item {{ Request::is('tuition-type', 'tuition-type/*') ? 'active' : '' }}">
-                        Tipe Biaya
-                    </a>
-                @endcan
-                @can('tuition.index')
-                    <a href="{{ route('tuition.index') }}"
-                        class="collapse-item {{ Request::is('tuition', 'tuition/*') ? 'active' : '' }}">
-                        Biaya
-                    </a>
-                @endcan
-                @can('payment-type.index')
-                    <a href="{{ route('payment-type.index') }}"
-                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
-                        Tipe Pembayaran
-                    </a>
-                @endcan
-                @can('wallet.index')
-                    <a href="{{ route('wallet.index') }}"
-                        class="collapse-item {{ Request::is('wallet', 'wallet/*') ? 'active' : '' }}">
-                        Dompet
-                    </a>
-                @endcan
-                @can('payment-type.index')
-                    <a href="{{ route('payment-type.index') }}"
-                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
-                        Tipe Pembayaran
-                    </a>
-                @endcan
+        <!-- Keuangan Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKeuangan"
+                aria-expanded="true" aria-controls="menuKeuangan">
+                <i class="fas fa-coins"></i>
+                <span>Keuangan</span>
+            </a>
+            <div id="menuKeuangan" class="collapse {{ $menuKeuangan }}" aria-labelledby="menuKeuangan"
+                data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    @can('tuition-type.index')
+                        <a href="{{ route('tuition-type.index') }}"
+                            class="collapse-item {{ Request::is('tuition-type', 'tuition-type/*') ? 'active' : '' }}">
+                            Tipe Biaya
+                        </a>
+                    @endcan
+                    @can('tuition.index')
+                        <a href="{{ route('tuition.index') }}"
+                            class="collapse-item {{ Request::is('tuition', 'tuition/*') ? 'active' : '' }}">
+                            Biaya
+                        </a>
+                    @endcan
+                    @can('payment-type.index')
+                        <a href="{{ route('payment-type.index') }}"
+                            class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
+                            Tipe Pembayaran
+                        </a>
+                    @endcan
+                    @can('wallet.index')
+                        <a href="{{ route('wallet.index') }}"
+                            class="collapse-item {{ Request::is('wallet', 'wallet/*') ? 'active' : '' }}">
+                            Dompet
+                        </a>
+                    @endcan
+                    @can('payment-type.index')
+                        <a href="{{ route('payment-type.index') }}"
+                            class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
+                            Tipe Pembayaran
+                        </a>
+                    @endcan
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- End Keuangan Menu -->
+        </li>
+        <!-- End Keuangan Menu -->
     @endcanany
 
-    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index', 'approvals.index'])
+    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index',
+        'approvals.index'])
         <!-- Sekolah Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah"

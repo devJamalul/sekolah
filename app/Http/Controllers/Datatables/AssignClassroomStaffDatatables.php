@@ -17,9 +17,14 @@ class AssignClassroomStaffDatatables extends Controller
      */
     public function __invoke(Request $request)
     {
-        $classroom = Classroom::with('staff')->has('staff')->where('id', $request->classroom_id)->first();
-        $staff   = $classroom?->staff ?? [];
-        return DataTables::of($staff)
+        $classroom = ClassroomStaff::with('staff', 'classroom.grade')->get();
+        return DataTables::of($classroom)
+            ->addColumn('class_staff', function ($row) {
+                return $row->classroom->grade->grade_name . ' - ' . $row->classroom->name;
+            })
+            ->addColumn('action', function ($row) {
+                return 'Aksi';
+            })
             ->toJson();
     }
 
