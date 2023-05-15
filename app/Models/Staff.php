@@ -7,6 +7,7 @@ use App\Models\School;
 use App\Models\ClassroomStaff;
 use App\Models\Scopes\StaffScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -51,4 +52,37 @@ class Staff extends Model
     {
         static::addGlobalScope(new StaffScope);
     }
+
+    // Accessor
+    public function getFilePhotoAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function getFileBirthCertificateAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
+    }
+
+    public function getFileFamilyCardAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
+    }
+    // End Accessor
+
 }
