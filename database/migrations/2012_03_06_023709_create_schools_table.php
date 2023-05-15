@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\School;
-use App\Models\Staff;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,8 +23,6 @@ return new class extends Migration
             $table->string('school_name');
             $table->string('foundation_head_name')->nullable();
             $table->string('foundation_head_tlpn')->nullable();
-            $table->foreignIdFor(Staff::class)->nullable()->constrained()->nullOnDelete();
-            $table->foreignIdFor(School::class)->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
