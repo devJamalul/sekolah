@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\School;
+use App\Models\Staff;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -33,6 +34,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::table('schools', function (Blueprint $table) {
+            $table->foreignIdFor(Staff::class)->nullable()->after('foundation_head_name')->constrained()->cascadeOnDelete();
+        });
     }
 
     /**
@@ -41,5 +46,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('staff');
+
+        Schema::table('schools', function (Blueprint $table) {
+            $table->dropForeignIdFor(Staff::class);
+            $table->dropColumn('staff_id');
+        });
     }
 };
