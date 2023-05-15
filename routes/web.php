@@ -35,6 +35,7 @@ use App\Http\Controllers\Invoice\VoidInvoiceController;
 use App\Http\Controllers\Profile\EditPasswordController;
 use App\Http\Controllers\Profile\EditProfileController;
 use App\Http\Controllers\Reports\StudentReport;
+use App\Http\Controllers\TuitionApprovalController;
 use App\Http\Controllers\School\SchoolProfileController;
 use App\Http\Controllers\Wallet\TopUpWalletController;
 use App\Http\Controllers\Wallet\WalletController;
@@ -78,7 +79,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::resource("classroom", ClassroomController::class)->except(['show']);
 
     // Approvals
-    Route::resource('approvals', ApprovalController::class);
+    Route::resource('tuition-approval', TuitionApprovalController::class);
 
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');

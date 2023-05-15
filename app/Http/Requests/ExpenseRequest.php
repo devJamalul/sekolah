@@ -65,4 +65,14 @@ class ExpenseRequest extends FormRequest
             'approved_by' => 'nullable|exists:users,id',
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'expense_number' => 'Nomor Pengeluaran',
+            'expense_date' => 'Tanggal pengeluaran',
+            'requested_by' => 'Diminta oleh',
+            'approved_by' => 'Disetujui oleh',
+        ];
+    }
 }

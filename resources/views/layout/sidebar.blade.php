@@ -18,7 +18,7 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider">
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('home', 'home/*') ? 'active' : '' }}">
@@ -88,10 +88,10 @@
                         Biaya
                     </a>
                 @endcan
-                @can('payment-type.index')
-                    <a href="{{ route('payment-type.index') }}"
-                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
-                        Tipe Pembayaran
+                @can('tuition-approval.index')
+                    <a href="{{ route('tuition-approval.index') }}"
+                        class="collapse-item {{ Request::is('tuition-approval', 'tuition-approval/*') ? 'active' : '' }}">
+                        Persetujuan Biaya
                     </a>
                 @endcan
                 @can('wallet.index')
@@ -151,12 +151,6 @@
                         <a href="{{ route('assign-classroom-student.index') }}"
                             class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">
                             Rombongan Belajar
-                        </a>
-                    @endcan
-                    @can('approvals.index')
-                        <a href="{{ route('approvals.index') }}"
-                            class="collapse-item {{ Request::is('approvals', 'approvals/*') ? 'active' : '' }}">
-                            Persetujuan
                         </a>
                     @endcan
                 </div>

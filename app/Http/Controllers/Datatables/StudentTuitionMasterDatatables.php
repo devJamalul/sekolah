@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Datatables;
 
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
-use App\Models\Student;
 use App\Models\StudentTuitionMaster;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class StudentTuitionMasterDatatables extends Controller
 {
@@ -15,13 +15,13 @@ class StudentTuitionMasterDatatables extends Controller
         $studentTuitionMaster = StudentTuitionMaster::select(['student_tuition_masters.id as student_tuition_masters_id', 'student_tuition_masters.*'])->where('student_id', $request->id)->with('tuition.tuition_type')->latest('student_tuition_masters.created_at');
         return DataTables::of($studentTuitionMaster)
                         ->editColumn('tuition_type', function ($row) {
-                            return $row->tuition->tuition_type->name;
+                            return Str::of($row->tuition->tuition_type->name)->limit(20, '...');
                         })
                         ->editColumn('price', function ($row) {
                             return 'Rp. ' . number_format($row->price, 0, ',', '.');
                         })
                         ->editColumn('note', function ($row) {
-                            return $row->note ?? '-';
+                            return $row->note ? Str::of($row->note)->limit(20, '...') : '-';
                         })
                         ->addColumn('action', function (StudentTuitionMaster $row) use($request) {
                             $data = [
@@ -32,5 +32,7 @@ class StudentTuitionMasterDatatables extends Controller
                             ];
                             return view('components.datatable-action', $data);
                         })->toJson();
+
+                        
     }
 }
