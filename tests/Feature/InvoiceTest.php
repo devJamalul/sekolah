@@ -1,10 +1,7 @@
 <?php
 
 use App\Models\Invoice;
-use App\Models\InvoiceDetail;
-use App\Models\School;
 use App\Models\User;
-use RealRashid\SweetAlert\Facades\Alert;
 
 beforeEach(function () {
     session(['school_id' => 1]);
@@ -166,7 +163,10 @@ test('can render invoice page as School Staff', function (User $user) {
 
     $response->assertOk();
 })
-    ->with('school_staff');
+    ->with([
+        User::ROLE_BENDAHARA => [fn () => $this->bendahara],
+        User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
+    ]);
 
 // UPDATE
 test('U P D A T E', function () {
