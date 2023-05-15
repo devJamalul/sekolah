@@ -43,7 +43,7 @@
                             <label class="form-check-label" for="generatable-checkbox">Rutin</label>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">SIMPAN</button>
+                        <button type="submit" class="btn float-right btn-primary">Simpan</button>
                     </form>
                 </div>
             </div>

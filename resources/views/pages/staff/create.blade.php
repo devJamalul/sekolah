@@ -359,7 +359,7 @@
                     {{-- End Student Documents Accordion --}}
 
                     <div class="p-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary float-right">Simpan</button>
                     </div>
             </div>
             {{-- End Student Information Accordion --}}

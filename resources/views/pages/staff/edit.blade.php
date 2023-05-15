@@ -74,7 +74,7 @@
                                                 <label for="dob">Tanggal Lahir<span
                                                         class="text-small text-danger">*</span> </label>
                                                 <input type="date" name="dob" id="dob"
-                                                    value="{{ old('dob', $staff->dob->format('Y-m-d')) }}"
+                                                    value="{{ old('dob', $staff->dob?->format('Y-m-d')) }}"
                                                     class="form-control @error('dob') is-invalid @enderror" required>
                                                 @error('dob')
                                                     <div class="invalid-feedback">
@@ -371,7 +371,7 @@
                     {{-- End Student Documents Accordion --}}
 
                     <div class="p-4">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary float-right">Ubah</button>
                     </div>
             </div>
             {{-- End Student Information Accordion --}}

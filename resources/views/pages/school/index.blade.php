@@ -10,7 +10,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
                 <a href="{{ route('schools.create') }}"
-                    class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Tambah {{ $title }}</a>
+                    class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-capitalize">Tambah
+                    {{ $title }}</a>
             </div>
             <div class="card">
                 <div class="card-body">

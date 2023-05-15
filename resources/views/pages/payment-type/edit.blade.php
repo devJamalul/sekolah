@@ -57,7 +57,7 @@
                                 </div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">Ubah</button>
+                        <button type="submit" class="btn btn-primary float-right">Ubah</button>
                     </form>
                 </div>
             </div>
