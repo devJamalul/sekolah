@@ -7,7 +7,6 @@ use App\Models\User;
 beforeEach(function () {
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
     $this->opsAdmin = User::role(User::ROLE_OPS_ADMIN)->first();
-    $this->adminYayasan = User::role(User::ROLE_ADMIN_YAYASAN)->first();
     $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->first();
     $this->bendahara = User::role(User::ROLE_BENDAHARA)->first();
     $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->first();
@@ -28,14 +27,12 @@ dataset('staff_only_read', [
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
 ]);
 
 dataset('staff_cannot_crud', [
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
 
