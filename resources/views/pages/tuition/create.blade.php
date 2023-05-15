@@ -19,7 +19,8 @@
                     <form action="{{ route('tuition.store') }}" method="post">
                         @csrf
                         <div class="form-group">
-                            <label for="tuition-type-select">Tipe Uang Sekolah<span class="text-small text-danger">*</span></label>
+                            <label for="tuition-type-select">Tipe Uang Sekolah<span
+                                    class="text-small text-danger">*</span></label>
                             <select class="form-control @error('tuition_type_id') is-invalid @enderror"
                                 name="tuition_type_id" id="tuition-type-select">
                                 <option value="">-</option>
@@ -36,9 +37,10 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="academic-year-select">Tahun Akademik<span class="text-small text-danger">*</span></label>
-                            <select class="form-control @error('academic_year_id') is-invalid @enderror" name="academic_year_id"
-                                id="academic-year-select">
+                            <label for="academic-year-select">Tahun Akademik<span
+                                    class="text-small text-danger">*</span></label>
+                            <select class="form-control @error('academic_year_id') is-invalid @enderror"
+                                name="academic_year_id" id="academic-year-select">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $academicYear)
                                     <option value="{{ $academicYear->id }}" @selected(old('academic_year_id') == $academicYear->id)>
@@ -71,14 +73,15 @@
                         </div>
                         <div class="form-group">
                             <label for="price">Nominal<span class="text-small text-danger">*</span></label>
-                            <input type="text" name="price" id="price" value="{{ old('price') }}" class="form-control @error('price') is-invalid @enderror" required>
+                            <input type="text" name="price" id="price" value="{{ old('price') }}"
+                                class="form-control @error('price') is-invalid @enderror" required>
                             @error('price')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">SIMPAN</button>
+                        <button type="submit" class="btn btn-primary float-right">Simpan</button>
                     </form>
                 </div>
             </div>
@@ -90,7 +93,7 @@
 @endsection
 
 @push('js')
-  <script>
-    formatAngka('#price')
-  </script>
+    <script>
+        formatAngka('#price')
+    </script>
 @endpush

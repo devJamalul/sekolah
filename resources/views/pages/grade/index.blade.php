@@ -10,8 +10,8 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
                 @can('grade.create')
-                    <a href="{{ route('grade.create') }}"
-                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
+                    <a href="{{ route('grade.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Tambah
+                        {{ $title }}</a>
                 @endcan
             </div>
             <div class="card">

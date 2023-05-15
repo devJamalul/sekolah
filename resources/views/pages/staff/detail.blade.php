@@ -9,7 +9,7 @@
         {{-- Header --}}
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
-            <a href="{{ route('staff.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">Kembali</a>
+            <a href="{{ route('staff.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-default shadow-sm">Kembali</a>
         </div>
         {{-- End Header --}}
 
@@ -46,7 +46,7 @@
 
                                     <tr>
                                         <td scope="row">Tanggal Lahir</td>
-                                        <td class="text-primary font-weight-bold">{{ $staff->dob->format('d F Y') }}</td>
+                                        <td class="text-primary font-weight-bold">{{ $staff->dob?->format('d F Y') }}</td>
                                     </tr>
                                     <tr>
                                         <td scope="row">Alamat</td>
