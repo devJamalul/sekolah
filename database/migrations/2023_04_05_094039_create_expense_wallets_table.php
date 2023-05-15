@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // by Jamal
         Schema::create('expense_wallets', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('expense_id')->unsigned()->nullable();
