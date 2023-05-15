@@ -15,12 +15,10 @@ return new class extends Migration
     {
         Schema::create('student_tuition_masters', function (Blueprint $table) {
             $table->id();
-
             $table->foreignIdFor(Student::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(Tuition::class)->nullable()->constrained()->nullOnDelete();
             $table->double('price')->nullable();
             $table->text('note')->nullable();
-
             $table->timestamps();
             $table->softDeletes();
         });

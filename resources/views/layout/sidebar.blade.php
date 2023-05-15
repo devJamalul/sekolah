@@ -132,7 +132,7 @@
                     @can('grade.index')
                         <a href="{{ route('grade.index') }}"
                             class="collapse-item {{ Request::is('grade', 'grade/*') ? 'active' : '' }}">
-                            Tingkat
+                            Tingkatan
                         </a>
                     @endcan
                     @can('academy-year.index')
