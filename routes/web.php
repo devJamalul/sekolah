@@ -8,39 +8,40 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\TuitionController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
-use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\PaymentTypeController;
+use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TuitionTypeController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\ExpenseReportController;
+use App\Http\Controllers\Wallet\WalletController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
-use App\Http\Controllers\TransactionReportController;
-use App\Http\Controllers\AssignClassroomStaffController;
-use App\Http\Controllers\ReportSchoolFinancesController;
-use App\Http\Controllers\StudentTuitionMasterController;
-use App\Http\Controllers\ReportStudentTuitionsController;
-use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\ExpenseApprovalController;
 use App\Http\Controllers\Invoice\InvoiceController;
+use App\Http\Controllers\TuitionApprovalController;
+use App\Http\Controllers\Wallet\WalletLogController;
+use App\Http\Controllers\TransactionReportController;
+use App\Http\Middleware\School\RequireChangePassword;
+use App\Http\Controllers\Invoice\PayInvoiceController;
+use App\Http\Controllers\Wallet\TopUpWalletController;
+use App\Http\Controllers\Invoice\VoidInvoiceController;
+use App\Http\Controllers\Profile\EditProfileController;
+use App\Http\Controllers\AssignClassroomStaffController;
+use App\Http\Controllers\Profile\EditPasswordController;
+use App\Http\Controllers\ReportSchoolFinancesController;
+use App\Http\Controllers\School\SchoolProfileController;
+use App\Http\Controllers\StudentTuitionMasterController;
 use App\Http\Controllers\Invoice\InvoiceDetailController;
 use App\Http\Controllers\Invoice\InvoiceReportController;
-use App\Http\Controllers\Invoice\PayInvoiceController;
+use App\Http\Controllers\ReportStudentTuitionsController;
+use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
-use App\Http\Controllers\Invoice\VoidInvoiceController;
-use App\Http\Controllers\Profile\EditPasswordController;
-use App\Http\Controllers\Profile\EditProfileController;
-use App\Http\Controllers\Reports\StudentReport;
-use App\Http\Controllers\TuitionApprovalController;
-use App\Http\Controllers\School\SchoolProfileController;
-use App\Http\Controllers\Wallet\TopUpWalletController;
-use App\Http\Controllers\Wallet\WalletController;
-use App\Http\Controllers\Wallet\WalletLogController;
-use App\Http\Middleware\School\RequireChangePassword;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
 
     // Approvals
     Route::resource('tuition-approval', TuitionApprovalController::class);
+    Route::resource('expense-approval', ExpenseApprovalController::class);
 
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');

@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->enum('grade', ["TK", "SD", "SMP", "SMA", "SMK"])->nullable();
+            $table->text('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('postal_code', 20)->nullable();
+            $table->string('school_name');
+            $table->string('foundation_head_name')->nullable();
+            $table->string('foundation_head_tlpn')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
