@@ -28,7 +28,7 @@
                 <option value="">--- Pilih Biaya Sekolah ---</option>
                 @foreach ($tuitions as $tuition)
                     <option value="{{ $tuition->id }}" @selected(old('tuition_id') == $tuition->id)>
-                        {{ $tuition->tuition_type->name }}
+                        {{ $tuition->tuition_type->name }} - {{ $tuition->grade->grade_name }}
                     </option>
                 @endforeach
             </select>
@@ -41,7 +41,7 @@
 
           <div class="form-group">
             <label for="price">Harga<span class="text-small text-danger">*</span></label>
-            <input type="text" name="price" value="{{ old('price', ) }}" id="price" class="form-control @error('price') is-invalid @enderror" required>
+            <input type="text" id="price" name="price" value="{{ old('price', ) }}" id="price" class="form-control @error('price') is-invalid @enderror" required>
             @error('price')
               <div class="invalid-feedback">
                   {{ $message }}
@@ -68,24 +68,8 @@
   </div>
 
 @endsection
-
 @push('js')
   <script>
-    $(document).ready(function() {
-      // let h6 = $('h6.text-primary')
-      // let labelNamaSekolah = $('label[for="name-input"]')
-
-      // labelNamaSekolah.text("Nama Yayasan");
-      // h6.text("Yayasan Baru");
-
-      // $('#school-select').change(function() {
-      //   labelNamaSekolah.text("Nama Yayasan");
-      //   h6.text("Yayasan Baru");
-      //   if ($(this).val() !== '') {
-      //     h6.text("Sekolah Baru");
-      //     labelNamaSekolah.text("Nama Sekolah");
-      //   }
-      // })
-    });
+    formatAngka('#price')
   </script>
 @endpush

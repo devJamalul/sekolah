@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PaymentType;
 use App\Models\StudentTuition;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('student_tuition_payment_histories', function (Blueprint $table) {
             $table->id();
-
             $table->foreignIdFor(StudentTuition::class)->nullable()->constrained()->nullOnDelete();
             $table->double('price')->nullable();
-
+            $table->foreignIdFor(PaymentType::class)->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

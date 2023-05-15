@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Grade;
+use App\Models\PaymentType;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\TuitionType;
@@ -19,10 +20,13 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(School::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(Student::class)->nullable()->constrained()->nullOnDelete();
-            $table->foreignIdFor(TuitionType::class)->nullable()->constrained()->nullOnDelete();
-            $table->foreignIdFor(Grade::class)->nullable()->constrained()->nullOnDelete();
-            $table->double('price')->nullable();
+            $table->foreignIdFor(PaymentType::class)->nullable()->constrained()->nullOnDelete();
             $table->text('note')->nullable();
+            $table->date('period')->nullable();
+            $table->string('bill_number')->nullable();
+            $table->double('grand_total')->nullable();
+            $table->string('status')->default('pending');
+            $table->boolean('is_sent')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

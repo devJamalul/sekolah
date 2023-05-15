@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Datatables\UsersDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
 use App\Http\Controllers\Datatables\StudentDatatables;
+use App\Http\Controllers\Datatables\WalletLogDatatables;
 use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\ExpenseReportDatatables;
+use App\Http\Controllers\Datatables\ExpenseApprovalDatatables;
+use App\Http\Controllers\Datatables\TuitionApprovalDatatables;
 use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
 
@@ -30,6 +33,8 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     Route::get('tuition-type', [App\Http\Controllers\Datatables\TuitionTypeDatatables::class, 'index'])->name('tuition-type');
 
+    Route::get('tuition-approval', [TuitionApprovalDatatables::class, 'index'])->name('tuition-approval');
+
     Route::get('assign-classroom-student', App\Http\Controllers\Datatables\AssignClassroomStudentDatatables::class)->name('assign-classroom-student');
 
     Route::get('tuition', [App\Http\Controllers\Datatables\TuitionDatatables::class, 'index'])->name('tuition');
@@ -50,10 +55,13 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('transaction-report', TransactionReportDatatables::class)->name('transaction-report');
 
     Route::get('wallet', [App\Http\Controllers\Datatables\WalletDatatables::class, 'index'])->name('wallet');
+    Route::get('wallet/{wallet}/logs', WalletLogDatatables::class)->name('wallet.logs');
 
     Route::get('report-school-finances', App\Http\Controllers\Datatables\ReportSchoolFinancesDatatables::class)->name('report-school-finances');
 
     Route::get('expense-report', ExpenseReportDatatables::class)->name('expense-report');
+
+    Route::get('expense-approval', [ExpenseApprovalDatatables::class, 'index'])->name('expense-approval');
 
     Route::get('invoices', App\Http\Controllers\Datatables\InvoiceDatatables::class)->name('invoices');
 });

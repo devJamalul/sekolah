@@ -53,9 +53,9 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return to_route('invoices.index')->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoices.create')->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
+        return to_route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
     }
 
     /**
@@ -109,7 +109,7 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return to_route('invoices.index')->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoice-details.index', $invoice->getKey())->withToastError('Ups! ' . $th->getMessage());
         }
         return redirect()->route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil mengubah invoice!');
     }

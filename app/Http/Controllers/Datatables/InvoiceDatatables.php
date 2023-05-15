@@ -31,16 +31,16 @@ class InvoiceDatatables extends Controller
                 ];
 
                 if ($invoice->is_posted == Invoice::POSTED_DRAFT) {
-                    array_push($data['custom_links'], ['label' => 'Ubah', 'url' => route('invoices.edit', ['invoice' => $invoice->id])]);
-                    array_push($data['custom_links'], ['label' => 'Terbitkan', 'url' => route('invoices.publish', ['invoice' => $invoice->id])]);
+                    array_push($data['custom_links'], ['label' => 'Ubah', 'url' => route('invoices.edit', ['invoice' => $invoice->id]), 'name' => 'invoices.edit']);
+                    array_push($data['custom_links'], ['label' => 'Terbitkan', 'url' => route('invoices.publish', ['invoice' => $invoice->id]), 'name' => 'invoices.publish']);
                 }
 
                 if ($invoice->payment_status == Invoice::STATUS_PENDING && $invoice->is_posted == Invoice::POSTED_PUBLISHED && $invoice->is_original == true) {
-                    array_push($data['custom_links'], ['label' => 'Bayar', 'url' => route('invoices.pay', ['invoice' => $invoice->id])]);
+                    array_push($data['custom_links'], ['label' => 'Bayar', 'url' => route('invoices.pay', ['invoice' => $invoice->id]), 'name' => 'invoices.pay']);
                 }
 
                 if ($invoice->is_posted != Invoice::VOID and $invoice->is_posted != Invoice::POSTED_DRAFT) {
-                    array_push($data['custom_links'], ['label' => 'Void', 'url' => route('invoices.void', ['invoice' => $invoice->id])]);
+                    array_push($data['custom_links'], ['label' => 'Void', 'url' => route('invoices.void', ['invoice' => $invoice->id]), 'name' => 'invoices.void']);
                 }
 
                 return view('components.datatable-action', $data);

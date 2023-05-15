@@ -43,7 +43,7 @@ class InvoiceSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
 
         // create school
         $permission = Permission::firstOrCreate([

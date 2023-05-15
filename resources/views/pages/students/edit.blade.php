@@ -276,6 +276,24 @@
                   </div>
                   {{-- End Phone & Name --}}
 
+                  <div class="row">
+                    
+                    {{-- Email --}}
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="father_email">Email Ayah</label>
+                        <input type="text" name="father_email" value="{{ old('father_email', $student->father_email) }}" id="father_email" class="form-control @error('father_email') is-invalid @enderror">
+                        @error('father_email')
+                          <div class="invalid-feedback">
+                              {{ $message }}
+                          </div>
+                        @enderror
+                      </div>
+                    </div>
+                    {{-- End Email --}}
+
+                  </div>
+
                   {{-- Address --}}
                   <div class="row">
                     <div class="col">
@@ -335,6 +353,24 @@
         
                   </div>
                   {{-- End Name & Phone --}}
+
+                  <div class="row">
+                    
+                    {{-- Email --}}
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="mother_email">Email Ibu</label>
+                        <input type="text" name="mother_email" value="{{ old('mother_email', $student->mother_email) }}" id="mother_email" class="form-control @error('mother_email') is-invalid @enderror">
+                        @error('mother_email')
+                          <div class="invalid-feedback">
+                              {{ $message }}
+                          </div>
+                        @enderror
+                      </div>
+                    </div>
+                    {{-- End Email --}}
+
+                  </div>
   
                   {{-- Address --}}
                   <div class="row">
@@ -395,6 +431,24 @@
         
                   </div>
                   {{-- End Name & Phone --}}
+
+                  <div class="row">
+                    
+                    {{-- Email --}}
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label for="guardian_email">Email Wali</label>
+                        <input type="text" name="guardian_email" value="{{ old('guardian_email', $student->guardian_email) }}" id="guardian_email" class="form-control @error('guardian_email') is-invalid @enderror">
+                        @error('guardian_email')
+                          <div class="invalid-feedback">
+                              {{ $message }}
+                          </div>
+                        @enderror
+                      </div>
+                    </div>
+                    {{-- End Email --}}
+
+                  </div>
   
                   {{-- Address --}}
                   <div class="row">

@@ -20,4 +20,9 @@ class ClassroomStaff extends Model
     {
         return $this->belongsTo(Classroom::class);
     }
+
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
 }

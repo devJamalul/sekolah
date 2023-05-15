@@ -39,14 +39,17 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
     
                     $student->father_name               = $item['nama_ayah'];
                     $student->father_address            = $item['alamat_ayah'];
+                    $student->father_email              = $item['email_ayah'];
                     $student->father_phone_number       = $item['nomor_telepon_ayah'];
     
                     $student->mother_name               = $item['nama_ibu'];
                     $student->mother_address            = $item['alamat_ibu'];
+                    $student->mother_email              = $item['email_ibu'];
                     $student->mother_phone_number       = $item['nomor_telepon_ibu'];
     
                     $student->guardian_name             = $item['nama_wali'];
                     $student->guardian_address          = $item['alamat_wali'];
+                    $student->guardian_email            = $item['email_wali'];
                     $student->guardian_phone_number     = $item['nomor_telepon_wali'];
     
                     $student->save();
@@ -85,14 +88,17 @@ class StudentsImport implements ToCollection, WithHeadingRow, WithValidation
 
             'nama_ayah' => 'required',
             'alamat_ayah' => 'nullable',
+            'email_ayah' => 'nullable|email',
             'nomor_telepon_ayah' => 'nullable|max:20',
 
             'nama_ibu' => 'required',
             'alamat_ibu' => 'nullable',
+            'email_ibu' => 'nullable|email',
             'nomor_telepon_ibu' => 'nullable|max:20',
 
             'nama_wali' => 'nullable',
             'alamat_wali' => 'nullable',
+            'email_wali' => 'nullable|email',
             'nomor_telepon_wali' => 'nullable|max:20',
         ];
     }

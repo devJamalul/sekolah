@@ -10,6 +10,7 @@ use App\Models\AcademicYear;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TuitionRequest;
+use App\Notifications\TuitionApprovalNotification;
 
 class TuitionController extends Controller
 {
@@ -61,6 +62,11 @@ class TuitionController extends Controller
             $tuition->price             = formatAngka($request->price);
             $tuition->request_by        = Auth::id();
             $tuition->save();
+
+            $headmasters = User::where('school_id', session('school_id'))->role('kepala sekolah')->get();
+            foreach ($headmasters as $headmaster) {
+                $headmaster->notify(new TuitionApprovalNotification($tuition));
+            }
 
             DB::commit();
         } catch (\Throwable $th) {

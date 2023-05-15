@@ -57,4 +57,11 @@ class GradeRequest extends FormRequest
             ],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'grade_name' => 'Nama Tingkatan',
+        ];
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Datatables;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\Student;
-use App\Models\TuitionType;
+use Illuminate\Support\Str;
 
 class StudentDatatables extends Controller
 {
@@ -14,10 +14,13 @@ class StudentDatatables extends Controller
         $students = Student::with('school')->latest('created_at');
         return DataTables::of($students)
                         ->editColumn('name', function ($data) {
-                            return "<a href='" . route('students.show', $data->getKey()) . "'>{$data->name}</a>";
+                            return "<a href='" . route('students.show', $data->getKey()) . "'>".Str::of($data->name)->limit(20, '...')."</a>";
                         })
                         ->editColumn('gender', function ($data) {
                             return strtolower($data->gender) == Student::GENDER_LAKI ? 'Laki-Laki' : 'Perempuan';
+                        })
+                        ->editColumn('address', function ($data) {
+                            return Str::of($data->address)->limit(40, '...');
                         })
                         ->addColumn('action', function (Student $row) {
                             $data = [
@@ -29,6 +32,7 @@ class StudentDatatables extends Controller
                                     [
                                         'label' => 'Biaya Khusus',
                                         'url' => route('tuition-master.index', ['id' => $row->id]),
+                                        'name' => 'tuition-master.index'
                                     ]
                                 ]
                             ];
