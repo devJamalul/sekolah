@@ -1,6 +1,6 @@
 @php
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*', 'school-profile') ? 'show' : '';
-    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'expense-approval', 'expense-approval/*') ? 'show' : '';
+    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'tuition-approval', 'tuition-approval/*', 'expense-approval', 'expense-approval/*') ? 'show' : '';
     $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
@@ -65,7 +65,7 @@
     <!-- End Administrasi Menu -->
     @endcanany
 
-    @canany(['tuition-type.index', 'tuition.index', 'wallet.index', 'payment-type.index'])
+    @canany(['tuition-type.index', 'tuition.index', 'wallet.index', 'payment-type.index', 'tuition-approval.index'])
     <!-- Keuangan Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKeuangan"
@@ -113,12 +113,12 @@
                     </a>
                 @endcan
             </div>
-        </div>
-    </li>
-    <!-- End Keuangan Menu -->
+        </li>
+        <!-- End Keuangan Menu -->
     @endcanany
 
-    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index', 'approvals.index'])
+    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index',
+        'approvals.index'])
         <!-- Sekolah Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah"

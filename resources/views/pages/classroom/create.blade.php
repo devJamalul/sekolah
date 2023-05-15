@@ -18,8 +18,25 @@
             <div class="card">
                 <div class="card-body">
                     <form action="{{ route('classroom.store') }}" method="post">
-                        <input type="hidden" name="academic_year_id" value="{{ $academicYears?->id }}">
                         @csrf
+                        <div class="form-group">
+                            <label for="grade-select">Tahun Ajaran<span class="text-small text-danger">*</span></label>
+                            <select class="form-control @error('academic_year_id') is-invalid @enderror"
+                                name="academic_year_id">
+                                <option value="">-</option>
+                                @foreach ($academicYears as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->academic_year_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('academic_year_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
                         <div class="form-group">
                             <label for="grade-select">Tingkat<span class="text-small text-danger">*</span></label>
                             <select class="form-control @error('grade_id') is-invalid @enderror" name="grade_id"
