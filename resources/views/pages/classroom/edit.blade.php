@@ -26,7 +26,7 @@
                                 name="academic_year_id">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $item)
-                                    <option value="{{ $item->id }}" @if ($item->id === $grade->academic_year_id) selected @endif>
+                                    <option value="{{ $item->id }}" @if ($item->id === $classroom->academic_year_id) selected @endif>
                                         {{ $item->academic_year_name }}
                                     </option>
                                 @endforeach
