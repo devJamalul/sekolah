@@ -65,6 +65,15 @@ test('can not render invoice create page as School Staff', function (User $user)
         User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     ]);
 
+test('guest can not render create invoice page', function () {
+    $response = $this
+        ->get(route('invoices.create'));
+
+    // assert
+    $response->assertRedirectToRoute('login');
+    $this->assertGuest();
+});
+
 test('store invoice validation - note', function () {
     $data = [
         'school_id' => session('school_id'),
@@ -168,6 +177,15 @@ test('can render invoice page as School Staff', function (User $user) {
         User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     ]);
 
+test('guest can not render invoice menu', function () {
+    $response = $this
+        ->get(route('invoices.index'));
+
+    // assert
+    $response->assertRedirectToRoute('login');
+    $this->assertGuest();
+});
+
 // UPDATE
 test('U P D A T E', function () {
     expect(true)->toBeTrue();
@@ -216,6 +234,16 @@ test('can not render invoice edit page as School Staff', function (User $user) {
         User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
         User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     ]);
+
+test('guest can not render edit invoice page', function () {
+    $invoice = Invoice::factory()->create();
+    $response = $this
+        ->get(route('invoices.edit', $invoice->getKey()));
+
+    // assert
+    $response->assertRedirectToRoute('login');
+    $this->assertGuest();
+});
 
 test('update invoice validation - note', function () {
     $invoice = Invoice::factory()->create();
@@ -374,6 +402,17 @@ test('can delete invoice', function (User $user) {
         User::ROLE_BENDAHARA => [fn () => $this->bendahara],
         User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     ]);
+
+test('guest can not delete invoice', function () {
+    $invoice = Invoice::factory()->create();
+
+    $response = $this
+        ->get(route('invoices.destroy', $invoice->getKey()));
+
+    // assert
+    $response->assertRedirectToRoute('login');
+    $this->assertGuest();
+});
 
 // VOID
 test('V O I D', function () {
