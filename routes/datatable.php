@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Datatables\UsersDatatables;
 use App\Http\Controllers\Datatables\SchoolsDatatables;
 use App\Http\Controllers\Datatables\StudentDatatables;
+use App\Http\Controllers\Datatables\WalletLogDatatables;
 use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\ExpenseReportDatatables;
+use App\Http\Controllers\Datatables\ExpenseApprovalDatatables;
+use App\Http\Controllers\Datatables\TuitionApprovalDatatables;
 use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
-use App\Http\Controllers\Datatables\TuitionApprovalDatatables;
-use App\Http\Controllers\Datatables\WalletLogDatatables;
 
 Route::middleware(['web', 'auth'])->group(function () {
     Route::get('academy-years', [App\Http\Controllers\Datatables\AcademyYearDatatables::class, 'index'])->name('academy-year');
@@ -59,6 +60,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('report-school-finances', App\Http\Controllers\Datatables\ReportSchoolFinancesDatatables::class)->name('report-school-finances');
 
     Route::get('expense-report', ExpenseReportDatatables::class)->name('expense-report');
+
+    Route::get('expense-approval', [ExpenseApprovalDatatables::class, 'index'])->name('expense-approval');
 
     Route::get('invoices', App\Http\Controllers\Datatables\InvoiceDatatables::class)->name('invoices');
 });
