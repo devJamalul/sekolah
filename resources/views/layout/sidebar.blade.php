@@ -1,6 +1,6 @@
 @php
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*', 'school-profile') ? 'show' : '';
-    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*') ? 'show' : '';
+    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'expense-approval', 'expense-approval/*') ? 'show' : '';
     $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
@@ -13,7 +13,7 @@
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('home') }}">
         <div class="sidebar-brand-icon">
             <i class="fas fa-school"></i>
-        </div>
+        </div> 
         <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
     </a>
 
@@ -92,6 +92,12 @@
                     <a href="{{ route('tuition-approval.index') }}"
                         class="collapse-item {{ Request::is('tuition-approval', 'tuition-approval/*') ? 'active' : '' }}">
                         Persetujuan Biaya
+                    </a>
+                @endcan
+                @can('expense-approval.index')
+                    <a href="{{ route('expense-approval.index') }}"
+                        class="collapse-item {{ Request::is('expense-approval', 'expense-approval/*') ? 'active' : '' }}">
+                        Persetujuan Pengeluaran Biaya
                     </a>
                 @endcan
                 @can('wallet.index')
