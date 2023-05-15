@@ -16,8 +16,8 @@ class WalletDatatables extends Controller
         return DataTables::of($wallet)
             ->editColumn('name', function ($row) {
                 $danabos = match ($row->danabos) {
-                    1 => "<span class='text-small text-danger'>*</span>",
-                    0 => '',
+                    true => "<span class='text-small text-danger'>*</span>",
+                    false => '',
                 };
                 return "<a href='" . route('wallet.logs', $row->getKey()) . "'>" . $row->name . "</a> " . $danabos;
             })
