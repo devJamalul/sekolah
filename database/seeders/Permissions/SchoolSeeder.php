@@ -21,6 +21,8 @@ class SchoolSeeder extends Seeder
         $admin_yayasan = Role::whereName(User::ROLE_ADMIN_YAYASAN)->first();
         $admin_sekolah = Role::whereName(User::ROLE_ADMIN_SEKOLAH)->first();
         $kepala_sekolah = Role::whereName(User::ROLE_KEPALA_SEKOLAH)->first();
+        $bendahara = Role::whereName(User::ROLE_BENDAHARA)->first();
+        $tata_usaha = Role::whereName(User::ROLE_TATA_USAHA)->first();
 
         // schools
         $roles = [
@@ -78,7 +80,7 @@ class SchoolSeeder extends Seeder
             'name' => $roles['profile-index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['profile-update'],
             'guard_name' => 'web'
