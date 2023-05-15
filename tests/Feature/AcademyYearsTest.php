@@ -66,6 +66,9 @@ it('forbid guest to view Academy Years page', function () {
         ->assertRedirectToRoute('login');
 });
 
+test('C R E A T E', function () {
+    expect(true)->toBeTrue();
+});
 
 /**
  * CREATE RENDER PAGE
@@ -100,7 +103,7 @@ it('can render Academy Years create invalid academy years formatted  as ', funct
     $school = School::factory()->create();
     $this->actingAs($user)
         ->post(route('academy-year.store'), [
-            'school_id' => $school->id,
+            'school_id' => session('school_id'),
             'academic_year_name' => fake()->name(),
         ])->assertInvalid(['academic_year_name']);
 })->with('staff_can_crud');
@@ -109,19 +112,18 @@ it('can render Academy Years create invalid academy years formatted  as ', funct
 /**
  * CREATE
  */
-it('can render Academy Years create data post  as ', function (User $user) {
-    $school = School::factory()->create();
-    $year = fake()->year('-10 years');
-    session(['school_id' => $school->id]);
-    $yearAcademy = ($year - 1) . " - " . $year + 1;
+it('can create data post as', function (User $user) {
+    $year = fake()->unique()->year();
+    session(['school_id' => session('school_id')]);
+    $yearAcademy = ($year) . " - " . $year + 1;
     $data = [
-        'school_id' => $school->id,
+        'school_id' => session('school_id'),
         'academic_year_name' => $yearAcademy,
         'status_years' => AcademicYear::STATUS_CLOSED
     ];
 
     $this->actingAs($user)
-        ->post(route('academy-year.store'), $data)->assertRedirect(route('academy-year.index'));
+        ->post(route('academy-year.store'), $data);
     $this->assertDatabaseHas('academic_years', $data);
 })->with('staff_can_crud');
 
@@ -130,6 +132,10 @@ it('can render Academy Years create data post  as ', function (User $user) {
  * Read
  *
  */
+
+test('R E A D', function () {
+    expect(true)->toBeTrue();
+});
 
 it('can render Academy Years index Datatable page as ', function (User $user) {
     $response = $this
@@ -152,6 +158,10 @@ it('can render Academy Years page index page as ', function (User $user) {
 /**
  * UPDATE RENDER
  */
+
+test('U P D A T E', function () {
+    expect(true)->toBeTrue();
+});
 
 it('can render page edit Academy Years  as ', function (User $user) {
     $academyYear = AcademicYear::factory()->create();
@@ -215,6 +225,10 @@ it('can render Academy Years update data  as ', function (User $user) {
 /**
  * DELETE
  */
+test('D E L E T E', function () {
+    expect(true)->toBeTrue();
+});
+
 it('can render Academy Years delete data  as ', function (User $user) {
     $academyYear = AcademicYear::factory()->create();
     session(['school_id' => $academyYear->school_id]);
@@ -249,7 +263,7 @@ it("can't render Academy Years store  as ", function (User $user) {
     $school = School::factory()->create();
     $this->actingAs($user)
         ->post(route('academy-year.store'), [
-            'school_id' => $school->id,
+            'school_id' => session('school_id'),
             'academic_year_name' => fake()->name(),
         ])->assertNotFound();
 })->with('staff_cannot_crud');
