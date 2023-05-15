@@ -5,12 +5,27 @@ use App\Models\School;
 use App\Models\User;
 
 beforeEach(function () {
+    session(['school_id' => 1]);
+
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
     $this->opsAdmin = User::role(User::ROLE_OPS_ADMIN)->first();
-    $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->first();
-    $this->bendahara = User::role(User::ROLE_BENDAHARA)->first();
-    $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->first();
-    $this->kepalaSekolah = User::role(User::ROLE_KEPALA_SEKOLAH)->first();
+
+    $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->bendahara = User::role(User::ROLE_BENDAHARA)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->kepalaSekolah = User::role(User::ROLE_KEPALA_SEKOLAH)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
     $this->setupFaker();
 });
 
@@ -48,7 +63,7 @@ dataset('staff_cannot_crud', [
 it('forbid guest to view Academy Years page', function () {
     $this
         ->get(route('academy-year.index'))
-        ->assertNotFound();
+        ->assertRedirectToRoute('login');
 });
 
 

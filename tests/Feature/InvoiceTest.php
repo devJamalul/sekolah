@@ -7,7 +7,7 @@ use App\Models\User;
 use RealRashid\SweetAlert\Facades\Alert;
 
 beforeEach(function () {
-    session(['school_id' => 2]);
+    session(['school_id' => 1]);
 
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
     $this->opsAdmin = User::role(User::ROLE_OPS_ADMIN)->first();
@@ -20,7 +20,6 @@ beforeEach(function () {
         'school_id' => session('school_id')
     ]);
 
-    // $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->first();
     $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->firstWhere([
         'school_id' => session('school_id')
     ]);
