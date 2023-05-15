@@ -30,7 +30,10 @@ class ClassroomController extends Controller
         //
         $title = "Tambah Kelas";
         $schools = School::all();
-        $academicYears = AcademicYear::Active()->first();
+        $academicYears = AcademicYear::whereIn('status_years', [
+            AcademicYear::STATUS_STARTED,
+            AcademicYear::STATUS_REGISTRATION
+        ])->orderBy('status_years', 'desc')->get();
         $grades = Grade::all();
         return view('pages.classroom.create', compact('schools', 'academicYears',  'grades', 'title'));
     }
@@ -44,16 +47,15 @@ class ClassroomController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $classroom                      = new Classroom();
             $classroom->school_id           = session('school_id');
             $classroom->academic_year_id    = $request->academic_year_id;
             $classroom->grade_id            = $request->grade_id;
             $classroom->name                = $request->name;
             $classroom->save();
-            
-            DB::commit();
 
+            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('classroom.index')->withToastError('Eror Simpan Kelas');
@@ -87,8 +89,8 @@ class ClassroomController extends Controller
      * Update the specified resource in storage.
      */
     public function update(ClassroomRequest $request, Classroom $classroom)
-    { 
-        
+    {
+
         DB::beginTransaction();
 
         try {
@@ -98,9 +100,8 @@ class ClassroomController extends Controller
             $classroom->grade_id            = $request->grade_id;
             $classroom->name                = $request->name;
             $classroom->save();
-            
-            DB::commit();
 
+            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('classroom.index')->withToastError('Eror Simpan Kelas!');
@@ -116,20 +117,19 @@ class ClassroomController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $classroom->delete();
             DB::commit();
 
             return response()->json([
                 'msg' => 'Berhasil Hapus Kelas!'
             ], 200);
-
         } catch (\Throwable $th) {
-            
+
             DB::rollBack();
             return response()->json([
                 'msg' => 'Eror Hapus Kelas!'
             ]);
-        } 
+        }
     }
 }
