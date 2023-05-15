@@ -132,7 +132,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::post('export-student-tuition', [ReportStudentTuitionsController::class, 'export'])->name('export-student-tuition');
 
     //staff
-    Route::resource("staff", StaffController::class)->except(['show']);
+    Route::resource("staff", StaffController::class);
 
     // Wallet
     Route::resource("wallet", WalletController::class)->except(['show']);
@@ -176,7 +176,6 @@ Route::middleware(['auth', 'password.changed'])->prefix('reports')->group(functi
     Route::post('students/get-classroom', [StudentReport::class, 'getClassroomByFilter'])->name('reports.students.getClassroomByFilter');
     Route::post('students', [StudentReport::class, 'exportStudentReport'])->name('reports.students.export');
     Route::post('expense', [ExpenseReportController::class, 'exportExpenseReport'])->name('reports.expense.export');
-
 });
 
 

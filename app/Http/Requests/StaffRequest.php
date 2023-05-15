@@ -34,7 +34,19 @@ class StaffRequest extends FormRequest
     {
         return [
             'school_id' => 'required|exists:schools,id',
-            'name'      => 'required'
+            'name' => 'required',
+            'dob' => 'required',
+            'religion' => 'required',
+            'gender' => 'required',
+            'address' => 'required',
+            'phone_number' => 'nullable|max:20',
+            'family_card_number' => 'required|numeric|max_digits:20',
+            'nik' => 'required|numeric|max_digits:16',
+            'nip' => 'nullable|numeric|max_digits:20',
+            'nidn' => 'nullable|numeric|max_digits:10',
+            'file_photo' => 'nullable|image|max:4000',
+            'file_birth_certificate' => 'nullable|image|max:4000',
+            'file_family_card' => 'nullable|image|max:4000',
         ];
     }
 
@@ -43,7 +55,19 @@ class StaffRequest extends FormRequest
 
         return [
             'school_id' => 'required|exists:schools,id',
-            'name'      => 'required'
+            'name' => 'required',
+            'dob' => 'required',
+            'religion' => 'required',
+            'gender' => 'required',
+            'address' => 'required',
+            'phone_number' => 'nullable|max:20',
+            'family_card_number' => 'required|numeric|max_digits:20',
+            'nik' => 'required|numeric|max_digits:16',
+            'nip' => 'nullable|numeric|max_digits:20',
+            'nidn' => 'nullable|numeric|max_digits:10',
+            'file_photo' => 'nullable|image|max:4000',
+            'file_birth_certificate' => 'nullable|image|max:4000',
+            'file_family_card' => 'nullable|image|max:4000',
         ];
     }
 
