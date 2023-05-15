@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +18,7 @@ class AcademicYearFactory extends Factory
     {
         $year = fake()->year('-10 years');
         return [
-            'school_id' => 2,
+            'school_id' => 1,
             'academic_year_name' => "$year - " . $year + 1,
         ];
     }

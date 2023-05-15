@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->double('init_value')->nullable();
             $table->double('last_balance')->nullable();
+            $table->double('withholding_balance')->nullable();
+            $table->boolean('danabos')->default(false)->comment('Flag untuk Dana Bos');
             $table->timestamps();
             $table->softDeletes();
         });
