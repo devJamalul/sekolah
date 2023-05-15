@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
                 User::ROLE_KEPALA_SEKOLAH,
             ];
 
-            foreach ($roles as $key => $role) {
+            foreach ($roles as $role) {
                 $user = User::updateOrCreate(
                     [
                         'email' => str($role)->slug() . '@sekolah.com',
@@ -69,7 +69,13 @@ class UserSeeder extends Seeder
                     ]
                 );
                 $user->assignRole($role);
+                $user->staff()->updateOrCreate([
+                    'school_id' => $sekolah->getKey(),
+                ]);
             }
+
+            $sekolah->staff_id = 1;
+            $sekolah->save();
         }
     }
 }
