@@ -78,9 +78,11 @@ class ClassroomController extends Controller
     public function edit(Classroom $classroom)
     {
         $schools = School::all();
-        $academicYears = AcademicYear::Active()->first();
         $grades = Grade::all();
-
+        $academicYears = AcademicYear::whereIn('status_years', [
+            AcademicYear::STATUS_STARTED,
+            AcademicYear::STATUS_REGISTRATION
+        ])->orderBy('status_years', 'desc')->get();
         $title = "Ubah Kelas";
         return view('pages.classroom.edit', compact('schools', 'academicYears',  'grades', 'classroom', 'title'));
     }

@@ -9,7 +9,7 @@
 
         {{-- start table academy years --}}
         <div class="col-lg-6">
-            
+
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
                 <a href="{{ route('classroom.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-default shadow-sm">
@@ -20,7 +20,24 @@
                 <div class="card-body">
                     <form action="{{ route('classroom.update', ['classroom' => $classroom->id]) }}" method="post">
                         @method('PUT')
-                        <input type="hidden" name="academic_year_id" value="{{ $academicYears?->id }}">
+                        <div class="form-group">
+                            <label for="grade-select">Tahun Ajaran<span class="text-small text-danger">*</span></label>
+                            <select class="form-control @error('academic_year_id') is-invalid @enderror"
+                                name="academic_year_id">
+                                <option value="">-</option>
+                                @foreach ($academicYears as $item)
+                                    <option value="{{ $item->id }}" @if ($item->id === $grade->academic_year_id) selected @endif>
+                                        {{ $item->academic_year_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('academic_year_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
                         @csrf
                         <div class="form-group">
                             <label for="grade-select">Tingkat<span class="text-small text-danger">*</span></label>
@@ -39,7 +56,7 @@
                                 </div>
                             @enderror
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="classroom-input">Kelas<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('name') is-invalid @enderror" name="name"
