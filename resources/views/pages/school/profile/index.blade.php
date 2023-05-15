@@ -168,7 +168,7 @@
                                 @enderror
                             </div>
 
-                            @can('profile-update.update')
+                            @can('schools.profile-index')
                             <div class="btn-group float-right mr-3 mt-2">
                                 <button type="submit" class="btn btn-primary ">Simpan</button>
                                 <button type="reset" class="btn btn-secondary ">Batal</button>
