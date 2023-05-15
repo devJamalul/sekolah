@@ -107,12 +107,12 @@
                     </a>
                 @endcan
             </div>
-        </div>
-    </li>
-    <!-- End Keuangan Menu -->
+        </li>
+        <!-- End Keuangan Menu -->
     @endcanany
 
-    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index', 'approvals.index'])
+    @canany(['grade.index', 'academy-year.index', 'students.index', 'classroom.index', 'assign-classroom-student.index',
+        'approvals.index'])
         <!-- Sekolah Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuSekolah"
