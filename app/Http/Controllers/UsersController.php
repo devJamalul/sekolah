@@ -6,6 +6,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\School;
 use App\Models\Staff;
 use App\Models\User;
+use App\Notifications\NewSchoolPICNotification;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -42,11 +43,13 @@ class UsersController extends Controller
     {
         DB::beginTransaction();
         try {
+            $password = fake()->word();
             $user = new User();
             $user->school_id = session('school_id');
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = bcrypt($request->email);
+            $user->password = bcrypt($password);
+            $user->new_password = 1;
             $user->email_verified_at = now();
             $user->save();
 
@@ -59,9 +62,8 @@ class UsersController extends Controller
             $staff->save();
 
             DB::commit();
-            DB::afterCommit(function () use ($user) {
-                // event(new Registered($user)); # aktifkan jika sudah menggunakan email verifikasi
-            });
+            // event(new Registered($user)); # aktifkan jika sudah menggunakan email verifikasi
+            $user->notify(new NewSchoolPICNotification($user, $password));
         } catch (Exception $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Tambah pengguna',
@@ -143,7 +145,7 @@ class UsersController extends Controller
         if ($user->school_id != session('school_id')) {
             abort(404);
         }
-        
+
         DB::beginTransaction();
         try {
             $user->delete();

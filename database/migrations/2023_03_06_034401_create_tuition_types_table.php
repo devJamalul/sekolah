@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(School::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name')->nullable();
-            $table->boolean('generatable')->nullable();
+            $table->boolean('recurring')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

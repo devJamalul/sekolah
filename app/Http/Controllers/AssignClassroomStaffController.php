@@ -9,7 +9,9 @@ use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AssignClassroomStaffRequest;
+use App\Models\ClassroomStaff;
 use App\Models\ClassroomStudent;
+use App\Models\Staff;
 use Exception;
 
 class AssignClassroomStaffController extends Controller
@@ -20,9 +22,17 @@ class AssignClassroomStaffController extends Controller
     public function __invoke(Request $request)
     {
         $data['title'] = "Tetapkan Wali Kelas";
-        $data['academy_year'] = AcademicYear::active()->first();
-        $data['classroom'] = Classroom::with('grade')->where('academic_year_id', $data['academy_year']?->id)->get();
         return view('pages.assign-classroom-staff.index', $data);
+    }
+
+    public function create()
+    {
+        $data['title'] = "Tetapkan Wali Kelas";
+        return view('pages.assign-classroom-staff.create', $data);
+    }
+
+    public function show(ClassroomStaff $classroomStaff)
+    {
     }
 
     public function store(AssignClassroomStaffRequest $request)

@@ -16,7 +16,7 @@ class GradeController extends Controller
     public function index()
     {
         //
-        $title = "Tingkat";
+        $title = "Tingkatan";
         return view('pages.grade.index', compact('title'));
     }
 
@@ -40,7 +40,7 @@ class GradeController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $grade              = new Grade();
             $grade->school_id   = session('school_id');
             $grade->grade_name  = $request->grade_name;
@@ -54,7 +54,7 @@ class GradeController extends Controller
         }
 
         return redirect()->route('grade.index')->withToastSuccess('Berhasil Simpan Tingkat!');
-    }    
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -63,7 +63,7 @@ class GradeController extends Controller
     {
 
         $schools = School::all();
-        $title = "Ubah Tingkat";
+        $title = "Ubah Tingkatan";
         return view('pages.grade.edit', compact('schools', 'grade', 'title'));
     }
 
@@ -79,7 +79,7 @@ class GradeController extends Controller
             $grade->school_id   = session('school_id');
             $grade->grade_name  = $request->grade_name;
             $grade->save();
-            
+
             DB::commit();
 
         } catch (\Throwable $th) {
@@ -97,7 +97,7 @@ class GradeController extends Controller
     {
         DB::beginTransaction();
         try {
-            
+
             $grade->delete();
             DB::commit();
 
@@ -106,7 +106,7 @@ class GradeController extends Controller
             ], 200);
 
         } catch (\Throwable $th) {
-            
+
             DB::rollBack();
             return response()->json([
                 'msg' => 'Eror Hapus Tingkat!'
