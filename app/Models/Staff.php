@@ -16,7 +16,21 @@ class Staff extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const GENDER_MALE = "Laki-laki";
+    const GENDER_FEMALE = "Perempuan";
+    const GENDERS = [
+        "Laki-laki", "Perempuan"
+    ];
+
+    const RELIGIONS = [
+        'Budha', 'Hindu', 'Katolik', 'Khonghucu', 'Islam', 'Protestan'
+    ];
+
     protected $guarded = [];
+
+    protected $casts = [
+        'dob' => 'date:Y-m-d'
+    ];
 
     public function classrooms(): BelongsToMany
     {

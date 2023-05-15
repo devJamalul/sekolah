@@ -46,4 +46,12 @@ class StaffRequest extends FormRequest
             'name'      => 'required'
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'school_id' => 'ID Sekolah',
+            'name' => 'Nama',
+        ];
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\SchoolRequest;
 use App\Models\School;
 use App\Models\Staff;
 use App\Models\User;
+use App\Notifications\NewSchoolPICNotification;
 use Exception;
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -41,14 +42,15 @@ class SchoolsController extends Controller
     public function store(SchoolRequest $request)
     {
 
-        $role = $request->has('school_id') ? User::ROLE_ADMIN_SEKOLAH : $role = User::ROLE_ADMIN_YAYASAN;
+        // $role = $request->has('school_id') ? User::ROLE_ADMIN_SEKOLAH : $role = User::ROLE_ADMIN_YAYASAN;
+        $role = User::ROLE_ADMIN_SEKOLAH;
 
         DB::beginTransaction();
         try {
             // sekolah
             $school = new School();
             $school->school_name = $request->school_name;
-            $school->school_id = $request->school_id;
+            // $school->school_id = $request->school_id;
             $school->province = $request->province;
             $school->city = $request->city;
             $school->postal_code = $request->postal_code;
@@ -61,11 +63,13 @@ class SchoolsController extends Controller
             $school->save();
 
             // PIC
+            $password = fake()->word();
             $user = new User();
             $user->school_id = $school->getKey();
             $user->name = $request->name_pic;
             $user->email = $request->email_pic;
-            $user->password = bcrypt($user->email);
+            $user->password = bcrypt($password);
+            $user->new_password = true;
             $user->save();
 
             //staff
@@ -83,6 +87,9 @@ class SchoolsController extends Controller
             $user->assignRole($role);
 
             DB::commit();
+
+            // notification
+            $user->notify(new NewSchoolPICNotification($user, $password));
         } catch (Exception $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Tambah sekolah',

@@ -1,5 +1,5 @@
 @php
-    $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*') ? 'show' : '';
+    $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*', 'school-profile') ? 'show' : '';
     $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*') ? 'show' : '';
     $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
@@ -18,7 +18,7 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider">
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('home', 'home/*') ? 'active' : '' }}">
@@ -30,6 +30,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+    @canany(['schools.index', 'users.index', 'schools.profile-index'])
     <!-- Administrasi Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuAdministrasi"
@@ -52,10 +53,17 @@
                         Pengguna
                     </a>
                 @endcan
+                @can('schools.profile-index')
+                    <a href="{{ route('schools.profile-index') }}"
+                        class="collapse-item  {{ Request::is('school-profile') ? 'active' : '' }}">
+                        Informasi Sekolah
+                    </a>
+                @endcan
             </div>
         </div>
     </li>
     <!-- End Administrasi Menu -->
+    @endcanany
 
     @canany(['tuition-type.index', 'tuition.index', 'wallet.index', 'payment-type.index'])
     <!-- Keuangan Menu -->
@@ -80,10 +88,10 @@
                         Biaya
                     </a>
                 @endcan
-                @can('payment-type.index')
-                    <a href="{{ route('payment-type.index') }}"
-                        class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
-                        Tipe Pembayaran
+                @can('tuition-approval.index')
+                    <a href="{{ route('tuition-approval.index') }}"
+                        class="collapse-item {{ Request::is('tuition-approval', 'tuition-approval/*') ? 'active' : '' }}">
+                        Persetujuan Biaya
                     </a>
                 @endcan
                 @can('wallet.index')
@@ -143,12 +151,6 @@
                         <a href="{{ route('assign-classroom-student.index') }}"
                             class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">
                             Rombongan Belajar
-                        </a>
-                    @endcan
-                    @can('approvals.index')
-                        <a href="{{ route('approvals.index') }}"
-                            class="collapse-item {{ Request::is('approvals', 'approvals/*') ? 'active' : '' }}">
-                            Persetujuan
                         </a>
                     @endcan
                 </div>

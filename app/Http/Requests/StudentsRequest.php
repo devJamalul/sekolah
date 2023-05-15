@@ -44,14 +44,17 @@ class StudentsRequest extends FormRequest
             
             'father_name' => 'nullable',
             'father_address' => 'nullable',
+            'father_email' => 'nullable|email',
             'father_phone_number' => 'nullable|max:20',
 
             'mother_name' => 'nullable',
             'mother_address' => 'nullable',
+            'mother_email' => 'nullable|email',
             'mother_phone_number' => 'nullable|max:20',
 
             'guardian_name' => 'nullable',
             'guardian_address' => 'nullable',
+            'guardian_email' => 'nullable|email',
             'guardian_phone_number' => 'nullable|max:20',
 
             'file_photo' => 'nullable|image|max:4000',
@@ -77,19 +80,54 @@ class StudentsRequest extends FormRequest
 
             'father_name' => 'nullable',
             'father_address' => 'nullable',
+            'father_email' => 'nullable|email',
             'father_phone_number' => 'nullable|max:20',
 
             'mother_name' => 'nullable',
             'mother_address' => 'nullable',
+            'mother_email' => 'nullable|email',
             'mother_phone_number' => 'nullable|max:20',
 
             'guardian_name' => 'nullable',
             'guardian_address' => 'nullable',
+            'guardian_email' => 'nullable|email',
             'guardian_phone_number' => 'nullable|max:20',
 
             'file_photo' => 'nullable|image|max:4000',
             'file_birth_certificate' => 'nullable|image|max:4000',
             'file_family_card' => 'nullable|image|max:4000',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Nama',
+            'email' => 'Email',
+            'dob' => 'Tanggal Lahir',
+            'religion' => 'Agama',
+            'gender' => 'Jenis Kelamin',
+            'address' => 'Alamat',
+            'phone_number' => 'Nomor Telepon',
+            'family_card_number' => 'Nomor Kartu Keluarga',
+            'nik' => 'NIK',
+            'nis' => 'NIS',
+            'nisn' => 'NISN',
+
+            'father_name' => 'Nama Ayah',
+            'father_address' => 'Alamat Ayah',
+            'father_email' => 'Email Ayah',
+            'father_phone_number' => 'Nomor Telepon Ayah',
+
+            'mother_name' => 'Nama Ibu',
+            'mother_address' => 'Alamat Ibu',
+            'mother_email' => 'Email Ibu',
+            'mother_phone_number' => 'Nomor Telepon Ibu',
+
+            'guardian_name' => 'Nama Wali',
+            'guardian_address' => 'Alamat Wali',
+            'guardian_email' => 'Email Wali',
+            'guardian_phone_number' => 'Nomor Telepon Wali',
         ];
     }
 }

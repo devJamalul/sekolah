@@ -45,4 +45,12 @@ class ConfigRequest extends FormRequest
             'name'      =>'required'
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'code' => 'Kode',
+            'name' => 'Nama',
+        ];
+    }
 }
