@@ -2,7 +2,6 @@
 
 
 @section('content')
-
     {{-- start ROW --}}
 
     <div class="row">
@@ -21,9 +20,11 @@
                         @method('PUT')
                         @csrf
                         <div class="form-group">
-                            <label for="expense-number-input">No Pengeluaran Biaya<span class="text-small text-danger">*</span></label>
-                            <input type="text" class="form-control  @error('expense_number') is-invalid @enderror" name="expense_number"
-                                value="{{ $expense->expense_number }}" id="expense-number-input" placeholder="" disabled>
+                            <label for="expense-number-input">No Pengeluaran Biaya<span
+                                    class="text-small text-danger">*</span></label>
+                            <input type="text" class="form-control  @error('expense_number') is-invalid @enderror"
+                                name="expense_number" value="{{ $expense->expense_number }}" id="expense-number-input"
+                                placeholder="" disabled>
                             @error('expense_number')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -31,9 +32,11 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="expense-date-input">Tanggal Pengeluaran Biaya<span class="text-small text-danger">*</span></label>
-                            <input type="date" class="form-control @error('expense_date') is-invalid @enderror" name="expense_date"
-                                id="expense-date-input" placeholder="" value="{{ $expense->expense_date }}">
+                            <label for="expense-date-input">Tanggal Pengeluaran Biaya<span
+                                    class="text-small text-danger">*</span></label>
+                            <input type="date" class="form-control @error('expense_date') is-invalid @enderror"
+                                name="expense_date" id="expense-date-input" placeholder=""
+                                value="{{ $expense->expense_date }}">
                             @error('expense_date')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -50,7 +53,7 @@
                                 </div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">SIMPAN</button>
+                        <button type="submit" class="btn btn-primary float-right">Simpan</button>
                     </form>
                 </div>
             </div>
@@ -59,5 +62,4 @@
         {{-- END table Expense --}}
     </div>
     {{-- END ROW --}}
-
 @endsection

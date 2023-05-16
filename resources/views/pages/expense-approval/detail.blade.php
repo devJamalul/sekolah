@@ -4,14 +4,7 @@
 
 @section('content')
 
-	<div class="col-lg-12">
-
-			{{-- Header --}}
-      <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
-        <a href="{{ route('expense-approval.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-danger shadow-sm">Kembali</a>
-      </div>
-			{{-- End Header --}}
+    <div class="col-lg-12">
 
       {{-- Tuition Data --}}
       <div class="row">
@@ -68,12 +61,8 @@
                 @endif
               @endcan
             </div>
-          </div>
         </div>
-      </div>
-      {{-- End Tuition Data --}}
+        {{-- End Tuition Data --}}
 
     </div>
-    {{-- END table schools --}}
-
 @endsection
