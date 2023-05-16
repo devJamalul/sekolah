@@ -62,6 +62,7 @@ class PublishTuition extends Command
             $this->line('-----------------------');
             foreach ($tuition_types as $tuition_type) {
                 $this->line('Tuition Type: ' . $tuition_type->name);
+                // Fixes #153
                 $tuitions = $tuition_type->tuitions()->withoutGlobalScopes()->whereNotNull('approval_by')->where('academic_year_id', $academic_year->getKey())->get();
                 foreach ($tuitions as $tuition) {
                     $this->line('Tuition: ' . $tuition->getKey());
