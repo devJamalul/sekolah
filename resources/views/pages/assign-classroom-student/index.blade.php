@@ -66,7 +66,7 @@
                         <div class="form-group ml-auto">
                             <button class="btn btn-primary btn-sm filter">
                                 Filter
-                                <i class="fas fa-filter"></i>
+                                {{-- <i class="fas fa-filter"></i> --}}
                             </button>
                         </div>
                         {{-- END SELECT ACADEMY YEARS --}}
@@ -107,11 +107,13 @@
                                     <div class="col-6">
                                         {{-- START BUTTON TETAPKAN KELAS --}}
                                         <div class="form-group ">
-                                            <button type="submit" id="assign-classroom-store"
-                                                class="btn btn-primary btn-block btn-sm">
-                                                <i class="fa fa-arrow-circle-right " aria-hidden="true"></i>
-                                                Tetapkan kelas
-                                            </button>
+                                            @can('assign-classroom-student.store')
+                                                <button type="submit" id="assign-classroom-store"
+                                                    class="btn btn-primary btn-block btn-sm">
+                                                    {{-- <i class="fa fa-arrow-circle-right " aria-hidden="true"></i> --}}
+                                                    Tetapkan kelas
+                                                </button>
+                                            @endcan
                                         </div>
                                         {{-- END BUTTON TETAPKAN KELAS  --}}
                                     </div>
@@ -124,19 +126,22 @@
                                 {{-- START FORM HAPUS KELAS --}}
 
                                 <input type="hidden" name="classroom_id">
-                                <div class="btn-group btn-block">
+                                {{-- <div class="btn-group btn-block"> --}}
+
+                                @can('assign-classroom-student.destroy')
                                     <button type="button" class="btn btn-sm btn-success btn-classroom-exist"
                                         onclick="assignclassroom('Naik kelas','{{ $academy_year->register?->id }}','{{ $academy_year->register?->academic_year_name }}')">
-                                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                        {{-- <i class="fa fa-arrow-up" aria-hidden="true"></i> --}}
                                         <span>Naik Kelas</span>
                                     </button>
                                     <button type="button" class="btn btn-sm  btn-danger btn-classroom-exist"
                                         onclick="assignclassroom('Pindah Kelas','{{ $academy_year->started?->id }}','{{ $academy_year->started?->academic_year_name }}')">
-                                        <span class="fa-fw select-all fas"></span>
+                                        {{-- <span class="fa-fw select-all fas"></span> --}}
 
                                         <span>Pindah Kelas</span>
                                     </button>
-                                </div>
+                                @endcan
+                                {{-- </div> --}}
                                 {{-- END FORM HAPUS KELAS --}}
 
 

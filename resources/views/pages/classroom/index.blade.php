@@ -11,7 +11,7 @@
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
                 @can('classroom.create')
                     <a href="{{ route('classroom.create') }}"
-                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
+                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Tambah {{ $title }}</a>
                 @endcan
             </div>
             <div class="card">

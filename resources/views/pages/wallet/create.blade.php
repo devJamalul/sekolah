@@ -28,15 +28,6 @@
                                 </div>
                             @enderror
                         </div>
-
-                        @if ($danabos == 0)
-                        <div class="form-check my-2">
-                            <input type="checkbox" class="form-check-input" name="danabos" value="1"
-                                @checked(old('danabos') == '1') id="danabos-checkbox">
-                            <label class="form-check-label" for="danabos-checkbox">Dana Bos</label>
-                        </div>
-                        @endif
-
                         <div class="form-group">
                             <label for="init-value-input">Saldo Awal<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('init_value') is-invalid @enderror"
@@ -47,7 +38,17 @@
                                 </div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">SIMPAN</button>
+
+                        @if ($danabos == 0)
+                            <div class="form-check my-2">
+                                <input type="checkbox" class="form-check-input" name="danabos" value="1"
+                                    @checked(old('danabos') == '1') id="danabos-checkbox">
+                                <label class="form-check-label" for="danabos-checkbox">Dana Bos</label>
+                            </div>
+                        @endif
+
+
+                        <button type="submit" class="btn btn-primary float-right">Simpan</button>
                     </form>
                 </div>
             </div>

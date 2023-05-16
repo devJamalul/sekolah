@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Database\Seeders\Permissions\UserSeeder;
 use Database\Seeders\Permissions\GradeSeeder;
+use Database\Seeders\Permissions\StaffSeeder;
 use Database\Seeders\Permissions\SchoolSeeder;
 use Database\Seeders\Permissions\WalletSeeder;
 use Database\Seeders\Permissions\ExpenseSeeder;
@@ -22,6 +23,7 @@ use Database\Seeders\Permissions\ExpenseDetailSeeder;
 use Database\Seeders\Permissions\ExpenseReportSeeder;
 use Database\Seeders\Permissions\InvoiceDetailSeeder;
 use Database\Seeders\Permissions\SchoolSelectorSeeder;
+use Database\Seeders\Permissions\TuitionApprovalSeeder;
 use Database\Seeders\Permissions\TransactionReportSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
@@ -29,7 +31,6 @@ use Database\Seeders\Permissions\ReportSchoolFinancesSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
 use Database\Seeders\Permissions\ExpenseApprovalSeeder;
-use Database\Seeders\Permissions\TuitionApprovalSeeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -76,7 +77,8 @@ class PermissionsSeeder extends Seeder
             ExpenseReportSeeder::class,
             TuitionApprovalSeeder::class,
             ReportSchoolFinancesSeeder::class,
-            ExpenseApprovalSeeder::class,
+            StaffSeeder::class,
+            ExpenseApprovalSeeder::class
         ]);
     }
 }

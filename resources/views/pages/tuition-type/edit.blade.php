@@ -47,7 +47,7 @@
                                 @checked(old('generatable', $tuitionType->recurring) == '1') id="generatable-checkbox">
                             <label class="form-check-label" for="generatable-checkbox">Rutin</label>
                         </div>
-                        <button type="submit" class="btn btn-primary">Ubah</button>
+                        <button type="submit" class="btn btn-primary float-right">Ubah</button>
                     </form>
                 </div>
             </div>

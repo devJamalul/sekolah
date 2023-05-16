@@ -13,7 +13,7 @@
                     {{-- <a href="{{ route('publish-tuition.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TERBITKAN</a> --}}
                     @can('tuition.create')
                         <a href="{{ route('tuition.create') }}"
-                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TAMBAH</a>
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Tambah {{ $title }}</a>
                     @endcan
                 </div>
             </div>

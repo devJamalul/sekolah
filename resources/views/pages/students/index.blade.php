@@ -8,13 +8,14 @@
     <div class="col-lg-12">
 
         <div class="d-sm-flex align-items-center justify-content-between">
-            <h1 class="h3 mb-4 text-gray-800">{{ $title }}</h1>
+            <h1 class="h3 mb-4 text-primary font-weight-bold">{{ $title }}</h1>
             <div>
-                @can('students.create')
-                    <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm mr-2">Tambah</a>
-                @endcan
                 @can('students.import')
-                    <a href="{{ route('students.import') }}" class="btn btn-success btn-sm mr-2">Impor Excel</a>
+                    <a href="{{ route('students.import') }}" class="btn btn-success btn-sm mr-2">Impor Excel
+                        {{ $title }}</a>
+                @endcan
+                @can('students.create')
+                    <a href="{{ route('students.create') }}" class="btn btn-primary btn-sm mr-2">Tambah {{ $title }}</a>
                 @endcan
             </div>
         </div>
