@@ -14,6 +14,10 @@ class ExpenseDatatables extends Controller
     {
         $expense = Expense::with('requested_by', 'approved_by')->latest('created_at');
         return DataTables::of($expense)
+            ->editColumn('expense_number', function ($row){
+                return "<a href='" . route('expense.show', $row->id) . "'>{$row->expense_number}</a>";
+            
+            })
             ->editColumn('request_by', function ($row){
                 return $row->requested_by->name;
             })
@@ -44,7 +48,7 @@ class ExpenseDatatables extends Controller
                 return view('components.datatable-action', $data);
 
             })
-            ->rawColumns(['status', 'action'])
+            ->rawColumns(['status', 'action', 'expense_number'])
             ->toJson();
     }
 }
