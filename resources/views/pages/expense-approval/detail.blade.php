@@ -43,9 +43,9 @@
                     <tr>
                         <td scope="row">Status</td>
                         <td class="text-primary font-weight-bold">
-                          @if ($expense->deleted_at)
+                          @if ($expense->status == \App\Models\Expense::STATUS_REJECTED)
                             <span class="badge badge-danger">Ditolak</span>
-                          @elseif ($expense->approval_by)
+                          @elseif ($expense->status == \App\Models\Expense::STATUS_APPROVED)
                             <span class="badge badge-success">Disetujui</span>
                           @else
                             <span class="badge badge-primary">Menunggu Persetujuan</span>
@@ -56,7 +56,7 @@
               </table>
 
               @can(['expense-approval.update'])
-                @if (!$expense->deleted_at && !$expense->approval_by)
+                @if ($expense->status == \App\Models\Expense::STATUS_PENDING)
                   <div style="width: 100%; display: flex; justify-content: end; ">
                     <form action="{{ route('expense-approval.update', ["expense_approval" => $expense->getKey()]) }}" method="post">
                       @csrf

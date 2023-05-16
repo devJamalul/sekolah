@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Wallet\WalletTransaction;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\ExpenseApprovalNotification;
- 
+
 class ExpenseApprovalController extends Controller
 {
     /**
@@ -66,13 +67,21 @@ class ExpenseApprovalController extends Controller
             switch ($request->action) {
                 case 'approve':
                     $expense_approval->approval_by = Auth::user()->id;
+                    $expense_approval->status = Expense::STATUS_APPROVED;
                     break;
                 case 'reject':
-                    $expense_approval->delete();
+                    $expense_approval->status = Expense::STATUS_REJECTED;
                     break;
             }
             $expense_approval->save();
-            
+
+            // pengurangan saldo jika diterima
+            if ($request->action == 'approve') {
+                foreach ($expense_approval->expense_details as $detail) {
+                    WalletTransaction::decrement($detail->wallet_id, $detail->quantity * $detail->price, 'Pengeluaran ' . $expense_approval->expense_number . ' untuk ' . $detail->item_name);
+                }
+            }
+
             // Notification
             $expense_approval->requested_by->notify(new ExpenseApprovalNotification($expense_approval));
 
