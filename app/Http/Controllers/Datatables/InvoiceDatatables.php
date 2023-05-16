@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Datatables;
 
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use Faker\Core\Number;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Laraindo\RupiahFormat;
 use Laraindo\TanggalFormat;
 use Yajra\DataTables\DataTables;
 
@@ -48,6 +50,7 @@ class InvoiceDatatables extends Controller
             ->editColumn('invoice_number', function ($invoice) {
                 return "<a href='" . route('invoice-details.index', $invoice->getKey()) . "'>{$invoice->invoice_number}</a>";
             })
+            ->editColumn('total_amount', fn ($invoice) => number_format($invoice->total_amount, 0, ',', '.'))
             ->editColumn('invoice_date', fn ($invoice) => TanggalFormat::DateIndo($invoice->invoice_date))
             ->editColumn('due_date', fn ($invoice) => TanggalFormat::DateIndo($invoice->due_date))
             ->editColumn('payment_status', function ($invoice) {

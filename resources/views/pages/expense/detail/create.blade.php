@@ -38,8 +38,8 @@
                         </div>
                         <div class="form-group col-6">
                             <label for="item-name-input">Nama Barang<span class="text-small text-danger">*</span></label>
-                            <input type="text" class="form-control @error('item_name') is-invalid @enderror"
-                                name="item_name" id="item-name-input" placeholder="">
+                            <input type="text" class="form-control @error('item_name') is-invalid @enderror" name="item_name"
+                                id="item-name-input" value="{{ old('item_name') }}">
                             @error('item_name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -47,10 +47,9 @@
                             @enderror
                         </div>
                         <div class="form-group col-6">
-                            <label for="quantity-input">Kuantitas Barang<span
-                                    class="text-small text-danger">*</span></label>
-                            <input type="text" class="form-control @error('quantity') is-invalid @enderror"
-                                name="quantity" id="quantity-input" placeholder="">
+                            <label for="quantity-input">Kuantitas Barang<span class="text-small text-danger">*</span></label>
+                            <input type="text" class="form-control @error('quantity') is-invalid @enderror" name="quantity"
+                                id="quantity-input" value="{{ old('quantity') }}">
                             @error('quantity')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -60,7 +59,7 @@
                         <div class="form-group col-6">
                             <label for="price-input">Harga Barang<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
-                                id="price-input">
+                                id="price-input" value="{{ old('price') }}">
                             @error('price')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -101,9 +100,10 @@
                                     <td>{{ number_format($expenseDetail->quantity, 0, ',', '.') }}</td>
                                     <td>Rp. {{ number_format($expenseDetail->price, 0, ',', '.') }}</td>
                                     <td>
-                                        <a class="btn btn-warning"
-                                            href="{{ route('expense-detail.edit', $expenseDetail->id) }}">Ubah</a>
-                                        <button class="btn btn-danger" onclick="softDelete(this)"
+                                        {{-- todo: logika edit expense  --}}
+                                        {{-- <a class="btn btn-warning"
+                                            href="{{ route('expense-detail.edit', $expenseDetail->id) }}">Ubah</a> --}}
+                                        <button class="btn btn-danger btn-sm" onclick="softDelete(this)"
                                             value="{{ $expenseDetail->id }}"
                                             data-redirect="{{ route('expense.show', $expenseDetail->expense->id) }}"
                                             data-url="{{ route('expense-detail.destroy', $expenseDetail->id) }}">Hapus</button>

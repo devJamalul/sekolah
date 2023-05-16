@@ -22,6 +22,7 @@ Disetujui oleh : **{{ $expense->approved_by?->name ?? '-' }}** <br>
         $status = "Menunggu Persetujuan";
     }
 @endphp
+
 Status : **{{ $status }}**
 
 Terima kasih,<br>
