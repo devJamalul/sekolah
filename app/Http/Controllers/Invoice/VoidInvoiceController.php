@@ -17,9 +17,12 @@ class VoidInvoiceController extends Controller
     {
         if ($invoice->school_id != session('school_id')) abort(404);
 
+        // todo
+        return to_route('invoices.index')->withToastError('Ups, mohon maaf! Fitur void masih dalam tahap pengembangan.');
+
         // cek status dan kembalikan jika statusnya sudah VOID
         if ($invoice->is_posted == Invoice::VOID)
-            return redirect()->back()->withToastError('Ups! Invoice tidak bisa di-void-kan kembali.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak bisa di-void-kan kembali.');
 
         $data['title'] = "Konfirmasi Void | Invoice " . $invoice->invoice_number;
         $data['details'] = $invoice->invoice_details()->orderBy('id')->get();
@@ -34,9 +37,12 @@ class VoidInvoiceController extends Controller
     {
         if ($invoice->school_id != session('school_id')) abort(404);
 
+        // todo
+        return to_route('invoices.index')->withToastError('Ups, mohon maaf! Fitur void masih dalam tahap pengembangan.');
+
         // cek status dan kembalikan jika statusnya sudah VOID
         if ($invoice->is_posted == Invoice::VOID)
-            return redirect()->back()->withToastError('Ups! Invoice tidak bisa di-void-kan kembali.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak bisa di-void-kan kembali.');
 
         DB::beginTransaction();
         try {
@@ -51,7 +57,7 @@ class VoidInvoiceController extends Controller
                 'invoice' => $invoice
             ]);
             DB::rollback();
-            return redirect()->back()->withToastError('Ups, terjadi kesalahan saat void invoice!');
+            return to_route('invoices.index')->withToastError('Ups, terjadi kesalahan saat void invoice!');
         }
         return to_route('invoices.index')->withToastSuccess('Invoice berhasil di-void-kan!');
     }

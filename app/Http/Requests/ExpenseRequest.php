@@ -51,14 +51,6 @@ class ExpenseRequest extends FormRequest
     {
 
         return [
-            'expense_number'   => [
-                'required',
-                Rule::unique('expenses')->where(function ($q) {
-                    $q->where('expense_number', $this->expense_number);
-                    $q->where('school_id', session('school_id'));
-                    $q->whereNull('deleted_at');
-                })->ignore($this->expense->id, 'id')
-            ],
             'expense_date' => 'required|date',
             'status'        => 'nullable',
             'requested_by' => 'nullable|exists:users,id',
