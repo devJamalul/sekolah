@@ -17,7 +17,7 @@ class WalletDatatables extends Controller
             ->editColumn('name', function ($row) {
                 $danabos = match ($row->danabos) {
                     1 => "<span class='text-small text-danger'>*</span>",
-                    0 => '',
+                    default => '',
                 };
                 return "<a href='" . route('wallet.logs', $row->getKey()) . "'>" . $row->name . "</a> " . $danabos;
             })

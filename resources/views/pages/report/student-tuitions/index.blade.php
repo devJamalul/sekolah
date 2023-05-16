@@ -12,7 +12,7 @@
             <div class="col-lg-12">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
-                    <div class="btn-group">
+                    <div>
                         <div class="btn-group dropleft">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
@@ -27,7 +27,8 @@
                         <a href="#" data-toggle="modal"
                             class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm p-2 filter">
                             Filter
-                            <i class="fas fa-filter"></i> </a>
+                            {{-- <i class="fas fa-filter"></i> --}}
+                        </a>
                     </div>
                 </div>
                 <div class="card">
@@ -103,7 +104,7 @@
                         <input type="text" class="form-control form-control-sm" name="reportrange" id="reportrange"
                             aria-describedby="reportrange" value="{{ old('reportrange') }}" autocomplete="off">
                     </div>
-                    <div class="btn-group">
+                    <div class="float-right">
                         <button type="button" class="btn btn-danger filter">Tutup</button>
                         <button type="reset" class="btn btn-secondary filter" id="filter-reset">Reset</button>
                         <button type="button" class="btn btn-primary filter" id="filter-data">Filter</button>
