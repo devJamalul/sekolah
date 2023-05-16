@@ -25,7 +25,7 @@ class ReportSchoolFinancesController extends Controller
 
     public function report(Request $request)
     {
-        $wallet = Wallet::find($request->wallet_id);
+        $wallet = Wallet::findOrFail($request->wallet_id);
         $queryParameter = $this->queryParameter($request);
         $title = $this->title;
         return view('pages.report.school-finances.report', compact('title', 'wallet', 'queryParameter'));
