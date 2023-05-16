@@ -18,7 +18,8 @@
                         <div class="form-group">
                             <label for="old_password">Password Lama</label>
                             <input type="password" class="form-control @error('old_password') is-invalid @enderror"
-                                name="old_password" id="old_password" autocomplete="off" value="{{ old('old_password') }}" autofocus tabindex="1">
+                                name="old_password" id="old_password" autocomplete="off" value="{{ old('old_password') }}"
+                                autofocus tabindex="1">
                             @error('old_password')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -48,8 +49,7 @@
                             @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary" tabindex="4">Simpan</button>
-                        <button type="reset" class="btn btn-default">Batal</button>
+                        <button type="submit" class="btn btn-primary float-right" tabindex="4">Simpan</button>
                     </form>
                 </div>
             </div>
