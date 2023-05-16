@@ -2,7 +2,6 @@
 
 
 @section('content')
-
     {{-- start ROW --}}
 
     <div class="row">
@@ -22,15 +21,16 @@
                         @csrf
                         <div class="form-group">
                             <label for="grade-input">Tingkat<span class="text-small text-danger">*</span></label>
-                            <input type="text" class="form-control  @error('grade_name') is-invalid @enderror" name="grade_name"
-                                value="{{ old('grade_name', $grade->grade_name) }}" id="grade-input" placeholder="1, 2, 3, dsb">
+                            <input type="text" class="form-control  @error('grade_name') is-invalid @enderror"
+                                name="grade_name" value="{{ old('grade_name', $grade->grade_name) }}" id="grade-input"
+                                placeholder="1, 2, 3, dsb">
                             @error('grade_name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary">SIMPAN</button>
+                        <button type="submit" class="btn float-right btn-primary">Ubah</button>
                     </form>
                 </div>
             </div>
@@ -39,5 +39,4 @@
         {{-- END table academy years --}}
     </div>
     {{-- END ROW --}}
-
 @endsection

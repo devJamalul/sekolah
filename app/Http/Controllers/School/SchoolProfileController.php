@@ -37,7 +37,6 @@ class SchoolProfileController extends Controller
         try {
             // school
             $school->school_name = $request->school_name;
-            $school->school_id = $request->school_id;
             $school->province = $request->province;
             $school->city = $request->city;
             $school->postal_code = $request->postal_code;

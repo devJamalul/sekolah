@@ -80,11 +80,11 @@ class SchoolSeeder extends Seeder
             'name' => $roles['profile-index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
+        $permission->syncRoles([$admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['profile-update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah]);
+        $permission->syncRoles([$admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha]);
     }
 }

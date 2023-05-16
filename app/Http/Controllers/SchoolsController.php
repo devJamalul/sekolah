@@ -31,9 +31,8 @@ class SchoolsController extends Controller
     public function create()
     {
         $title = "Tambah Sekolah";
-        $schools = School::induk()->get();
         $grade_school =  School::GRADE_SCHOOL;
-        return view('pages.school.create', compact('schools', 'title', 'grade_school'));
+        return view('pages.school.create', compact('title', 'grade_school'));
     }
 
     /**

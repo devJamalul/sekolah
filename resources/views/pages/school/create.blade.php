@@ -9,7 +9,8 @@
         <div class="col-lg-12">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h1>
-                <a href="{{ route('schools.index') }}" class="d-none d-sm-inline-block btn btn-sm btn-default shadow-sm">
+                <a href="{{ route('schools.index') }}"
+                    class="d-none text-capitalize d-sm-inline-block btn btn-sm btn-default shadow-sm">
                     Kembali
                 </a>
             </div>
@@ -176,10 +177,12 @@
                                 @enderror
                             </div>
 
+
+                        </div>
+
+                        <div class="col-12">
                             <div class="btn-group float-right mr-3 mt-2">
                                 <button type="submit" class="btn btn-primary ">Simpan</button>
-                                <button type="reset" class="btn btn-secondary ">Batal</button>
-
                             </div>
                         </div>
                     </form>

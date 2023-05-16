@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             AcademicYearsSeeder::class,
             StudentsSeeder::class,
             TuitionTypesSeeder::class,
-            StudentTuitionsSeeder::class,
+            // StudentTuitionsSeeder::class,
             PermissionsSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();

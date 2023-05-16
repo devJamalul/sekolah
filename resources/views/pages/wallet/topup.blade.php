@@ -20,15 +20,15 @@
                         @csrf
                         <div class="form-group">
                             <label for="init-value-input">Nominal<span class="text-small text-danger">*</span></label>
-                            <input type="text" class="form-control @error('nominal') is-invalid @enderror"
-                                name="nominal" id="nominal-input" value="{{ old('nominal') }}" autocomplete="off" autofocus tabindex="1">
+                            <input type="text" class="form-control @error('nominal') is-invalid @enderror" name="nominal"
+                                id="nominal-input" value="{{ old('nominal') }}" autocomplete="off" autofocus tabindex="1">
                             @error('nominal')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary" tabindex="2">SIMPAN</button>
+                        <button type="submit" class="btn float-right btn-primary" tabindex="2">Simpan</button>
                     </form>
                 </div>
             </div>
