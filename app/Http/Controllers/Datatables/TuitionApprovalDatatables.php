@@ -16,10 +16,10 @@ class TuitionApprovalDatatables extends Controller
     public function index(Request $request)
     {
         $tuitions = Tuition::where('school_id', session('school_id'))
-                                ->with('tuition_type')
+                                ->with('tuition_type', 'grade')
                                 ->withTrashed()
                                 ->get();
-        
+
         return DataTables::of($tuitions)
                         ->addColumn('tuition_name', function ($row) {
                             return $row->tuition_type->name;
@@ -27,15 +27,18 @@ class TuitionApprovalDatatables extends Controller
                         ->addColumn('price', function ($row) {
                             return 'Rp. ' . number_format($row->price, 0, ',', '.');
                         })
+                        ->addColumn('grade', function ($row) {
+                            return $row->grade->grade_name;
+                        })
                         ->addColumn('status', function ($row) {
-                            if ($row->deleted_at) 
+                            if ($row->deleted_at)
                                 return '<span class="badge badge-danger">Ditolak</span>';
 
                             if ($row->approval_by)
                                 return '<span class="badge badge-success">Disetujui</span>';
-                            
+
                             return '<span class="badge badge-primary">Menunggu Persetujuan</span>';
-                        })  
+                        })
                         ->addColumn('action', function (Tuition $row) use($request) {
                             $data = [
                                 'redirect_url' => route('tuition-approval.index'),

@@ -6,8 +6,6 @@
 
     <div class="col-lg-12">
 
-
-
         {{-- Tuition Data --}}
         <div class="row">
             <div class="col-md-6">
@@ -25,6 +23,15 @@
                                 <tr>
                                     <td scope="row">Nama Biaya</td>
                                     <td class="text-primary font-weight-bold">{{ $tuition->tuition_type->name }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Tingkatan</td>
+                                    <td class="text-primary font-weight-bold">{{ $tuition->grade->grade_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td scope="row">Tahun Ajaran</td>
+                                    <td class="text-primary font-weight-bold">
+                                        {{ $tuition->academic_year->academic_year_name }}</td>
                                 </tr>
                                 <tr>
                                     <td scope="row">Nominal</td>

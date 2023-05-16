@@ -23,22 +23,6 @@ class TuitionApprovalController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Tuition $tuition_approval)
@@ -48,14 +32,6 @@ class TuitionApprovalController extends Controller
             'tuition' => $tuition_approval,
         ];
         return view('pages.tuition-approval.detail', $data);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -73,7 +49,7 @@ class TuitionApprovalController extends Controller
                     break;
             }
             $tuition_approval->save();
-            
+
             // Notification
             $tuition_approval->requested_by->notify(new TuitionApprovalNotification($tuition_approval));
 
@@ -81,13 +57,5 @@ class TuitionApprovalController extends Controller
         } catch (\Throwable $th) {
             return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
