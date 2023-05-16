@@ -111,7 +111,7 @@
                                 </tr>
                                 @php
                                     $jumlahBarang += $expenseDetail->quantity;
-                                    $totalHarga += $expenseDetail->price;
+                                    $totalHarga += $expenseDetail->price * $expenseDetail->quantity;
                                 @endphp
                             @endforeach
                         </tbody>
