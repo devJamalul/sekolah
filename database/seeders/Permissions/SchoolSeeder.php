@@ -85,6 +85,6 @@ class SchoolSeeder extends Seeder
             'name' => $roles['profile-update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$admin_yayasan, $admin_sekolah, $kepala_sekolah]);
+        $permission->syncRoles([$admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha]);
     }
 }
