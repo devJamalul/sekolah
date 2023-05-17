@@ -74,6 +74,14 @@ class AssignClassroomStaffController extends Controller
 
         DB::beginTransaction();
         try {
+            $classroomStaff = ClassroomStaff::where(['classroom_id' => $request->classroom_id])->first();
+            if ($classroomStaff) {
+                return redirect()
+                    ->route('assign-classroom-staff.index')
+                    ->with('classroom_id', $request->classroom_id)
+                    ->withToastError('Ops Gagal Tetapkan Wali Kelas!');
+            }
+
             $classroom = Classroom::find($request->classroom_old);
             $classroom->staff()->detach([$request->id]);
             $classroom->save();
