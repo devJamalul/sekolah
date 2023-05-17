@@ -31,7 +31,11 @@ class StudentTuitionMasterController extends Controller
     public function create(Request $req)
     {
         $student = Student::findOrFail($req->id);
-        $academicYear = AcademicYear::where('status_years', 'started')->first();
+        $academicYear = AcademicYear::where('status_years', '!=', 'closed')->first();
+
+        // If no Academic Year data
+        if (!$academicYear) return redirect()->back()->withToastError('Belum ada data tahun akademik');
+
         $selectedStudentTuitionMaster = StudentTuitionMaster::where('student_id', $student->id)->get();
         $studentTuitionMaster = collect(Tuition::with('tuition_type', 'grade')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get())
                                 ->reject(function($tuitionMasters) use($selectedStudentTuitionMaster){
@@ -42,12 +46,16 @@ class StudentTuitionMasterController extends Controller
 
                                     }
                                 });
+        
+        // If no Tuition data
+        if (count($studentTuitionMaster) == 0) return redirect()->back()->withToastError('Belum ada data biaya');
+
         $data = [
             'id' => $req->id,
             'title' => "Tambah Biaya Khusus $student->name",
             'tuitions' => $studentTuitionMaster,
         ];
-
+        
         return view('pages.students.tuition-master.create', $data);
     }
 

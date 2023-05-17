@@ -64,7 +64,6 @@ class WalletRequest extends FormRequest
                     $q->whereNull('deleted_at');
                 })->ignore($this->wallet->id, 'id')
             ],
-            'init_value'    => 'required|min:0',
         ];
     }
 }
