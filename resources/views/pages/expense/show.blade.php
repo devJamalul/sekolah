@@ -25,11 +25,6 @@
                                 <input type="text" class="form-control  @error('expense_number') is-invalid @enderror"
                                     name="expense_number" value="{{ $expense->expense_number }}" id="expense-number-input"
                                     placeholder="" disabled>
-                                @error('expense_number')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="expense-date-input">Tanggal Pengeluaran Biaya<span
@@ -37,11 +32,6 @@
                                 <input type="date" class="form-control @error('expense_date') is-invalid @enderror"
                                     name="expense_date" id="expense-date-input" placeholder=""
                                     value="{{ $expense->expense_date }}" disabled>
-                                @error('expense_date')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
                             </div>
                         </div>
                     </div>    
@@ -54,21 +44,11 @@
                                 <label for="note-input">Dibuat Oleh</label>
                                 <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
                                     id="note-input" placeholder="" value="{{ $expense->requested_by->name }}" disabled>
-                                @error('note')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="note-input">Catatan</label>
                                 <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
                                     id="note-input" placeholder="" value="{{ $expense->note }}" disabled>
-                                @error('note')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
                             </div>
                         </div>
                     </div>
