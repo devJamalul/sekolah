@@ -30,7 +30,6 @@ class SchoolRequest extends FormRequest
     protected function postMethod(): array
     {
         return [
-            'school_id'  => 'nullable|exists:schools,id',
             'school_name' => 'required|string|max:255',
             'province'   => 'required|string|max:100',
             'city'  => 'required|string|max:100',
@@ -41,6 +40,7 @@ class SchoolRequest extends FormRequest
             'phone'   => 'required|string|max:100',
             'foundation_head_name'   => 'required|string|max:100',
             'foundation_head_tlpn'   => 'required|string|max:100',
+            'foundation_head_email'   => 'required|email|max:100|unique:users,email',
             'name_pic'  => 'required|string|max:100',
             'email_pic' => 'required|string|max:255|unique:users,email',
         ];
@@ -49,7 +49,6 @@ class SchoolRequest extends FormRequest
     protected function putMethod(): array
     {
         return [
-            'school_id' => 'nullable|exists:schools,id',
             'school_name' => 'required|string|max:255',
             'province'   => 'required|string|max:100',
             'city'  => 'required|string|max:100',
@@ -58,9 +57,6 @@ class SchoolRequest extends FormRequest
             'grade'  => 'required|string|max:100',
             'email' => 'required|string|max:255',
             'phone'   => 'required|string|max:100',
-            'foundation_head_name'   => 'required|string|max:100',
-            'foundation_head_tlpn'   => 'required|string|max:100',
-            'name_pic'  => 'required|string|max:100',
         ];
     }
 }
