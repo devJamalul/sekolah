@@ -17,13 +17,19 @@ class AssignClassroomStaffDatatables extends Controller
      */
     public function __invoke(Request $request)
     {
-        $classroom = ClassroomStaff::with('staff', 'classroom.grade')->get();
-        return DataTables::of($classroom)
-            ->addColumn('class_staff', function ($row) {
-                return $row->classroom->grade->grade_name . ' - ' . $row->classroom->name;
+        $staff = Staff::with('classrooms.grade', 'classrooms.academic_year')->latest('created_at');
+        return DataTables::of($staff)
+            ->addColumn('staff_class', function (Staff $row) {
+                $classroom = $row->classrooms?->first();
+                return $classroom ? $classroom->grade->grade_name . "-" . $classroom->name : 'belum ditentukan';
             })
-            ->addColumn('action', function ($row) {
-                return 'Aksi';
+            ->addColumn('academic_year_name', function (Staff $row) {
+                $classroom = $row->classrooms?->first();
+                return $classroom ? $classroom->academic_year->academic_year_name : 'belum ditentukan';
+            })
+            ->addColumn('action', function (Staff $row) {
+                $classroom = $row->classrooms?->first();
+                return view('pages.assign-classroom-staff.action', compact('row', 'classroom'));
             })
             ->toJson();
     }

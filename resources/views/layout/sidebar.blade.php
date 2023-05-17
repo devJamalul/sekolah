@@ -174,6 +174,13 @@
                             Rombongan Belajar
                         </a>
                     @endcan
+
+                    @can('assign-classroom-staff.index')
+                        <a href="{{ route('assign-classroom-staff.index') }}"
+                            class="collapse-item {{ Request::is('assign-classroom-staff', 'assign-classroom-staff/*') ? 'active' : '' }}">
+                            Rombongan Guru/Staff
+                        </a>
+                    @endcan
                 </div>
             </div>
         </li>

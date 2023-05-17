@@ -106,7 +106,7 @@
 
                                     <div class="col-6">
                                         {{-- START BUTTON TETAPKAN KELAS --}}
-                                        <div class="form-group ">
+                                        <div class="form-group mt-1">
                                             @can('assign-classroom-student.store')
                                                 <button type="submit" id="assign-classroom-store"
                                                     class="btn btn-primary btn-block btn-sm">
@@ -121,27 +121,27 @@
                                 {{-- END FORM TETAPKAN KELAS --}}
 
                             </div>
-                            <div class="col-5">
+                            <div class="col-5 ">
 
                                 {{-- START FORM HAPUS KELAS --}}
 
                                 <input type="hidden" name="classroom_id">
-                                {{-- <div class="btn-group btn-block"> --}}
+                                <div class="mt-1">
 
-                                @can('assign-classroom-student.destroy')
-                                    <button type="button" class="btn btn-sm btn-success btn-classroom-exist"
-                                        onclick="assignclassroom('Naik kelas','{{ $academy_year->register?->id }}','{{ $academy_year->register?->academic_year_name }}')">
-                                        {{-- <i class="fa fa-arrow-up" aria-hidden="true"></i> --}}
-                                        <span>Naik Kelas</span>
-                                    </button>
-                                    <button type="button" class="btn btn-sm  btn-danger btn-classroom-exist"
-                                        onclick="assignclassroom('Pindah Kelas','{{ $academy_year->started?->id }}','{{ $academy_year->started?->academic_year_name }}')">
-                                        {{-- <span class="fa-fw select-all fas"></span> --}}
+                                    @can('assign-classroom-student.destroy')
+                                        <button type="button" class="btn btn-sm btn-success btn-classroom-exist"
+                                            onclick="assignclassroom('Naik kelas','{{ $academy_year->register?->id }}','{{ $academy_year->register?->academic_year_name }}')">
+                                            {{-- <i class="fa fa-arrow-up" aria-hidden="true"></i> --}}
+                                            <span>Naik Kelas</span>
+                                        </button>
+                                        <button type="button" class="btn btn-sm  btn-danger btn-classroom-exist"
+                                            onclick="assignclassroom('Pindah Kelas','{{ $academy_year->started?->id }}','{{ $academy_year->started?->academic_year_name }}')">
+                                            {{-- <span class="fa-fw select-all fas"></span> --}}
 
-                                        <span>Pindah Kelas</span>
-                                    </button>
-                                @endcan
-                                {{-- </div> --}}
+                                            <span>Pindah Kelas</span>
+                                        </button>
+                                    @endcan
+                                </div>
                                 {{-- END FORM HAPUS KELAS --}}
 
 
@@ -243,12 +243,14 @@
                         <div class="modal-body">
                             @csrf
                             @method('DELETE')
-                            <div class="form-group ">
-                                <input type="hidden" name="classroom_old">
-                                <input type="hidden" name="type">
-                                <input type="hidden" id="academy-year-modal">
-                            </div>
+                            <input type="hidden" name="classroom_old">
+                            <input type="hidden" name="type">
+                            <input type="hidden" id="academy-year-modal">
                             <div class="form-group">
+                                <label for="">Kelas
+
+                                    <small class="text-danger">**</small>
+                                </label>
                                 <select
                                     class="form-control  @error('classroom_id')
                                          is-invalid
@@ -265,7 +267,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
