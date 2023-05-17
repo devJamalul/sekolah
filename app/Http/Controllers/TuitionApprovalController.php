@@ -46,6 +46,7 @@ class TuitionApprovalController extends Controller
                     break;
                 case 'reject':
                     $tuition_approval->status = Tuition::STATUS_REJECTED;
+                    $tuition_approval->reject_reason  = $request->reject_reason;    
                     break;
             }
             $tuition_approval->save();
