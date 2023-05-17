@@ -76,6 +76,10 @@
             <div id="menuKeuangan" class="collapse {{ $menuKeuangan }}" aria-labelledby="menuKeuangan"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
+                    @canany(['tuition-type.index', 'tuition.index', 'wallet.index', 'payment-type.index'])
+                        <h6 class="collapse-header">Data Master</h6>
+                    @endcanany
+
                     @can('tuition-type.index')
                         <a href="{{ route('tuition-type.index') }}"
                             class="collapse-item {{ Request::is('tuition-type', 'tuition-type/*') ? 'active' : '' }}">
@@ -88,18 +92,6 @@
                             Biaya
                         </a>
                     @endcan
-                    @can('tuition-approval.index')
-                        <a href="{{ route('tuition-approval.index') }}"
-                            class="collapse-item {{ Request::is('tuition-approval', 'tuition-approval/*') ? 'active' : '' }}">
-                            Persetujuan Biaya
-                        </a>
-                    @endcan
-                    @can('expense-approval.index')
-                        <a href="{{ route('expense-approval.index') }}"
-                            class="collapse-item {{ Request::is('expense-approval', 'expense-approval/*') ? 'active' : '' }}">
-                            Persetujuan Pengeluaran Biaya
-                        </a>
-                    @endcan
                     @can('wallet.index')
                         <a href="{{ route('wallet.index') }}"
                             class="collapse-item {{ Request::is('wallet', 'wallet/*') ? 'active' : '' }}">
@@ -110,6 +102,23 @@
                         <a href="{{ route('payment-type.index') }}"
                             class="collapse-item {{ Request::is('payment-type', 'payment-type/*') ? 'active' : '' }}">
                             Tipe Pembayaran
+                        </a>
+                    @endcan
+
+                    @canany(['tuition-approval.index', 'expense-approval.index'])
+                        <h6 class="collapse-header">Persetujuan</h6>
+                    @endcanany
+
+                    @can('tuition-approval.index')
+                        <a href="{{ route('tuition-approval.index') }}"
+                            class="collapse-item {{ Request::is('tuition-approval', 'tuition-approval/*') ? 'active' : '' }}">
+                            Biaya
+                        </a>
+                    @endcan
+                    @can('expense-approval.index')
+                        <a href="{{ route('expense-approval.index') }}"
+                            class="collapse-item {{ Request::is('expense-approval', 'expense-approval/*') ? 'active' : '' }}">
+                            Pengeluaran Biaya
                         </a>
                     @endcan
                 </div>

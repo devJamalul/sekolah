@@ -43,7 +43,7 @@ class ExpenseController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $expense                    = new Expense();
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
@@ -59,7 +59,7 @@ class ExpenseController extends Controller
             DB::rollBack();
             return redirect()->route('expense.index')->withToastError('Eror Simpan Pengeluaran Biaya!');
         }
-        
+
         return redirect()->route('expense.show', $expense->id)->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
     }
 
@@ -70,7 +70,7 @@ class ExpenseController extends Controller
     {
         $title = "Tambah Detail Pengeluaran Biaya";
         $wallets = Wallet::where('school_id', session('school_id'))->get();
-        $expenseDetails = $expense->expense_details;
+        $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
         return view('pages.expense.detail.create', compact('title', 'wallets', 'expenseDetails', 'expense'));
     }
 
@@ -94,7 +94,7 @@ class ExpenseController extends Controller
         DB::beginTransaction();
 
         try {
-            
+
             $expense->school_id         = session('school_id');
             $expense->expense_date      = $request->expense_date;
             $expense->note              = $request->note;
@@ -105,8 +105,8 @@ class ExpenseController extends Controller
 
         } catch (\Throwable $th) {
             return redirect()->route('expense.index')->withToastError('Eror Simpan Pengeluaran Biaya!');
-        }    
-        
+        }
+
         return redirect()->route('expense.index')->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
     }
 
@@ -127,7 +127,7 @@ class ExpenseController extends Controller
             }
 
             DB::commit();
-            
+
             return response()->json([
                 'msg' => 'Berhasil Hapus Pengeluaran Biaya!'
             ], 200);

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(School::class, 'school_id')->nullable();
             $table->string('expense_number')->nullable();
             $table->date('expense_date')->nullable();
+            $table->double('price')->default(0);
             $table->text('note')->nullable();
             $table->enum('status', ["approved", "pending", "rejected"])->nullable();
             $table->boolean('is_sempoa_processed')->nullable()->default(false);

@@ -12,22 +12,23 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable 
-                        :tableId="'tuition_approval'" 
-                        :tableHeaders="['Nama Biaya', 'Nominal', 'Status', 'Aksi']" 
+                    <x-datatable
+                        :tableId="'tuition_approval'"
+                        :tableHeaders="['Nama Biaya', 'Tingkatan', 'Nominal', 'Status', 'Aksi']"
                         :tableColumns="[
                             ['data' => 'tuition_name'],
+                            ['data' => 'grade', 'name' => 'grade.grade_name'],
                             ['data' => 'price'],
                             ['data' => 'status'],
-                            ['data' => 'action'] 
-                        ]" 
+                            ['data' => 'action']
+                        ]"
                         :getDataUrl="route('datatable.tuition-approval')"
                     />
                 </div>
             </div>
         </div>
         {{-- END table Approval --}}
-        
+
     </div>
     {{-- END ROW --}}
 
