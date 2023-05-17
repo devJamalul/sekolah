@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignIdFor(AcademicYear::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(Grade::class)->nullable()->constrained()->nullOnDelete();
             $table->double('price')->nullable();
+            $table->enum('status', ["approved", "pending", "rejected"])->nullable();
             $table->foreignIdFor(User::class, 'request_by')->nullable();
             $table->foreignIdFor(User::class, 'approval_by')->nullable();
             $table->timestamps();
