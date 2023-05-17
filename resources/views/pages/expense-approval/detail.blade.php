@@ -53,17 +53,34 @@
                                     @endif
                                 </td>
                             </tr>
+                            @if ($expense->reject_reason)
+                            <tr>
+                                <td scope="row">Alasan Penolakan</td>
+                                <td class="text-primary font-weight-bold">
+                                    <td class="text-primary font-weight-bold">{{ $expense->reject_reason}}
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
 
                     @can(['expense-approval.update'])
                         @if ($expense->status == \App\Models\Expense::STATUS_PENDING)
-                            <div style="width: 100%; display: flex; justify-content: end; ">
+                            <div class="col-12" style="width: 100%; display: flex; justify-content: end; ">
                                 <form
                                     action="{{ route('expense-approval.update', ['expense_approval' => $expense->getKey()]) }}"
                                     method="post">
                                     @csrf
                                     @method('PUT')
+                                    <div class="form-group col-12">
+                                        <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror" rows="5" placeholder="Alasan Penolakan (Opsional)"></textarea>
+                                        @error('reject_reason')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    
                                     <button type="submit" name="action" value="reject"
                                         class="btn btn-danger ml-2">Tolak</button>
                                     <button type="submit" name="action" value="approve"
