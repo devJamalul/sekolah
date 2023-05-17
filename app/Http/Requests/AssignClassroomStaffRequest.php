@@ -39,18 +39,6 @@ class AssignClassroomStaffRequest extends FormRequest
         return [
             'classroom_id' => 'required',
             'id'           => 'required',
-            'id.*'         => Rule::forEach(function () {
-                return [
-                    function ($attribute, $staff_id, $fail) {
-                        $classroom = Classroom::with('staff')->whereHas('staff', fn ($q) => $q->where('staff_id', $staff_id))->find($this->classroom_id);
-                        if ($classroom) {
-                            $staff = $classroom->staff->first();
-                            return $fail("({$staff->name}) ");
-                        }
-                        return true;
-                    },
-                ];
-            })
         ];
     }
 
@@ -60,7 +48,7 @@ class AssignClassroomStaffRequest extends FormRequest
     {
         return [
             'classroom_id' => 'required',
-            'id'           => 'required|array'
+            'id'           => 'required'
         ];
     }
 
