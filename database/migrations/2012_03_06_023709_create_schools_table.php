@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('postal_code', 20)->nullable();
             $table->string('school_name');
             $table->string('foundation_head_name')->nullable();
+            $table->string('foundation_head_email')->nullable();
             $table->string('foundation_head_tlpn')->nullable();
             $table->timestamps();
             $table->softDeletes();
