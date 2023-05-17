@@ -123,6 +123,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
 
     // Expense
     Route::resource('expense', ExpenseController::class);
+    Route::get('expense/{expense}/show-detail', [ExpenseController::class, 'ShowDetail'])->name('expense.show-detail');
     Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
     Route::resource("expense-report", ExpenseReportController::class)->only(['index', 'store']);
 

@@ -50,6 +50,9 @@ class PermissionsSeeder extends Seeder
         $kepala_sekolah = Role::whereName(User::ROLE_KEPALA_SEKOLAH)->first();
          */
 
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
         $this->call([
             SchoolSeeder::class,
             StudentSeeder::class,

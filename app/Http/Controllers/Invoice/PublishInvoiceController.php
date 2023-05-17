@@ -19,15 +19,15 @@ class PublishInvoiceController extends Controller
 
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
         if ($invoice->is_posted == Invoice::POSTED_PUBLISHED or $invoice->is_posted == Invoice::POSTED_SENT)
-            return redirect()->back()->withToastError('Ups! Invoice sudah pernah diterbitkan.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice sudah pernah diterbitkan.');
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
         if ($invoice->is_posted != Invoice::POSTED_DRAFT)
-            return redirect()->back()->withToastError('Ups! Invoice tidak berhak untuk diterbitkan.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak untuk diterbitkan.');
 
         // cek harus memiliki invoice_details
         if (count($invoice->invoice_details) == 0)
-            return redirect()->back()->withToastError('Ups! Invoice belum memiliki baris data.');
+            return to_route('invoices.index')->withToastError('Ups! Invoice belum memiliki baris data.');
 
         // ambil status kirim emailnya
         $is_sent = $request->get('sent') ?? false;
@@ -48,8 +48,8 @@ class PublishInvoiceController extends Controller
                 'invoice' => $invoice
             ]);
             DB::rollback();
-            return redirect()->back()->withToastError('Ups, terjadi kesalahan saat publish invoice!');
+            return to_route('invoices.index')->withToastError('Ups, terjadi kesalahan saat publish invoice!');
         }
-        return redirect()->back()->withToastSuccess('Invoice berhasil diterbitkan!');
+        return to_route('invoices.index')->withToastSuccess('Invoice berhasil diterbitkan!');
     }
 }

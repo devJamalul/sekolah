@@ -44,8 +44,6 @@ class SchoolProfileController extends Controller
             $school->grade = $request->grade;
             $school->email = $request->email;
             $school->phone = $request->phone;
-            $school->foundation_head_name = $request->foundation_head_name;
-            $school->foundation_head_tlpn = $request->foundation_head_tlpn;
             $school->save();
 
             DB::commit();

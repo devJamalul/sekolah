@@ -33,6 +33,10 @@ class AcademicYear extends Model
         static::addGlobalScope(new AcademicYearScope);
     }
 
+    public function scopeSemua(Builder $query): void
+    {
+        $query->whereIn('status_years', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_REGISTRATION])->latest();
+    }
 
     public function scopeActive(Builder $query): void
     {
