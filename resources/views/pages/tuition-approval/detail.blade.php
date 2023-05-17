@@ -59,17 +59,32 @@
                                         @endif
                                     </td>
                                 </tr>
+                                @if ($tuition->reject_reason)
+                                    <tr>
+                                        <td scope="row">Alasan Penolakan</td>
+                                        <td class="text-primary font-weight-bold">{{ $tuition->reject_reason}}</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
 
                         @can(['tuition-approval.update'])
-                            @if (!$tuition->deleted_at && !$tuition->approval_by)
+                            @if ($tuition->status == \App\Models\Tuition::STATUS_PENDING )
                                 <div style="width: 100%; display: flex; justify-content: end; ">
                                     <form
                                         action="{{ route('tuition-approval.update', ['tuition_approval' => $tuition->getKey()]) }}"
                                         method="post">
                                         @csrf
                                         @method('PUT')
+                                        <div class="form-group col-12">
+                                            <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror" rows="5" placeholder="Alasan Penolakan (Opsional)"></textarea>
+                                            @error('reject_reason')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+
                                         <button type="submit" name="action" value="reject"
                                             class="btn btn-danger ml-2">Tolak</button>
                                         <button type="submit" name="action" value="approve"
