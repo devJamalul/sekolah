@@ -20,8 +20,12 @@ class AssignClassroomStaffDatatables extends Controller
         $staff = Staff::with('classrooms.grade', 'classrooms.academic_year')->latest('created_at');
         return DataTables::of($staff)
             ->addColumn('staff_class', function (Staff $row) {
-                $classroom = $row->classrooms?->first();
-                return $classroom ? $classroom->grade->grade_name . "-" . $classroom->name : 'belum ditentukan';
+                if ($row->classrooms->count() > 1) {
+                    return '<span  class="btn btn-success btn-sm" onclick="modalDetailClassroom(' . $row->id . ')"> Lebih dari ' . $row->classrooms->count() - 1 . '</span>';
+                } else {
+                    $classroom = $row->classrooms?->first();
+                    return $classroom ? $classroom->grade->grade_name . "-" . $classroom->name : 'belum ditentukan';
+                }
             })
             ->addColumn('academic_year_name', function (Staff $row) {
                 $classroom = $row->classrooms?->first();
@@ -31,6 +35,7 @@ class AssignClassroomStaffDatatables extends Controller
                 $classroom = $row->classrooms?->first();
                 return view('pages.assign-classroom-staff.action', compact('row', 'classroom'));
             })
+            ->rawColumns(['staff_class'])
             ->toJson();
     }
 

@@ -29,7 +29,7 @@
     }
     var getClassroom = function(id,setClassromList,idClassroomOld = 0){
         var result = null;
-        $.get(route('get-classroom')+'?academy_year_id='+id,function(data){
+        $.get(route('get-classroom')+'?academy_year_id='+id+'&get=staff',function(data){
             setClassromList.empty();
             setClassromList.append('<option value="">-- PILIH --</option>');
 
@@ -86,3 +86,21 @@
         $("#assingclassroom-modal-label").html(data.label)
         $("#modalAssignClass").modal()
     };
+
+    var modalDetailClassroom = function(staffId){
+        $.get(route('get-classroom-staff')+'?staff_id='+staffId,function(data){
+            var html='';
+            for(let i=0;i<data.classrooms.length;i++){
+                html +='<tr>'
+                html +='<td>'+data.classrooms[i].classroom.name+'</td>'
+                html +='<td>'+data.classrooms[i].classroom.grade.grade_name+'</td>'
+
+                html +='</tr>'
+            }
+
+            $("#detail-staff-classroom").html(html)
+        });
+
+        $("#modalDetailAssignClassStaff").modal()
+
+    }

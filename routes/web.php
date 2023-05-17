@@ -120,6 +120,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('assign-classroom-staff/create', [AssignClassroomStaffController::class, 'create'])->name(('assign-classroom-staff.create'));
     Route::post('assign-classroom-staff', [AssignClassroomStaffController::class, 'store'])->name(('assign-classroom-staff.store'));
     Route::delete('assign-classroom-staff', [AssignClassroomStaffController::class, 'destroy'])->name(('assign-classroom-staff.destroy'));
+    Route::get('get-classroom-staff', [AssignClassroomStaffController::class, 'classroomStaff'])->name('get-classroom-staff');
 
     // Expense
     Route::resource('expense', ExpenseController::class);

@@ -9,6 +9,7 @@ use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AssignClassroomStudentRequest;
+use App\Models\ClassroomStaff;
 use App\Models\ClassroomStudent;
 
 class AssignClassroomStudentController extends Controller
@@ -86,7 +87,11 @@ class AssignClassroomStudentController extends Controller
         try {
             if ($request->has('academy_year_id')) {
                 $academicYear = $request->academy_year_id;
+                $classroomStaff   = ClassroomStaff::groupBy('classroom_id')->pluck('classroom_id');
                 $classroom    = Classroom::with('grade', 'staff')
+                    ->when($request->has('get'), function ($row) use ($classroomStaff) {
+                        $row->whereNotIn('id', $classroomStaff);
+                    })
                     ->where('academic_year_id', $academicYear)->get();
 
                 return response()->json(['msg' => 'Berhasil', 'classrooms' => $classroom], 200);
