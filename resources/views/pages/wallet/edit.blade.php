@@ -36,12 +36,7 @@
                             <label for="init-value-input">Saldo Awal<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('init_value') is-invalid @enderror"
                                 name="init_value" value="{{ old('init_value', $wallet->init_value) }}"
-                                id="init_value-input">
-                            @error('init_value')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                                id="init_value-input" disabled>
                         </div>
                         @if ($wallet->danabos == 1 or $danabos == 0)
                             <div class="form-check my-2">

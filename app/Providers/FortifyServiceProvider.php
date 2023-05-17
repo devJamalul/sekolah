@@ -66,8 +66,7 @@ class FortifyServiceProvider extends ServiceProvider
                     session(['academic_year_id' => $academicYear->id]);
                     session(['academic_year_name' => $academicYear->academic_year_name]);
                 } else {
-                    session()->forget('academic_year_id');
-                    session()->forget('academic_year_name');
+                    session()->forget(['academic_year_id', 'academic_year_name']);
                 }
 
                 $ppdb = AcademicYear::PPDB()->first();
@@ -76,8 +75,7 @@ class FortifyServiceProvider extends ServiceProvider
                     session(['ppdb_academic_year_id' => $ppdb->id]);
                     session(['ppdb_academic_year_name' => $ppdb->academic_year_name]);
                 } else {
-                    session()->forget('ppdb_academic_year_id');
-                    session()->forget('ppdb_academic_year_name');
+                    session()->forget(['ppdb_academic_year_id', 'ppdb_academic_year_name']);
                 }
 
                 return $user;
