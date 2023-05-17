@@ -134,14 +134,14 @@
                         </div>
 
                         <div class="col-6">
-                            <p class="font-weight-bold h5">Informasi Pimpinan Sekolah</p>
+                            <p class="font-weight-bold h5">Informasi Kepala Sekolah</p>
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text"
                                     class="form-control @error('foundation_head_name') is-invalid @enderror"
                                     name="foundation_head_name" value="{{ $school->foundation_head_name }}"
-                                    autocomplete="off">
+                                    autocomplete="off" disabled>
                                 @error('foundation_head_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -149,11 +149,17 @@
                                 @enderror
                             </div>
                             <div class="form-group col-12">
+                                <label>Email <small class="text-danger">*</small> </label>
+                                <input type="email"
+                                    class="form-control @error('foundation_head_email') is-invalid @enderror"
+                                    name="foundation_head_email" autocomplete="off" value="{{ $school->foundation_head_email }}" disabled>
+                            </div>
+                            <div class="form-group col-12">
                                 <label>No Tlpn <small class="text-danger">*</small> </label>
                                 <input type="text"
                                     class="form-control @error('foundation_head_tlpn') is-invalid @enderror"
                                     name="foundation_head_tlpn" value="{{ $school->foundation_head_tlpn }}"
-                                    autocomplete="off">
+                                    autocomplete="off" disabled>
                                 @error('foundation_head_tlpn')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -161,12 +167,12 @@
                                 @enderror
                             </div>
 
-                            <p class="font-weight-bold h5">Informasi Penanggung Jawab</p>
+                            <p class="font-weight-bold h5">Informasi Administrator</p>
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control @error('name_pic') is-invalid @enderror"
-                                    name="name_pic" value="{{ $school->staf?->user?->name }}" readonly
+                                    name="name_pic" value="{{ $school->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->name ?? "-" }}" readonly
                                     autocomplete="off">
                                 @error('name_pic')
                                     <div class="invalid-feedback">
@@ -176,7 +182,7 @@
                             </div>
                             <div class="form-group col-12">
                                 <label>Email <small class="text-danger">*</small> </label>
-                                <input type="email" value="{{ $school->staf?->user?->email }}"
+                                <input type="email" value="{{ $school->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->email ?? "-" }}"
                                     class="form-control @error('email_pic') is-invalid @enderror" readonly
                                     name="email_pic" autocomplete="off">
                                 @error('email_pic')

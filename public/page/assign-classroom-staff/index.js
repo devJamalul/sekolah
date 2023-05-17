@@ -11,7 +11,6 @@
         {"data": "name"},
         {"data": "gender"},
         {"data": "staff_class"},
-        {"data": "academic_year_name"},
         {"data": 'action'},
 
     ];

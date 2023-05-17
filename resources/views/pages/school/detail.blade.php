@@ -73,7 +73,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header bg-primary text-white font-weight-bold">
-                        Data Informasi Pimpinan Sekolah
+                        Data Informasi Kepala Sekolah
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -82,6 +82,10 @@
                                     <tr>
                                         <td scope="row">Nama </td>
                                         <td class="text-primary font-weight-bold">{{ $school->foundation_head_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td scope="row">Email </td>
+                                        <td class="text-primary font-weight-bold">{{ $school->foundation_head_email }}</td>
                                     </tr>
                                     <tr>
                                         <td scope="row">No Telephone</td>
@@ -94,7 +98,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header bg-primary text-white font-weight-bold">
-                        Data Informasi Penanggung Jawab
+                        Data Informasi Administrator
                     </div>
                     <div class="card-body">
                         <div class="row">
