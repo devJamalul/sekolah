@@ -42,12 +42,18 @@ class StudentTuitionMasterController extends Controller
 
                                     }
                                 });
+        
+        // If no data
+        if (count($studentTuitionMaster) == 0) {
+            return redirect()->back()->withToastError('Belum ada data biaya');
+        }
+
         $data = [
             'id' => $req->id,
             'title' => "Tambah Biaya Khusus $student->name",
             'tuitions' => $studentTuitionMaster,
         ];
-
+        
         return view('pages.students.tuition-master.create', $data);
     }
 
