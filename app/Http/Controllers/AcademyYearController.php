@@ -113,13 +113,11 @@ class AcademyYearController extends Controller
         DB::beginTransaction();
         try {
             if ($academyYear->status_years === AcademicYear::STATUS_STARTED) {
-                session()->forget('academic_year_id');
-                session()->forget('academic_year_name');
+                session()->forget(['academic_year_id', 'academic_year_name']);
             }
 
             if ($academyYear->status_years === AcademicYear::STATUS_REGISTRATION) {
-                session()->forget('ppdb_academic_year_id');
-                session()->forget('ppdb_academic_year_name');
+                session()->forget(['ppdb_academic_year_id', 'ppdb_academic_year_name']);
             }
 
             $academyYear->delete();
@@ -152,6 +150,17 @@ class AcademyYearController extends Controller
         if ($academyYear->status_years === AcademicYear::STATUS_REGISTRATION) {
             session(['ppdb_academic_year_id' => $academyYear->id]);
             session(['ppdb_academic_year_name' => $academyYear->academic_year_name]);
+        }
+
+        // cek void
+        $tahun_aktif = AcademicYear::where('status_years', AcademicYear::STATUS_STARTED)->first();
+        if (!$tahun_aktif) {
+            session()->forget(['academic_year_id', 'academic_year_name']);
+        }
+
+        $tahun_ppdb = AcademicYear::where('status_years', AcademicYear::STATUS_REGISTRATION)->first();
+        if (!$tahun_ppdb) {
+            session()->forget(['ppdb_academic_year_id', 'ppdb_academic_year_name']);
         }
     }
 }
