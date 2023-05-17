@@ -95,9 +95,6 @@ class ExpenseController extends Controller
 
         try {
 
-            // if(){
-
-            // }
             $expense->school_id         = session('school_id');
             $expense->expense_date      = $request->expense_date;
             $expense->note              = $request->note;
