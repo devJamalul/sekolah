@@ -53,11 +53,6 @@
                                     @endif
                                 </td>
                             </tr>
-                            {{-- <tr>
-                                <td scope="row">Alasan Penolakan (Opsional)</td>
-                                <td class="">
-                                </td>
-                            </tr> --}}
                         </tbody>
                     </table>
 
