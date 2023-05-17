@@ -31,7 +31,7 @@ class StudentTuitionMasterController extends Controller
     public function create(Request $req)
     {
         $student = Student::findOrFail($req->id);
-        $academicYear = AcademicYear::where('status_years', 'started')->first();
+        $academicYear = AcademicYear::where('status_years', '!=', 'closed')->first();
 
         // If no Academic Year data
         if (!$academicYear) return redirect()->back()->withToastError('Belum ada data tahun akademik');
