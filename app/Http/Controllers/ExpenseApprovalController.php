@@ -63,7 +63,6 @@ class ExpenseApprovalController extends Controller
      */
     public function update(Request $request, Expense $expense_approval)
     {
-        dd($request->all());
         try {
             switch ($request->action) {
                 case 'approve':
