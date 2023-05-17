@@ -74,7 +74,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
         Route::get('/', 'index')->name('profile-index');
         Route::put('/', 'update')->name('profile-update');
     });
-    Route::resource('schools', SchoolsController::class)->except('show');
+    Route::resource('schools', SchoolsController::class);
 
     // Classroom
     Route::resource("classroom", ClassroomController::class)->except(['show']);

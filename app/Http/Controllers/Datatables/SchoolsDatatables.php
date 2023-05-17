@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Datatables;
 
-use App\Http\Controllers\Controller;
 use App\Models\School;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
 
 class SchoolsDatatables extends Controller
 {
@@ -24,6 +25,9 @@ class SchoolsDatatables extends Controller
                 ];
                 return view('components.datatable-action', $data);
             })
+            ->editColumn('school_name', function (School $row) {
+                return "<a href='" . route('schools.show', $row->getKey()) . "'>" . Str::of($row->school_name)->limit(20, '...') . "</a>";
+            })
             ->addColumn('pic_name', fn ($row) => $row->staf?->user?->name ?? '-')
             ->addColumn('pic_email', fn ($row) => $row->staf?->user?->email ?? '-')
             ->editColumn('induk', function ($row) {
@@ -39,6 +43,7 @@ class SchoolsDatatables extends Controller
                     $q->where('email', 'like', '%' . $keyword . '%');
                 });
             })
+            ->rawColumns(['school_name'])
             ->startsWithSearch(false)
             ->toJson();
     }
