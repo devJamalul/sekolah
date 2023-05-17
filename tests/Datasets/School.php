@@ -2,8 +2,11 @@
 
 use App\Models\User;
 
-dataset('school_staff', [
+dataset('foundation_staff', [
     User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
+]);
+
+dataset('school_staff', [
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],

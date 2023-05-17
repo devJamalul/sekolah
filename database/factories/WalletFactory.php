@@ -10,9 +10,9 @@ use App\Models\AcademicYear;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tuition>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Wallet>
  */
-class ExpenseFactory extends Factory
+class WalletFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -24,6 +24,7 @@ class ExpenseFactory extends Factory
         $randomNumber = rand(1, 2000);
 
         return [
+            'school_id' => session('school_id') ?? 2,
             'name' => fake()->word(),
             'init_value' => $randomNumber
         ];
