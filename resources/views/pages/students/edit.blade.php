@@ -571,10 +571,12 @@
                                             <label for="file_photo" class="font-weight-bold">Foto Siswa</label>
                                         </div>
 
-                                        @if ($student->file_photo)
+                                        <div id="file_photo_container">
+                                            @if ($student->file_photo)
                                             <img src="{{ $student->file_photo }}" id="file_photo_preview"
                                                 class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
-                                        @endif
+                                            @endif
+                                        </div>
 
                                         <div class="custom-file">
                                             <input type="file" name="file_photo" accept="image/*"
@@ -598,12 +600,15 @@
                                             <label for="file_birth_certificate" class="font-weight-bold">Akta
                                                 Kelahiran</label>
                                         </div>
-                                        @if ($student->file_birth_certificate)
+
+                                        <div id="file_birth_certificate_container">
+                                            @if ($student->file_birth_certificate)
                                             <img src="{{ $student->file_birth_certificate }}"
                                                 id="file_birth_certificate_preview"
                                                 class="img-thumbnail img-fluid col-md-3"
                                                 alt="Student's Birth Certificate">
-                                        @endif
+                                            @endif
+                                        </div>
 
                                         <div class="custom-file">
                                             <input type="file" accept="image/*"
@@ -627,10 +632,13 @@
                                         <div>
                                             <label for="file_family_card" class="font-weight-bold">Kartu Keluarga</label>
                                         </div>
-                                        @if ($student->file_family_card)
+
+                                        <div id="file_family_card_container">
+                                            @if ($student->file_family_card)
                                             <img src="{{ $student->file_family_card }}" id="file_family_card_preview"
                                                 class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
-                                        @endif
+                                            @endif
+                                        </div>
 
                                         <div class="custom-file">
                                             <input type="file" accept="image/*"
@@ -723,6 +731,13 @@
             document.querySelector('#file_birth_certificate').addEventListener('change', function(e) {
                 var file = document.getElementById("file_birth_certificate").files[0];
 
+                // Append element if there's no image
+                if (!document.getElementById("file_birth_certificate_preview")) {
+                    $('#file_birth_certificate_container')
+                        .append('<img id="file_birth_certificate_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">')
+                    file = document.getElementById("file_birth_certificate")?.files?.[0]
+                }
+
                 const preview = document.querySelector('#file_birth_certificate_preview')
                 preview.src = URL.createObjectURL(file)
 
@@ -732,6 +747,13 @@
             document.querySelector('#file_photo').addEventListener('change', function(e) {
                 var file = document.getElementById("file_photo").files[0];
 
+                // Append element if there's no image
+                if (!document.getElementById("file_photo_preview")) {
+                    $('#file_photo_container')
+                        .append('<img id="file_photo_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">')
+                    file = document.getElementById("file_photo")?.files?.[0]
+                }
+
                 const preview = document.querySelector('#file_photo_preview')
                 preview.src = URL.createObjectURL(file)
 
@@ -740,6 +762,13 @@
 
             document.querySelector('#file_family_card').addEventListener('change', function(e) {
                 var file = document.getElementById("file_family_card").files[0];
+
+                // Append element if there's no image
+                if (!document.getElementById("file_family_card_preview")) {
+                    $('#file_family_card_container')
+                        .append('<img id="file_family_card_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">')
+                    file = document.getElementById("file_family_card")?.files?.[0]
+                }
 
                 const preview = document.querySelector('#file_family_card_preview')
                 preview.src = URL.createObjectURL(file)
