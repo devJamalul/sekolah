@@ -71,7 +71,7 @@ class ExpenseApprovalController extends Controller
                     break;
                 case 'reject':
                     $expense_approval->status = Expense::STATUS_REJECTED;
-                    $expense_approval->notes  = $request->reject_reason;    
+                    $expense_approval->reject_reason  = $request->reject_reason;    
                     break;
             }
             $expense_approval->save();
