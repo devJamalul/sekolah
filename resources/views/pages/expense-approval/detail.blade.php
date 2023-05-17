@@ -53,6 +53,14 @@
                                     @endif
                                 </td>
                             </tr>
+                            @if ($expense->reject_reason)
+                            <tr>
+                                <td scope="row">Alasan Penolakan</td>
+                                <td class="text-primary font-weight-bold">
+                                    <td class="text-primary font-weight-bold">{{ $expense->reject_reason}}
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
 
