@@ -58,6 +58,7 @@ class SchoolsController extends Controller
             $school->email = $request->email;
             $school->phone = $request->phone;
             $school->foundation_head_name = $request->foundation_head_name;
+            $school->foundation_head_email = $request->foundation_head_email;
             $school->foundation_head_tlpn = $request->foundation_head_tlpn;
             $school->save();
 
@@ -70,8 +71,7 @@ class SchoolsController extends Controller
             $user->password = bcrypt($password);
             $user->new_password = true;
             $user->save();
-
-            //staff
+            // PIC staff
             $staff = new Staff();
             $staff->school_id = $school->getKey();
             $staff->user_id = $user->id;
@@ -82,13 +82,35 @@ class SchoolsController extends Controller
             $school->staff_id = $staff->getKey();
             $school->save();
 
-            // assign role
+            // PIC assign role
             $user->assignRole($role);
+
+            // Kepala Sekolah
+            $password2 = fake()->word();
+            $kepsek = new User();
+            $kepsek->school_id = $school->getKey();
+            $kepsek->name = $request->foundation_head_name;
+            $kepsek->email = $request->foundation_head_email;
+            $kepsek->password = bcrypt($password2);
+            $kepsek->new_password = true;
+            $kepsek->save();
+
+            // Kepsek - staff
+            $staff = new Staff();
+            $staff->school_id = $school->getKey();
+            $staff->user_id = $kepsek->id;
+            $staff->name = $kepsek->name;
+            $staff->phone_number = $request->foundation_head_tlpn;
+            $staff->save();
+
+            // PIC assign role
+            $kepsek->assignRole(User::ROLE_KEPALA_SEKOLAH);
 
             DB::commit();
 
             // notification
             $user->notify(new NewSchoolPICNotification($user, $password));
+            $kepsek->notify(new NewSchoolPICNotification($kepsek, $password2));
         } catch (Exception $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Tambah sekolah',
@@ -112,6 +134,17 @@ class SchoolsController extends Controller
         $title = "Ubah Sekolah";
         $grade_school =  School::GRADE_SCHOOL;
         return view('pages.school.edit', compact('school', 'title', 'grade_school'));
+    }
+
+    /**
+     *For detail school
+     */
+
+    public function show(School $school)
+    {
+        $school->load('staf.user');
+        $title = "Detail Sekolah " . $school->school_name;
+        return view('pages.school.detail', compact('school', 'title'));
     }
 
     /**

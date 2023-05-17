@@ -571,8 +571,10 @@
                                             <label for="file_photo" class="font-weight-bold">Foto Siswa</label>
                                         </div>
 
-                                        <img src="{{ $student->file_photo }}" id="file_photo_preview"
-                                            class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
+                                        @if ($student->file_photo)
+                                            <img src="{{ $student->file_photo }}" id="file_photo_preview"
+                                                class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
+                                        @endif
 
                                         <div class="custom-file">
                                             <input type="file" name="file_photo" accept="image/*"
@@ -596,10 +598,13 @@
                                             <label for="file_birth_certificate" class="font-weight-bold">Akta
                                                 Kelahiran</label>
                                         </div>
+                                        @if ($student->file_birth_certificate)
+                                            <img src="{{ $student->file_birth_certificate }}"
+                                                id="file_birth_certificate_preview"
+                                                class="img-thumbnail img-fluid col-md-3"
+                                                alt="Student's Birth Certificate">
+                                        @endif
 
-                                        <img src="{{ $student->file_birth_certificate }}"
-                                            id="file_birth_certificate_preview" class="img-thumbnail img-fluid col-md-3"
-                                            alt="Student's Birth Certificate">
                                         <div class="custom-file">
                                             <input type="file" accept="image/*"
                                                 class="custom-file-input @error('file_birth_certificate') is-invalid @enderror"
@@ -622,9 +627,11 @@
                                         <div>
                                             <label for="file_family_card" class="font-weight-bold">Kartu Keluarga</label>
                                         </div>
+                                        @if ($student->file_family_card)
+                                            <img src="{{ $student->file_family_card }}" id="file_family_card_preview"
+                                                class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
+                                        @endif
 
-                                        <img src="{{ $student->file_family_card }}" id="file_family_card_preview"
-                                            class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
                                         <div class="custom-file">
                                             <input type="file" accept="image/*"
                                                 class="custom-file-input @error('file_family_card') is-invalid @enderror"

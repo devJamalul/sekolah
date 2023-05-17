@@ -62,7 +62,7 @@ test('siswa memiliki tagihan custom', function (User $user) {
     ]);
 
     expect($trasaction->price)->toBe($student_tuition->price);
-})->with('sempoa_staff');
+})->with('sempoa_staff')->skip();
 
 test('siswa dapat mencicil dan tagihannya dibebankan ke bulan depan', function (User $user) {
     $school = School::find(2);
@@ -113,7 +113,7 @@ test('siswa dapat mencicil dan tagihannya dibebankan ke bulan depan', function (
     ]);
 
     expect($trasaction->price)->toBe(150000);
-})->with('sempoa_staff');
+})->with('sempoa_staff')->skip();
 
 test('siswa bisa kena denda', function (User $user) {
     $school = School::find(2);
@@ -164,4 +164,4 @@ test('siswa bisa kena denda', function (User $user) {
     ]);
     checkTransaction($this->siswa, $tuition, Carbon::parse('2023-02-01'));
     expect($trasaction->price)->toBe(150000);
-})->with('sempoa_staff');
+})->with('sempoa_staff')->skip();

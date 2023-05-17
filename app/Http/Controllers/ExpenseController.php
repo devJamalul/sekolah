@@ -140,4 +140,12 @@ class ExpenseController extends Controller
             ]);
         }
     }
+
+    public function ShowDetail(Expense $expense)
+    {
+        $title = "Detail Pengeluaran Biaya";
+        $wallets = Wallet::where('school_id', session('school_id'))->get();
+        $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
+        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense'));
+    }
 }

@@ -30,8 +30,6 @@ class SchoolProfileRequest extends FormRequest
             'grade'  => 'required|string|max:100',
             'email' => 'required|string|max:255',
             'phone'   => 'required|string|max:100',
-            'foundation_head_name'   => 'required|string|max:100',
-            'foundation_head_tlpn'   => 'required|string|max:100',
         ];
     }
 

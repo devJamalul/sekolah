@@ -130,7 +130,7 @@
                         </div>
 
                         <div class="col-6">
-                            <p class="font-weight-bold h5">Informasi Pimpinan Sekolah</p>
+                            <p class="font-weight-bold h5">Informasi Kepala Sekolah</p>
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
@@ -138,6 +138,17 @@
                                     class="form-control @error('foundation_head_name') is-invalid @enderror"
                                     name="foundation_head_name" autocomplete="off">
                                 @error('foundation_head_name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-12">
+                                <label>Email <small class="text-danger">*</small> </label>
+                                <input type="email"
+                                    class="form-control @error('foundation_head_email') is-invalid @enderror"
+                                    name="foundation_head_email" autocomplete="off">
+                                @error('foundation_head_email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -154,7 +165,7 @@
                                     </div>
                                 @enderror
                             </div>
-                            <p class="font-weight-bold h5">Informasi Penanggung Jawab</p>
+                            <p class="font-weight-bold h5">Informasi Administrator</p>
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>

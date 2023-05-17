@@ -25,7 +25,7 @@ class AssignClassroomStudentDatatables extends Controller
     public function students(Request $request)
     {
 
-        $studentClassroom = ClassroomStudent::whereHas('classroom.academic_year', fn ($q) => $q->active())->pluck('student_id');
+        $studentClassroom = ClassroomStudent::whereHas('classroom.academic_year', fn ($q) => $q->semua())->pluck('student_id');
         $students = Student::with('school')
             ->whereNotIn('id', $studentClassroom)
             ->when($request->has('nis'), function ($q) use ($request) {

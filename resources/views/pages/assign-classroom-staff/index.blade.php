@@ -46,7 +46,6 @@
                                 <th>Nama Staff/Guru</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Wali Kelas</th>
-                                <th>Tahun Ajaran</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
