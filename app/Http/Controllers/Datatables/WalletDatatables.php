@@ -27,7 +27,7 @@ class WalletDatatables extends Controller
             ->addColumn('action', function (Wallet $row) {
                 $data = [
                     'edit_url'     => route('wallet.edit', ['wallet' => $row->id]),
-                    'delete_url'   => route('wallet.destroy', ['wallet' => $row->id]),
+                    // 'delete_url'   => route('wallet.destroy', ['wallet' => $row->id]),
                     'redirect_url' => route('wallet.index'),
                     'resource'     => 'wallet',
                     'custom_links' => [
