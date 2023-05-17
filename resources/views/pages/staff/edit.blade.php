@@ -289,8 +289,10 @@
                                                 <label for="file_photo">Foto Staff/Guru</label>
                                             </div>
 
+                                            @if ($staff->file_photo)
                                             <img src="{{ $staff->file_photo }}" id="file_photo_preview"
                                                 class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
+                                            @endif
 
                                             <div class="custom-file">
                                                 <input type="file" name="file_photo" accept="image/*"
@@ -315,10 +317,12 @@
                                                     Kelahiran</label>
                                             </div>
 
+                                            @if ($staff->file_birth_certificate)
                                             <img src="{{ $staff->file_birth_certificate }}"
                                                 id="file_birth_certificate_preview"
                                                 class="img-thumbnail img-fluid col-md-3"
                                                 alt="Student's Birth Certificate">
+                                            @endif
 
                                             <div class="custom-file">
                                                 <input type="file" accept="image/*"
@@ -344,9 +348,10 @@
                                                     Keluarga</label>
                                             </div>
 
+                                            @if ($staff->file_family_card)
                                             <img src="{{ $staff->file_family_card }}" id="file_family_card_preview"
                                                 class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
-
+                                            @endif
 
                                             <div class="custom-file">
                                                 <input type="file" accept="image/*"
