@@ -63,6 +63,7 @@ class ExpenseApprovalController extends Controller
      */
     public function update(Request $request, Expense $expense_approval)
     {
+        dd($request->all());
         try {
             switch ($request->action) {
                 case 'approve':
@@ -71,6 +72,7 @@ class ExpenseApprovalController extends Controller
                     break;
                 case 'reject':
                     $expense_approval->status = Expense::STATUS_REJECTED;
+                    $expense_approval->notes  = $request->reject_reason;    
                     break;
             }
             $expense_approval->save();
