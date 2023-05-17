@@ -94,4 +94,21 @@ class AssignClassroomStaffController extends Controller
             ->route('assign-classroom-staff.index')
             ->withToastSuccess('Berhasil Ubah Wali Kelas');
     }
+
+
+    public function classroomStaff(Request $request)
+    {
+
+        try {
+            if ($request->has('staff_id')) {
+                $classroomStaff   = ClassroomStaff::with('classroom.grade')
+                    ->where('staff_id', $request->staff_id)->get();
+                return response()->json(['msg' => 'Berhasil', 'classrooms' => $classroomStaff], 200);
+            } else {
+                return response()->json(['msg' => 'Gagal', 'classrooms' => []], 201);
+            }
+        } catch (\Throwable $th) {
+            return response()->json(['msg' => 'Gagal'], 400);
+        }
+    }
 }
