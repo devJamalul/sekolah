@@ -31,13 +31,17 @@ class TuitionApprovalDatatables extends Controller
                             return $row->grade->grade_name;
                         })
                         ->addColumn('status', function ($row) {
-                            if ($row->deleted_at)
-                                return '<span class="badge badge-danger">Ditolak</span>';
-
-                            if ($row->approval_by)
-                                return '<span class="badge badge-success">Disetujui</span>';
-
-                            return '<span class="badge badge-primary">Menunggu Persetujuan</span>';
+                                switch ($row->status) {
+                                    case 'rejected':
+                                        return '<span class="badge badge-danger">Ditolak</span>';
+                                        break;
+                                    case 'approved':
+                                        return '<span class="badge badge-success">Disetujui</span>';
+                                        break;
+                                    default:
+                                        return '<span class="badge badge-primary">Menunggu Persetujuan</span>';
+                                        break;
+                                }
                         })
                         ->addColumn('action', function (Tuition $row) use($request) {
                             $data = [

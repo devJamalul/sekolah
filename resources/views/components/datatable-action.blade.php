@@ -2,6 +2,8 @@
     $tombolUbah = isset($edit_url) ? "<a class=\"dropdown-item\" href=\"$edit_url\">Ubah</a>" : '';
     $tombolHapus = isset($delete_url) ? "<a class=\"dropdown-item\" data-url=\"$delete_url\" data-redirect=$redirect_url onclick=\"softDelete(this)\">Hapus</a>" : '';
 @endphp
+
+
 <div class="btn-group">
     <div class="dropdown">
         <button class="btn btn-primary btn-sm dropdown-toggle shadow-sm" type="button" id="dropdownMenuButton"

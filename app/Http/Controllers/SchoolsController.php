@@ -115,6 +115,17 @@ class SchoolsController extends Controller
     }
 
     /**
+     *For detail school
+     */
+
+    public function show(School $school)
+    {
+        $school->load('staf.user');
+        $title = "Detail Sekolah " . $school->school_name;
+        return view('pages.school.detail', compact('school', 'title'));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(SchoolRequest $request, School $school)

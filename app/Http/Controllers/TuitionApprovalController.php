@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tuition;
-use App\Models\User;
 use App\Notifications\TuitionApprovalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,10 +41,11 @@ class TuitionApprovalController extends Controller
         try {
             switch ($request->action) {
                 case 'approve':
+                    $tuition_approval->status = Tuition::STATUS_APPROVED;
                     $tuition_approval->approval_by = Auth::user()->id;
                     break;
                 case 'reject':
-                    $tuition_approval->delete();
+                    $tuition_approval->status = Tuition::STATUS_REJECTED;
                     break;
             }
             $tuition_approval->save();

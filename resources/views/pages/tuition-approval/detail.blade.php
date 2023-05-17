@@ -50,9 +50,9 @@
                                 <tr>
                                     <td scope="row">Status</td>
                                     <td class="text-primary font-weight-bold">
-                                        @if ($tuition->deleted_at)
+                                        @if ($tuition->status == 'rejected')
                                             <span class="badge badge-danger">Ditolak</span>
-                                        @elseif ($tuition->approval_by)
+                                        @elseif ($tuition->status == 'approved')
                                             <span class="badge badge-success">Disetujui</span>
                                         @else
                                             <span class="badge badge-primary">Menunggu Persetujuan</span>
