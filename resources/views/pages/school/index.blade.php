@@ -23,13 +23,6 @@
                                 <th>Nama</th>
                                 <th>Nama Pimpinan</th>
                                 <th>No Hp Pimpinan</th>
-                                <th>Provinsi</th>
-                                <th>Kota</th>
-                                <th>Alamat</th>
-                                <th>Kode POS</th>
-                                <th>Tingkatan</th>
-                                <th>No Hp</th>
-                                <th>Email</th>
                                 <th>Name PIC</th>
                                 <th>Email PIC</th>
                                 <th>Aksi</th>
@@ -50,14 +43,11 @@
 
 @push('css')
     <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
-    <link rel="stylesheet"
-        href="https://datatables.net/release-datatables/extensions/FixedColumns/css/fixedColumns.bootstrap4.css">
 @endpush
 
 @push('js')
     <script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="https://datatables.net/release-datatables/extensions/FixedColumns/js/dataTables.fixedColumns.js"></script>
     <script>
         $.ajaxSetup({
             headers: {
@@ -79,27 +69,6 @@
                     data: 'foundation_head_tlpn'
                 },
                 {
-                    data: 'province'
-                },
-                {
-                    data: 'city'
-                },
-                {
-                    data: 'address'
-                },
-                {
-                    data: 'postal_code'
-                },
-                {
-                    data: 'grade'
-                },
-                {
-                    data: 'phone'
-                },
-                {
-                    data: 'email'
-                },
-                {
                     data: 'pic_name'
                 },
                 {
@@ -112,10 +81,6 @@
             ];
 
             var reportTable = table.DataTable({
-                scrollY: false,
-                scrollY: '50vh',
-                scrollX: true,
-                scrollCollapse: true,
                 paging: true,
                 info: false,
                 searching: true,
@@ -126,60 +91,6 @@
 
                 },
                 columns: columns,
-                fixedColumns: {
-                    rightColumns: 1
-                },
-                columnDefs: [{
-                        width: 300,
-                        targets: 0
-                    },
-                    {
-                        width: 200,
-                        targets: 1
-                    },
-                    {
-                        width: 200,
-                        targets: 2
-                    },
-                    {
-                        width: 200,
-                        targets: 3
-                    },
-                    {
-                        width: 200,
-                        targets: 4
-                    },
-                    {
-                        width: 200,
-                        targets: 5
-                    },
-                    {
-                        width: 50,
-                        targets: 6
-                    },
-                    {
-                        width: 50,
-                        targets: 7
-                    }, {
-                        width: 150,
-                        targets: 8
-                    }, {
-                        width: 200,
-                        targets: 9
-                    },
-                    {
-                        width: 150,
-                        targets: 10
-                    },
-                    {
-                        width: 200,
-                        targets: 11
-                    },
-                    {
-                        width: 200,
-                        targets: 12
-                    },
-                ],
             });
 
 
