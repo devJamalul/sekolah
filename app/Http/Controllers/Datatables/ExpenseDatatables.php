@@ -15,6 +15,9 @@ class ExpenseDatatables extends Controller
         $expense = Expense::with('requested_by', 'approved_by')->latest('created_at');
         return DataTables::of($expense)
             ->editColumn('expense_number', function ($row){
+                if($row->status == Expense::STATUS_APPROVED){
+                    return "<a href='" . route('expense.show-detail', $row->id) . "'>{$row->expense_number}</a>";
+                }
                 return "<a href='" . route('expense.show', $row->id) . "'>{$row->expense_number}</a>";
             
             })

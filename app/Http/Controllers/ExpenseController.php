@@ -95,6 +95,9 @@ class ExpenseController extends Controller
 
         try {
 
+            // if(){
+
+            // }
             $expense->school_id         = session('school_id');
             $expense->expense_date      = $request->expense_date;
             $expense->note              = $request->note;
@@ -139,5 +142,14 @@ class ExpenseController extends Controller
                 'msg' => 'Eror Hapus Pengeluaran Biaya'
             ]);
         }
+    }
+
+    public function ShowDetail(Expense $expense)
+    {
+        $title = "Detail Pengeluaran Biaya";
+        $wallets = Wallet::where('school_id', session('school_id'))->get();
+        $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
+        $requestedBy = Auth::user();
+        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'requestedBy'));
     }
 }
