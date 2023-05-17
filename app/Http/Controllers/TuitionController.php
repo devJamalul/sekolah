@@ -60,6 +60,7 @@ class TuitionController extends Controller
             $tuition->academic_year_id  = $request->academic_year_id;
             $tuition->grade_id          = $request->grade_id;
             $tuition->price             = formatAngka($request->price);
+            $tuition->status            = Tuition::STATUS_PENDING;
             $tuition->request_by        = Auth::id();
             $tuition->save();
 
@@ -140,7 +141,7 @@ class TuitionController extends Controller
         DB::beginTransaction();
         try {
 
-            $tuition->delete();
+            $tuition->status = Tuition::STATUS_REJECTED;
             DB::commit();
 
             return response()->json([
