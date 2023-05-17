@@ -113,6 +113,7 @@
 
             var reportTable = table.DataTable({
                 scrollY: false,
+                scrollY: '50vh',
                 scrollX: true,
                 scrollCollapse: true,
                 paging: true,
@@ -173,6 +174,10 @@
                     {
                         width: 200,
                         targets: 11
+                    },
+                    {
+                        width: 200,
+                        targets: 12
                     },
                 ],
             });

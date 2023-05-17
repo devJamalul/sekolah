@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Grade;
-use App\Models\Student;
 use App\Models\Classroom;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AssignClassroomStaffRequest;
 use App\Models\ClassroomStaff;
-use App\Models\ClassroomStudent;
 use App\Models\Staff;
 use Exception;
 
@@ -22,6 +19,10 @@ class AssignClassroomStaffController extends Controller
     public function __invoke(Request $request)
     {
         $data['title'] = "Tetapkan Wali Kelas";
+        $data['academy_years'] = AcademicYear::whereIn('status_years', [
+            AcademicYear::STATUS_STARTED,
+            AcademicYear::STATUS_REGISTRATION
+        ])->orderBy('status_years', 'desc')->get();
         return view('pages.assign-classroom-staff.index', $data);
     }
 
@@ -41,10 +42,7 @@ class AssignClassroomStaffController extends Controller
 
         try {
             $classroom = Classroom::find($request->classroom_id);
-
-            throw_if($classroom->staff->count() >= 1, "Gagal!, Wali Kelas pada kelas  {$classroom->name} sudah tersedia");
-
-            $classroom->staff()->attach($request->id);
+            $classroom->staff()->attach([$request->id]);
             $classroom->save();
             DB::commit();
         } catch (Exception $e) {
@@ -67,8 +65,12 @@ class AssignClassroomStaffController extends Controller
 
         DB::beginTransaction();
         try {
+            $classroom = Classroom::find($request->classroom_old);
+            $classroom->staff()->detach([$request->id]);
+            $classroom->save();
+
             $classroom = Classroom::find($request->classroom_id);
-            $classroom->staff()->detach($request->id);
+            $classroom->staff()->attach([$request->id]);
             $classroom->save();
             DB::commit();
         } catch (\Throwable $th) {
@@ -81,6 +83,6 @@ class AssignClassroomStaffController extends Controller
 
         return redirect()
             ->route('assign-classroom-staff.index')
-            ->withToastSuccess('Berhasil Hapus Wali Kelas');
+            ->withToastSuccess('Berhasil Ubah Wali Kelas');
     }
 }

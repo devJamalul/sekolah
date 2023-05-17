@@ -159,7 +159,7 @@ class StaffController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->route('staff.edit', $tuitionType->id)->withToastError("Ops Gagal ubah {$this->title}!");
+            return redirect()->route('staff.edit', $staff->id)->withToastError("Ops Gagal ubah {$this->title}!");
         }
 
         return redirect()->route('staff.index')->withToastSuccess("Ubah {$this->title} Berhasil!");
