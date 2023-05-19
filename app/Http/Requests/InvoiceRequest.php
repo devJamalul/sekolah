@@ -34,7 +34,7 @@ class InvoiceRequest extends FormRequest
             'note' => 'deskripsi',
             'invoice_number' => 'nomor invoice',
             'invoice_date' => 'tanggal invoice',
-            'due_date' => 'jatuh tempo'
+            'due_date' => 'jatuh tempo',
         ];
     }
 
@@ -52,6 +52,8 @@ class InvoiceRequest extends FormRequest
             'note' => 'required|string',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after:invoice_date',
+            'item_name' => 'required|string',
+            'price' => 'required|string',
         ];
     }
 
@@ -71,4 +73,12 @@ class InvoiceRequest extends FormRequest
             'due_date' => 'required|date|after:invoice_date',
         ];
     }
+
+    // public function messages()
+    // {
+    //     return [
+    //         'details.*.item_name.required' => ':attribute ke-:position harus diisi',
+    //         'details.*.price.required' => ':attribute ke-:position harus diisi',
+    //     ];
+    // }
 }

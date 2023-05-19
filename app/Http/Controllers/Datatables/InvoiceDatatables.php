@@ -48,7 +48,7 @@ class InvoiceDatatables extends Controller
                 return view('components.datatable-action', $data);
             })
             ->editColumn('invoice_number', function ($invoice) {
-                return "<a href='" . route('invoice-details.index', $invoice->getKey()) . "'>{$invoice->invoice_number}</a>";
+                return "<a href='" . route('invoices.edit', $invoice->getKey()) . "'>{$invoice->invoice_number}</a>";
             })
             ->editColumn('total_amount', fn ($invoice) => number_format($invoice->total_amount, 0, ',', '.'))
             ->editColumn('invoice_date', fn ($invoice) => TanggalFormat::DateIndo($invoice->invoice_date))

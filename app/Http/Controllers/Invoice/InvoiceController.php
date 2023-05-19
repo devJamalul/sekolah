@@ -6,6 +6,7 @@ use App\Actions\Invoice\CreateNewInvoiceNumber;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
 use App\Models\Invoice;
+use App\Models\InvoiceDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -45,6 +46,15 @@ class InvoiceController extends Controller
             $invoice->invoice_date = $request->invoice_date;
             $invoice->due_date = $request->due_date;
             $invoice->save();
+
+            $invoiceDetail = new InvoiceDetail();
+            $invoiceDetail->invoice_id = $invoice->getKey();
+            $invoiceDetail->item_name = $request->item_name;
+            $invoiceDetail->price = formatAngka($request->price);
+            $invoiceDetail->save();
+
+            $invoiceDetail->invoice->total_amount = $invoiceDetail->invoice->invoice_details()->sum('price');
+            $invoiceDetail->push();
             DB::commit();
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
@@ -55,7 +65,7 @@ class InvoiceController extends Controller
             DB::rollBack();
             return to_route('invoices.create')->withToastError('Ups! ' . $th->getMessage());
         }
-        return to_route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
+        return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
     }
 
     /**
@@ -65,13 +75,13 @@ class InvoiceController extends Controller
     {
         if ($invoice->school_id != session('school_id')) abort(404);
 
+        // cek status dan kembalikan jika statusnya bukan DRAFT
+        if ($invoice->is_posted != Invoice::POSTED_DRAFT)
+            return to_route('invoice-details.index', $invoice->getKey());
+
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
         if ($invoice->is_original == false)
             return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak diubah.');
-
-        // cek status dan kembalikan jika statusnya bukan DRAFT
-        if ($invoice->is_posted != Invoice::POSTED_DRAFT)
-            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
 
         $data['title'] = "Ubah " . $this->title;
         $data['invoice'] = $invoice;

@@ -51,7 +51,7 @@ class InvoiceDetailController extends Controller
             DB::rollBack();
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->back()->withToastSuccess('Berhasil menambah baris invoice!');
+        return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menambah baris invoice!');
     }
 
     /**
@@ -99,12 +99,12 @@ class InvoiceDetailController extends Controller
 
         DB::beginTransaction();
         try {
-            $invoiceDetail->delete();
+            $invoiceDetail->forceDelete();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->back()->withToastSuccess('Berhasil menghapus baris invoice!');
+        return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menghapus baris invoice!');
     }
 }
