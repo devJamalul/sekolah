@@ -30,33 +30,33 @@ class SchoolRequest extends FormRequest
     protected function postMethod(): array
     {
         return [
-            'school_name' => 'required|string|max:255',
+            'school_name' => 'required|string|max:200',
             'province'   => 'required|string|max:100',
             'city'  => 'required|string|max:100',
-            'postal_code' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:7',
             'address'   => 'required|string|max:100',
             'grade'  => 'required|string|max:100',
-            'email' => 'required|string|max:255',
-            'phone'   => 'required|string|max:100',
+            'email' => 'required|string|max:200',
+            'phone'   => 'required|string|max:15',
             'foundation_head_name'   => 'required|string|max:100',
             'foundation_head_tlpn'   => 'required|string|max:100',
             'foundation_head_email'   => 'required|email|max:100|unique:users,email',
             'name_pic'  => 'required|string|max:100',
-            'email_pic' => 'required|string|max:255|unique:users,email',
+            'email_pic' => 'required|string|max:200|unique:users,email',
         ];
     }
 
     protected function putMethod(): array
     {
         return [
-            'school_name' => 'required|string|max:255',
+            'school_name' => 'required|string|max:200',
             'province'   => 'required|string|max:100',
             'city'  => 'required|string|max:100',
-            'postal_code' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:7',
             'address'   => 'required|string|max:100',
             'grade'  => 'required|string|max:100',
-            'email' => 'required|string|max:255',
-            'phone'   => 'required|string|max:100',
+            'email' => 'required|string|max:200',
+            'phone'   => 'required|string|max:15',
         ];
     }
 }

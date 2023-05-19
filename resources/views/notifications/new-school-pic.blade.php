@@ -9,6 +9,8 @@ Email : {{ $user->email }}
 
 Password : {{ $password }}
 
+Role : {{ str($user->getRoleNames()[0])->title }}
+
 <x-mail::button :url="route('login')">
 Masuk ke Dashboard Sekolah
 </x-mail::button>
