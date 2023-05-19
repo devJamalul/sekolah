@@ -10,6 +10,7 @@ use App\Notifications\NewSchoolPICNotification;
 use Exception;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
@@ -41,6 +42,32 @@ class UsersController extends Controller
      */
     public function store(UserRequest $request)
     {
+        // cek sudah ada kepala sekolah atau belum
+        if ($request->jabatan == User::ROLE_KEPALA_SEKOLAH) {
+            $cek = User::query()
+                ->role(User::ROLE_KEPALA_SEKOLAH)
+                ->firstWhere([
+                    'school_id' => session('school_id'),
+                ]);
+            // lemparkan kembali jika sudah ada
+            if ($cek) {
+                return redirect()->route('users.index')->withToastError('Ups, kepala sekolah sudah ada. Tidak boleh ada dua kepala sekolah!');
+            }
+        }
+
+        // cek sudah ada admin sekolah atau belum
+        if ($request->jabatan == User::ROLE_ADMIN_SEKOLAH) {
+            $cek = User::query()
+                ->role(User::ROLE_ADMIN_SEKOLAH)
+                ->firstWhere([
+                    'school_id' => session('school_id'),
+                ]);
+            // lemparkan kembali jika sudah ada
+            if ($cek) {
+                return redirect()->route('users.index')->withToastError('Ups, admin sekolah sudah ada. Tidak boleh ada dua admin sekolah!');
+            }
+        }
+
         DB::beginTransaction();
         try {
             $password = fake()->word();
@@ -94,6 +121,16 @@ class UsersController extends Controller
             abort(404);
         }
 
+        $admin = User::find(auth()->id());
+        if (
+            $user->getRoleNames()[0] == User::ROLE_ADMIN_SEKOLAH
+            && $user->getKey() != Auth::id()
+            && $admin->getRoleNames()[0] != User::ROLE_SUPER_ADMIN
+            && $admin->getRoleNames()[0] != User::ROLE_OPS_ADMIN
+        ) {
+            return redirect()->route('users.index')->withToastError('Ups, anda tidak berhak mengubah data admin sekolah!');
+        }
+
         $title = "Ubah {$this->title}";
         return view('pages.users.edit', compact('user', 'title'));
     }
@@ -105,6 +142,33 @@ class UsersController extends Controller
     {
         if ($user->school_id != session('school_id')) {
             abort(404);
+        }
+
+        $admin = User::find(auth()->id());
+        if (
+            $user->getRoleNames()[0] == User::ROLE_ADMIN_SEKOLAH
+            && $user->getKey() != Auth::id()
+            && $admin->getRoleNames()[0] != User::ROLE_SUPER_ADMIN
+            && $admin->getRoleNames()[0] != User::ROLE_OPS_ADMIN
+        ) {
+            return redirect()->route('users.index')->withToastError('Ups, anda tidak berhak mengubah data admin sekolah!');
+        }
+
+        // simpan role awalnya
+        $role = $user->getRoleNames()[0];
+
+        // cek sudah ada kepala sekolah atau belum
+        if ($request->jabatan == User::ROLE_KEPALA_SEKOLAH) {
+            $cek = User::query()
+                ->role(User::ROLE_KEPALA_SEKOLAH)
+                ->where('id', '<>', $user->getKey())
+                ->firstWhere([
+                    'school_id' => session('school_id'),
+                ]);
+            // lemparkan kembali jika sudah ada
+            if ($cek) {
+                return redirect()->route('users.index')->withToastError('Ups, kepala sekolah sudah ada. Tidak boleh ada dua kepala sekolah!');
+            }
         }
 
         DB::beginTransaction();
@@ -120,10 +184,32 @@ class UsersController extends Controller
             $staff->save();
 
             DB::commit();
-            DB::afterCommit(function () use ($user) {
-                // todo: jika email berubah, maka jalankan verifikasi email di bawah
-                // event(new Registered($user)); # aktifkan jika sudah menggunakan email verifikasi
-            });
+            $user->refresh();
+
+            // pengubahan info kepsek jika ada transisi posisi kepsek
+            if (
+                $role != User::ROLE_KEPALA_SEKOLAH
+                && $user->getRoleNames()[0] == User::ROLE_KEPALA_SEKOLAH
+            ) {
+                $school = School::find($user->school_id);
+                $school->foundation_head_name = $user->name;
+                $school->foundation_head_email = $user->email;
+                $school->foundation_head_tlpn = $user->staff->phone_number;
+                $school->save();
+            }
+
+            // pengubahan info kepsek jika ada status quo pada posisi kepsek
+            if (
+                $role == User::ROLE_KEPALA_SEKOLAH
+                && $user->getRoleNames()[0] != User::ROLE_KEPALA_SEKOLAH
+            ) {
+                $school = School::find($user->school_id);
+                $school->foundation_head_name = null;
+                $school->foundation_head_email = null;
+                $school->foundation_head_tlpn = null;
+                $school->save();
+            }
+
         } catch (Exception $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Ubah pengguna',
