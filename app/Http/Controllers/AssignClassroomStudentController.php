@@ -14,6 +14,7 @@ use App\Models\ClassroomStudent;
 
 class AssignClassroomStudentController extends Controller
 {
+
     /**
      * Handle the incoming request.
      */
@@ -30,6 +31,7 @@ class AssignClassroomStudentController extends Controller
             'started' => $data['academy_years']?->where('status_years', AcademicYear::STATUS_STARTED)->first(),
             'register' => $data['academy_years']?->where('status_years', AcademicYear::STATUS_REGISTRATION)->first()
         ];
+        $data['selected_academy_years'] = $request->academic_year;
 
         return view('pages.assign-classroom-student.index', $data);
     }
@@ -38,19 +40,20 @@ class AssignClassroomStudentController extends Controller
     {
         DB::beginTransaction();
 
+
         try {
             $this->setClassroom($request);
             DB::commit();
         } catch (\Throwable $th) {
             return redirect()
-                ->route('assign-classroom-student.index')
+                ->route('assign-classroom-student.index', ['academic_year' => $request->academy_years])
                 ->with('classroom_id', $request->classroom_id)
                 ->withToastError('Gagal Tetapkan Kelas');
         }
 
 
         return redirect()
-            ->route('assign-classroom-student.index')
+            ->route('assign-classroom-student.index', ['academic_year' => $request->academy_years])
             ->withToastSuccess('Berhasil Tetapkan Kelas');
     }
 
@@ -61,23 +64,23 @@ class AssignClassroomStudentController extends Controller
         try {
             $isChangeClassroom = $request->type == 'Pindah Kelas';
 
-
             if ($isChangeClassroom) {
                 $this->destroyClassroom($request);
             }
-            $this->setClassroom($request);
+            $classroom = $this->setClassroom($request);
 
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()
-                ->route('assign-classroom-student.index')
+                ->route('assign-classroom-student.index', ['academic_year' => $request->academic_year])
                 ->with('classroom_id', $request->classroom_id)
                 ->withToastError('Gagal ' . $request->type);
         }
 
         return redirect()
-            ->route('assign-classroom-student.index')
+            ->route('assign-classroom-student.index', ['academic_year' => $request->academic_year])
+            ->with('classroom_id', $request->classroom_id)
             ->withToastSuccess('Berhasil ' . $request->type);
     }
 
@@ -106,8 +109,9 @@ class AssignClassroomStudentController extends Controller
     private function setClassroom($request)
     {
         $classroom = Classroom::find($request->classroom_id);
-        $classroom->students()->attach($request->id);
+        $classroom->students()->syncWithoutDetaching($request->id);
         $classroom->save();
+        return $classroom;
     }
 
     private function destroyClassroom($request)
@@ -115,5 +119,6 @@ class AssignClassroomStudentController extends Controller
         $classroom = Classroom::find($request->classroom_old);
         $classroom->students()->detach($request->id);
         $classroom->save();
+        return $classroom;
     }
 }
