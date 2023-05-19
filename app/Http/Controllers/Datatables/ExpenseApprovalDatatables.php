@@ -14,6 +14,7 @@ class ExpenseApprovalDatatables extends Controller
     public function index(Request $request)
     {
         $expense = Expense::where('school_id', session('school_id'))
+                                ->where('price', '>', '0')
                                 ->with('expense_details')
                                 ->orderByDesc('created_at')
                                 ->withTrashed()
