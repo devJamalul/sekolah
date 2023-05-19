@@ -52,14 +52,8 @@ class ExpenseDetailController extends Controller
             //     ->where('wallet_id', $danaBOS->id)
             //     ->sum(DB::raw('price * quantity'));
 
-            info("totalExpensePending: $totalExpensePending");
-
             $walletBalance  = $wallet->balance - $totalExpensePending;
             // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
-
-            info("walletBalance: $walletBalance");
-            // info("walletBos: $walletBos");
-
 
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $request->expense_id;
@@ -71,9 +65,7 @@ class ExpenseDetailController extends Controller
             //     $expenseDetail->wallet_id   = $danaBOS->id;
             // } 
             else {
-                $walletName = Wallet::find($request->wallet_id);
-
-                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet ' . $walletName->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
 
             $expenseDetail->item_name   = $request->item_name;
