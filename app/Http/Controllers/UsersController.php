@@ -41,6 +41,17 @@ class UsersController extends Controller
      */
     public function store(UserRequest $request)
     {
+        // cek sudah ada kepala sekolah atau belum
+        $cek = User::query()
+        ->role(User::ROLE_KEPALA_SEKOLAH)
+        ->firstWhere([
+            'school_id' => session('school_id'),
+        ]);
+        // lemparkan kembali jika sudah ada
+        if ($cek) {
+            return redirect()->route('users.index')->withToastError('Ups, kepala sekolah sudah ada. Tidak boleh ada dua kepala sekolah!');
+        }
+
         DB::beginTransaction();
         try {
             $password = fake()->word();
