@@ -217,9 +217,9 @@
     });
 
 
-    academy_year.change(function(){
+    academy_year.change(function(event){
         getClassroom($(this).val(),classroomId,labelStaffClass)
-        location.reload()
+        window.location.href = `${window.location.pathname}?academic_year=${event.target.value}`
     })
 
     classroomId.change(function() {

@@ -58,6 +58,35 @@
         {{-- END ASSIGN CLASS --}}
     </div>
 
+
+    <div class="modal" id="modalDetailAssignClassStaff">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="assingclassroom-staff-modal-label">Detail Kelas</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nama Kelas</th>
+                                <th>Tingkat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-staff-classroom">
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <form action="" id="form-modal" method="post">
         <div class="modal" id="modalAssignClass">
             <div class="modal-dialog">

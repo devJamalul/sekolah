@@ -52,8 +52,7 @@
                                              @enderror"
                                 name="academy_year" id="academy_year">
                                 @foreach ($academy_years as $key => $years)
-                                    <option value="{{ $years->id }}"
-                                        {{ session('academy_year') == $years->id ? 'selected' : '' }}>
+                                    <option value="{{ $years->id }}" @selected($selected_academy_years == $years->id)>
                                         {{ $years->academic_year_name }}</option>
                                 @endforeach
                             </select>
@@ -84,6 +83,7 @@
 
                                         {{-- START SELECT CLASSROOM --}}
                                         <div class="form-group">
+                                            <input type="hidden" name="academy_years" value="{{ $selected_academy_years }}">
                                             <select
                                                 class="form-control select2 @error('classroom_id')
                                                          is-invalid
@@ -97,7 +97,7 @@
                                                     {{ $message }}
                                                 </div>
                                             @enderror
-                                            <small>
+                                            <small class="d-none">
                                                 <b>Wali Kelas : <span id="staff-class"></span></b>
                                             </small>
                                         </div>
@@ -245,7 +245,7 @@
                             @method('DELETE')
                             <input type="hidden" name="classroom_old">
                             <input type="hidden" name="type">
-                            <input type="hidden" id="academy-year-modal">
+                            <input type="hidden" name="academic_year" id="academy-year-modal">
                             <div class="form-group">
                                 <label for="">Kelas
 
