@@ -118,10 +118,10 @@ class SchoolsController extends Controller
                 'sekolah' => $school->name
             ]);
             DB::rollback();
-            return redirect()->route('schools.create')->withToastError('Ups, terjadi kesalahan saat menambah data!');
+            return to_route('schools.create')->withToastError('Ups, terjadi kesalahan saat menambah data!');
         }
 
-        return redirect()->route('schools.index')->withToastSuccess('Berhasil menambah data!');
+        return to_route('schools.index')->withToastSuccess('Berhasil menambah data!');
     }
 
     /**
@@ -166,21 +166,7 @@ class SchoolsController extends Controller
             $school->grade = $request->grade;
             $school->email = $request->email;
             $school->phone = $request->phone;
-            $school->foundation_head_name = $request->foundation_head_name;
-            $school->foundation_head_tlpn = $request->foundation_head_tlpn;
             $school->save();
-
-            //staff
-            $staff = Staff::find($school->staff_id);
-            $staff->school_id = $school->getKey();
-            $staff->name = $request->name_pic;
-            $staff->save();
-
-            // user
-            $user = User::find($staff->user_id);
-            $user->name = $request->name_pic;
-            $user->email = $request->email_pic;
-            $user->save();
 
             DB::commit();
         } catch (Exception $th) {
@@ -190,10 +176,10 @@ class SchoolsController extends Controller
                 'school' => $school->name
             ]);
             DB::rollback();
-            return redirect()->route('schools.index')->withToastError('Ups, terjadi kesalahan saat mengubah data!');
+            return to_route('schools.index')->withToastError('Ups, terjadi kesalahan saat mengubah data!');
         }
 
-        return redirect()->route('schools.index')->withToastSuccess('Berhasil mengubah data!');
+        return to_route('schools.index')->withToastSuccess('Berhasil mengubah data!');
     }
 
     /**
