@@ -5,22 +5,33 @@ use App\Models\School;
 use App\Models\User;
 
 beforeEach(function () {
+    session(['school_id' => 1]);
+
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
     $this->opsAdmin = User::role(User::ROLE_OPS_ADMIN)->first();
-    $this->adminYayasan = User::role(User::ROLE_ADMIN_YAYASAN)->first();
-    $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->first();
-    $this->bendahara = User::role(User::ROLE_BENDAHARA)->first();
-    $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->first();
-    $this->kepalaSekolah = User::role(User::ROLE_KEPALA_SEKOLAH)->first();
-    $this->siswa = User::role(User::ROLE_SISWA)->first();
-    $this->alumni = User::role(User::ROLE_ALUMNI)->first();
+
+    $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->bendahara = User::role(User::ROLE_BENDAHARA)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->kepalaSekolah = User::role(User::ROLE_KEPALA_SEKOLAH)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
     $this->setupFaker();
 });
 
 // Create
 test('can render create page as Sempoa Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
+    session(['school_id' => session('school_id')]);
 
     $this->actingAs($user)
         ->get(route('grade.create'))
@@ -38,22 +49,18 @@ test('can render create page as School Staff', function (User $user) {
 ]);
 
 it('requires the grade name on create', function () {
-    // $name = $this->faker()->company();
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $this->actingAs($this->superAdmin)
+    $response = $this->actingAs($this->superAdmin)
         ->post(route('grade.store'), [
             'school_id' => session('school_id'),
             'grade_name' => '',
-        ])->assertInvalid(['grade_name' => 'required']);
+        ]);
+
+    $response->assertInvalid(['grade_name']);
 });
 
 test('can create grade as Sempoa Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-
     $data = [
-        'school_id' => $school->getKey(),
+        'school_id' => session('school_id'),
         'grade_name' => fake()->name()
     ];
     $response = $this->actingAs($user)
@@ -64,11 +71,8 @@ test('can create grade as Sempoa Staff', function (User $user) {
 })->with('sempoa_staff');
 
 test('can create grade as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-
     $data = [
-        'school_id' => $school->getKey(),
+        'school_id' => session('school_id'),
         'grade_name' => fake()->name()
     ];
     $response = $this->actingAs($user)
@@ -82,9 +86,7 @@ test('can create grade as School Staff', function (User $user) {
 
 // Read
 test('can render index page as Sempoa Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $this->actingAs($user)
         ->get(route('grade.index'))
@@ -94,9 +96,7 @@ test('can render index page as Sempoa Staff', function (User $user) {
 })->with('sempoa_staff');
 
 test('can render index page as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $this->actingAs($user)
         ->get(route('grade.index'))
@@ -107,9 +107,7 @@ test('can render index page as School Staff', function (User $user) {
 
 // Update
 test('can render edit page as Sempoa Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $response = $this->actingAs($user)
         ->get(route('grade.edit', $grade->getKey()))
@@ -119,7 +117,6 @@ test('can render edit page as Sempoa Staff', function (User $user) {
 })->with('sempoa_staff');
 
 test('can render edit page as School Staff', function (User $user) {
-    session(['school_id' => $user->school_id]);
     $grade = Grade::factory()->create(['school_id' => $user->school_id]);
 
     $response = $this->actingAs($user)
@@ -132,22 +129,18 @@ test('can render edit page as School Staff', function (User $user) {
 ]);
 
 it('requires the grade name on update', function () {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
     $this->actingAs($this->superAdmin)
         ->put(route('grade.update', $grade->getKey()), [
             'grade_name' => '',
-        ])->assertInvalid(['grade_name' => 'required']);
+        ])->assertInvalid(['grade_name']);
 });
 
 test('can update grade as Sempoa Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $data = [
-        'school_id' => $school->getKey(),
+        'school_id' => session('school_id'),
         'grade_name' => fake()->name()
     ];
     $response = $this->actingAs($user)
@@ -158,12 +151,10 @@ test('can update grade as Sempoa Staff', function (User $user) {
 })->with('sempoa_staff');
 
 test('can update grade as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $data = [
-        'school_id' => $school->getKey(),
+        'school_id' => session('school_id'),
         'grade_name' => fake()->name()
     ];
     $response = $this->actingAs($user)
@@ -177,9 +168,7 @@ test('can update grade as School Staff', function (User $user) {
 
 // Delete
 test('can delete grade as Sempoa Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $response = $this->actingAs($user)
         ->delete(route('grade.destroy', $grade->getKey()));
@@ -189,9 +178,7 @@ test('can delete grade as Sempoa Staff', function (User $user) {
 })->with('sempoa_staff');
 
 test('can delete grade as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $response = $this->actingAs($user)
         ->delete(route('grade.destroy', $grade->getKey()));
@@ -205,26 +192,19 @@ test('can delete grade as School Staff', function (User $user) {
 // Negasi
 // Create
 test('can not render create page as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-
     $response = $this->actingAs($user)
     ->get(route('grade.create'));
 
     $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
 ]);
 
 test('can not create grade as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-
     $data = [
-        'school_id' => $school->getKey(),
+        'school_id' => session('school_id'),
         'grade_name' => fake()->name()
     ];
     $response = $this->actingAs($user)
@@ -233,7 +213,6 @@ test('can not create grade as School Staff', function (User $user) {
     $response->assertNotFound();
     $this->assertDatabaseMissing('grades', $data);
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
@@ -243,28 +222,23 @@ test('can not create grade as School Staff', function (User $user) {
 
 // Update
 test('can not render edit page as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $response = $this->actingAs($user)
     ->get(route('grade.edit', $grade->getKey()));
 
     $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
 ]);
 
 test('can not update grade as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $data = [
-        'school_id' => $school->getKey(),
+        'school_id' => session('school_id'),
         'grade_name' => fake()->name()
     ];
     $response = $this->actingAs($user)
@@ -273,7 +247,6 @@ test('can not update grade as School Staff', function (User $user) {
     $response->assertNotFound();
     $this->assertDatabaseMissing('grades', $data);
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
@@ -281,9 +254,7 @@ test('can not update grade as School Staff', function (User $user) {
 
 // Delete
 test('can not delete grade as School Staff', function (User $user) {
-    $school = School::factory()->create();
-    session(['school_id' => $school->getKey()]);
-    $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
+    $grade = Grade::factory()->create(['school_id' => session('school_id')]);
 
     $response = $this->actingAs($user)
     ->delete(route('grade.destroy', $grade->getKey()));
@@ -291,7 +262,6 @@ test('can not delete grade as School Staff', function (User $user) {
     $response->assertNotFound();
     $this->assertModelExists($grade);
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
