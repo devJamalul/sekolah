@@ -21,7 +21,16 @@ function getConfigBySchool($code,$school_id){
     return json_encode($result);
 }
 
-function formatAngka(string $nominal): int
+function formatAngka(string|array|null $nominal): int|array
 {
+    if (is_array($nominal)) {
+        $data = [];
+        foreach ($nominal as $item) {
+            $data[] = (int) str_replace(".", "", $item);
+        }
+        return $data;
+    }
+
+    if (is_null($nominal)) $nominal = 0;
     return (int) str_replace(".", "", $nominal);
 }
