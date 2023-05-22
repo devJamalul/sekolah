@@ -21,15 +21,11 @@ class AssignClassroomStudentController extends Controller
     public function __invoke(Request $request)
     {
         $data['title'] = "Penetapan Kelas";
-        $data['academy_years'] = AcademicYear::whereIn('status_years', [
-            AcademicYear::STATUS_STARTED,
-            AcademicYear::STATUS_REGISTRATION
-        ])->orderBy('status_years', 'desc')->get();
-
+        $data['academy_years'] = AcademicYear::semua()->orderBy('status_years', 'desc')->get();
 
         $data['academy_year'] = (object)[
-            'started' => $data['academy_years']?->where('status_years', AcademicYear::STATUS_STARTED)->first(),
-            'register' => $data['academy_years']?->where('status_years', AcademicYear::STATUS_REGISTRATION)->first()
+            'started' => AcademicYear::active()->first(),
+            'register' => AcademicYear::PPDB()->first(),
         ];
         $data['selected_academy_years'] = $request->academic_year;
 
