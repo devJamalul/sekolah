@@ -13,6 +13,11 @@ class AcademyYearController extends Controller
 {
     private $title = "Tahun Akademik";
 
+    private $academyYearStatus = [
+        AcademicYear::STATUS_STARTED => 'Aktif',
+        AcademicYear::STATUS_REGISTRATION => 'Register',
+        AcademicYear::STATUS_CLOSED => 'Ditutup'
+    ];
     /**
      * Display a listing of the resource.
      */
@@ -28,11 +33,7 @@ class AcademyYearController extends Controller
      */
     public function create()
     {
-        $academyYearStatus = [
-            AcademicYear::STATUS_STARTED => 'Aktif',
-            AcademicYear::STATUS_REGISTRATION => 'Register',
-            AcademicYear::STATUS_CLOSED => 'Ditutup'
-        ];
+        $academyYearStatus = $this->academyYearStatus;
         $title = "Tambah {$this->title}";
         return view('pages.academy-year.create', compact('title', 'academyYearStatus'));
     }
@@ -69,11 +70,7 @@ class AcademyYearController extends Controller
     public function edit(AcademicYear $academyYear)
     {
         $title = "Ubah {$this->title}";
-        $academyYearStatus = [
-            AcademicYear::STATUS_STARTED => 'Aktif',
-            AcademicYear::STATUS_REGISTRATION => 'Register',
-            AcademicYear::STATUS_CLOSED => 'Ditutup'
-        ];
+        $academyYearStatus = $this->academyYearStatus;
         return view('pages.academy-year.edit', compact('academyYear', 'title', 'academyYearStatus'));
     }
 
@@ -136,8 +133,8 @@ class AcademyYearController extends Controller
     private function updateStatusYearsClosed(AcademicYear $academicYear, $status)
     {
         AcademicYear::where('status_years', $status)
-        ->where('id', '<>', $academicYear->getKey())
-        ->update(['status_years' => AcademicYear::STATUS_CLOSED]);
+            ->where('id', '<>', $academicYear->getKey())
+            ->update(['status_years' => AcademicYear::STATUS_CLOSED]);
     }
 
     private function updateSessionStatusActive(AcademicYear $academyYear)
