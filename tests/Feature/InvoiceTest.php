@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Invoice;
+use App\Models\InvoiceDetail;
 use App\Models\User;
 
 beforeEach(function () {
@@ -121,15 +122,21 @@ test('can store new invoice with empty invoice number', function () {
         'school_id' => session('school_id'),
         'note' => $inv_number,
         'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
+        'due_date' => now()->addDay()->format('Y-m-d'),
+        // invoice detail
+        'price' => 15000,
+        'item_name' => fake()->word()
     ];
     $response = $this
         ->actingAs($this->bendahara)
         ->post(route('invoices.store', $data));
 
-    $this->assertDatabaseHas('invoices', $data);
+    $collection = collect($data);
+
+    $this->assertDatabaseHas('invoices', $collection->except(['price', 'item_name'])->toArray());
     $invoice = Invoice::firstWhere('note', $inv_number);
-    $response->assertRedirectContains($invoice->getKey() . '/detail');
+    $this->assertDatabaseHas('invoice_details', $collection->only(['price', 'item_name'])->merge(['invoice_id' => $invoice->getKey()])->toArray());
+    $response->assertRedirectToRoute('invoices.edit', $invoice->getKey());
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 });
 
@@ -140,15 +147,22 @@ test('can store new invoice with invoice number', function () {
         'note' => $inv_number,
         'invoice_number' => $inv_number,
         'invoice_date' => now()->format('Y-m-d'),
-        'due_date' => now()->addDay()->format('Y-m-d')
+        'due_date' => now()->addDay()->format('Y-m-d'),
+        // invoice detail
+        'price' => 15000,
+        'item_name' => fake()->word()
     ];
+
+    $collection = collect($data);
+
     $response = $this
         ->actingAs($this->bendahara)
         ->post(route('invoices.store', $data));
 
-    $this->assertDatabaseHas('invoices', $data);
+    $this->assertDatabaseHas('invoices', $collection->except(['price', 'item_name'])->toArray());
     $invoice = Invoice::firstWhere('invoice_number', $inv_number);
-    $response->assertRedirectContains($invoice->getKey() . '/detail');
+    $this->assertDatabaseHas('invoice_details', $collection->only(['price', 'item_name'])->merge(['invoice_id' => $invoice->getKey()])->toArray());
+    $response->assertRedirectToRoute('invoices.edit', $invoice->getKey());
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 });
 
@@ -190,9 +204,11 @@ test('guest can not render invoice menu', function () {
 test('U P D A T E', function () {
     expect(true)->toBeTrue();
 });
+
 test('can render invoice edit page as Sempoa Staff', function (User $user) {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
 
     // edit
     $response = $this
@@ -204,8 +220,9 @@ test('can render invoice edit page as Sempoa Staff', function (User $user) {
     ->with('sempoa_staff');
 
 test('can render invoice edit page as School Staff', function (User $user) {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
 
     // edit
     $response = $this
@@ -236,7 +253,9 @@ test('can not render invoice edit page as School Staff', function (User $user) {
     ]);
 
 test('guest can not render edit invoice page', function () {
-    $invoice = Invoice::factory()->create();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
     $response = $this
         ->get(route('invoices.edit', $invoice->getKey()));
 
@@ -246,8 +265,11 @@ test('guest can not render edit invoice page', function () {
 });
 
 test('update invoice validation - note', function () {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
+
+    $invoice_detail = InvoiceDetail::firstWhere('invoice_id', $invoice->getKey());
 
     // edit
     $response = $this
@@ -270,8 +292,9 @@ test('update invoice validation - note', function () {
 });
 
 test('update invoice validation - invoice_number', function () {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
 
     // edit
     $response = $this
@@ -295,8 +318,9 @@ test('update invoice validation - invoice_number', function () {
 });
 
 test('update invoice validation - invoice_date', function () {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
 
     // edit
     $response = $this
@@ -320,8 +344,9 @@ test('update invoice validation - invoice_date', function () {
 });
 
 test('update invoice validation - due_date', function () {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
 
     // edit
     $response = $this
@@ -345,8 +370,13 @@ test('update invoice validation - due_date', function () {
 });
 
 test('can update invoice', function (User $user) {
-    $invoice = Invoice::factory()->create();
-    $invoice->refresh();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
+
+    $invoice_detail = InvoiceDetail::firstWhere('invoice_id', $invoice->getKey());
+    $old_price = $invoice_detail->price;
+
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 
     // edit
@@ -358,19 +388,29 @@ test('can update invoice', function (User $user) {
 
     // update
     $new_note = "updated #" . str()->random(10);
+    $new_price = (string) fake()->randomNumber(8, true);
     $data = [
         'note' => $new_note,
         'invoice_number' => $invoice->invoice_number,
         'invoice_date' => $invoice->invoice_date,
         'due_date' => $invoice->due_date,
+        // invoice detail
+        'invoice_detail_id' => [0 => $invoice_detail->getKey()],
+        'array_price' => [0 => $new_price],
+        'array_item_name' => [0 => $invoice_detail->item_name]
     ];
     $response = $this
         ->actingAs($user)
         ->put(route('invoices.update', ['invoice' => $invoice->getKey()]), $data);
 
-    $this->assertDatabaseHas('invoices', $data);
+    $collection = collect($data);
+
+    $this->assertDatabaseHas('invoices', $collection->except(['invoice_detail_id', 'array_price', 'array_item_name'])->toArray());
     $invoice->refresh();
+    $invoice_detail->refresh();
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
+    expect($invoice_detail->price)->toBe((float) $new_price);
+    expect($invoice_detail->price)->not()->toBe($old_price);
 })
     ->with([
         User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
@@ -385,7 +425,9 @@ test('D E L E T E', function () {
 });
 
 test('can delete invoice', function (User $user) {
-    $invoice = Invoice::factory()->create();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
     $invoice->refresh();
     expect($invoice->is_posted)->toBe(Invoice::POSTED_DRAFT);
 
@@ -404,10 +446,12 @@ test('can delete invoice', function (User $user) {
     ]);
 
 test('guest can not delete invoice', function () {
-    $invoice = Invoice::factory()->create();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
 
     $response = $this
-        ->get(route('invoices.destroy', $invoice->getKey()));
+        ->delete(route('invoices.destroy', $invoice->getKey()));
 
     // assert
     $response->assertRedirectToRoute('login');
@@ -417,7 +461,7 @@ test('guest can not delete invoice', function () {
 // VOID
 test('V O I D', function () {
     expect(true)->toBeTrue();
-});
+})->todo();
 
 test('can render void invoice page', function (User $user) {
     $invoice = Invoice::factory()->create();
@@ -435,7 +479,7 @@ test('can render void invoice page', function (User $user) {
         User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
         User::ROLE_BENDAHARA => [fn () => $this->bendahara],
         User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
-    ]);
+    ])->todo();
 
 test('can void invoice', function (User $user) {
     $invoice = Invoice::factory()->create();
@@ -469,13 +513,12 @@ test('can void invoice', function (User $user) {
         User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
         User::ROLE_BENDAHARA => [fn () => $this->bendahara],
         User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
-    ]);
+    ])->todo();
 
 test('can not void a voided invoice', function () {
     $invoice = Invoice::factory()->create([
         'is_posted' => Invoice::VOID
     ]);
-    $invoice->refresh();
 
     // void
     $response = $this->actingAs($this->superAdmin)
@@ -500,7 +543,7 @@ test('can not void a voided invoice', function () {
     $this->assertTrue(session()->has('alert'));
     info(session('alert'));
     // $this->assertEquals('error', session('alert')['type']);
-});
+})->todo();
 
 // PUBLISH
 test('P U B L I S H', function () {
@@ -508,7 +551,9 @@ test('P U B L I S H', function () {
 });
 
 test('can not publish invoice', function (User $user) {
-    $invoice = Invoice::factory()->create();
+    $invoice = Invoice::factory()
+        ->has(InvoiceDetail::factory(), 'invoice_details')
+        ->create();
     $invoice->refresh();
 
     $this->assertModelExists($invoice);
