@@ -34,6 +34,7 @@ class InvoiceDetailController extends Controller
      */
     public function store(InvoiceDetailRequest $request, Invoice $invoice)
     {
+        #used
         if($invoice->school_id != session('school_id')) abort(404);
 
         DB::beginTransaction();
@@ -51,43 +52,7 @@ class InvoiceDetailController extends Controller
             DB::rollBack();
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->back()->withToastSuccess('Berhasil menambah baris invoice!');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Invoice $invoice, InvoiceDetail $invoiceDetail)
-    {
-        if ($invoice->school_id != session('school_id') or $invoiceDetail->invoice != $invoice) abort(404);
-
-        $data['title'] = "Invoice " . $invoice->invoice_number;
-        $data['detail'] = $invoiceDetail;
-        $data['invoice'] = $invoice;
-        return view('pages.invoices.detail.edit', $data);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(InvoiceDetailRequest $request, Invoice $invoice, InvoiceDetail $invoiceDetail)
-    {
-        if ($invoice->school_id != session('school_id') or $invoiceDetail->invoice != $invoice) abort(404);
-
-        DB::beginTransaction();
-        try {
-            $invoiceDetail->item_name = $request->item_name;
-            $invoiceDetail->price = formatAngka($request->price);
-            $invoiceDetail->save();
-
-            $invoiceDetail->invoice->total_amount = $invoiceDetail->invoice->invoice_details()->sum('price');
-            $invoiceDetail->push();
-            DB::commit();
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
-        }
-        return to_route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil mengubah baris invoice!');
+        return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menambah baris invoice!');
     }
 
     /**
@@ -95,16 +60,17 @@ class InvoiceDetailController extends Controller
      */
     public function destroy(Invoice $invoice, InvoiceDetail $invoiceDetail)
     {
+        #used
         if ($invoice->school_id != session('school_id') or $invoiceDetail->invoice != $invoice) abort(404);
 
         DB::beginTransaction();
         try {
-            $invoiceDetail->delete();
+            $invoiceDetail->forceDelete();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->back()->withToastSuccess('Berhasil menghapus baris invoice!');
+        return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menghapus baris invoice!');
     }
 }
