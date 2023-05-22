@@ -19,6 +19,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
+        #used
         $data['title'] = $this->title;
         return view('pages.invoices.index', $data);
     }
@@ -28,6 +29,7 @@ class InvoiceController extends Controller
      */
     public function create()
     {
+        #used
         $data['title'] = "Tambah " . $this->title;
         return view('pages.invoices.create', $data);
     }
@@ -37,6 +39,7 @@ class InvoiceController extends Controller
      */
     public function store(InvoiceRequest $request, CreateNewInvoiceNumber $createNewInvoiceNumber)
     {
+        #used
         DB::beginTransaction();
         try {
             $invoice = new Invoice();
@@ -73,6 +76,7 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
+        #used
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
@@ -93,6 +97,7 @@ class InvoiceController extends Controller
      */
     public function update(InvoiceRequest $request, Invoice $invoice)
     {
+        #used
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
@@ -110,6 +115,24 @@ class InvoiceController extends Controller
             $invoice->invoice_date = $request->invoice_date;
             $invoice->due_date = $request->due_date;
             $invoice->save();
+
+            // update invoice_details
+            $array_max = $request->array_max;
+            foreach (range(0, $array_max) as $key => $item) {
+                info($request->array_price[$key]);
+                $invoiceDetail = InvoiceDetail::updateOrCreate(
+                    [
+                        'id' => $request->invoice_detail_id[$key]
+                    ],
+                    [
+                        'item_name' => $request->array_item_name[$key],
+                        'price' => formatAngka($request->array_price[$key]),
+                    ]
+                );
+                $invoiceDetail->invoice->total_amount = $invoiceDetail->invoice->invoice_details()->sum('price');
+                $invoiceDetail->push();
+            }
+
             DB::commit();
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
@@ -119,9 +142,9 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return to_route('invoice-details.index', $invoice->getKey())->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoices.edit', $invoice->getKey())->withToastError('Ups! ' . $th->getMessage());
         }
-        return redirect()->route('invoice-details.index', $invoice->getKey())->withToastSuccess('Berhasil mengubah invoice!');
+        return redirect()->route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil mengubah invoice!');
     }
 
     /**
@@ -139,6 +162,7 @@ class InvoiceController extends Controller
 
         DB::beginTransaction();
         try {
+            $invoice->invoice_details()->delete();
             $invoice->delete();
             DB::commit();
         } catch (\Throwable $th) {

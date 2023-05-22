@@ -28,13 +28,13 @@ class InvoiceDatatables extends Controller
                     'redirect_url' => route('invoices.index'),
                     'invoice' => $invoice,
                     'resource'     => 'invoices',
-                    'custom_links' => [
-                    ]
+                    'custom_links' => []
                 ];
 
                 if ($invoice->is_posted == Invoice::POSTED_DRAFT) {
                     array_push($data['custom_links'], ['label' => 'Ubah', 'url' => route('invoices.edit', ['invoice' => $invoice->id]), 'name' => 'invoices.edit']);
                     array_push($data['custom_links'], ['label' => 'Terbitkan', 'url' => route('invoices.publish', ['invoice' => $invoice->id]), 'name' => 'invoices.publish']);
+                    $data['delete_url'] =route('invoices.destroy', ['invoice' => $invoice->id]);
                 }
 
                 if ($invoice->payment_status == Invoice::STATUS_PENDING && $invoice->is_posted == Invoice::POSTED_PUBLISHED && $invoice->is_original == true) {
@@ -61,7 +61,7 @@ class InvoiceDatatables extends Controller
                     Invoice::VOID => '<span class="badge badge-dark">Void</span>',
                 };
 
-                $result .= match ($invoice->due_date < now()&& $invoice->is_posted != Invoice::POSTED_DRAFT && $invoice->is_posted != Invoice::VOID && $invoice->payment_status != Invoice::STATUS_PAID) {
+                $result .= match ($invoice->due_date < now() && $invoice->is_posted != Invoice::POSTED_DRAFT && $invoice->is_posted != Invoice::VOID && $invoice->payment_status != Invoice::STATUS_PAID) {
                     true => ' <span class="badge badge-danger">Overdue</span>',
                     false => '',
                 };

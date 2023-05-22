@@ -71,14 +71,11 @@ class InvoiceRequest extends FormRequest
             'note' => 'required|string',
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after:invoice_date',
+            'invoice_detail_id' => 'required|array',
+            'array_item_name' => 'required|array',
+            'array_item_name.*' => 'required|string',
+            'array_price' => 'required|array',
+            'array_price.*' => 'required|string',
         ];
     }
-
-    // public function messages()
-    // {
-    //     return [
-    //         'details.*.item_name.required' => ':attribute ke-:position harus diisi',
-    //         'details.*.price.required' => ':attribute ke-:position harus diisi',
-    //     ];
-    // }
 }
