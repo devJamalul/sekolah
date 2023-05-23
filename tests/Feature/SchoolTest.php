@@ -59,91 +59,129 @@ test('can render School create page as Super Admin', function () {
     $response->assertOk();
 });
 
-it('requires the school name on create', function () {
+it('requires field the school information', function () {
     $name = $this->faker()->company();
     $this->actingAs($this->superAdmin)
         ->post(route('schools.store'), [
-            'school_id' => '',
-            'name' => '',
-            'pic_name' => "PIC $name",
-            'pic_email' => str($name)->slug() . "@gmail.com"
-        ])->assertInvalid(['name' => 'required']);
+            [
+                'school_name' => '',
+                'province' => '',
+                'city' => '',
+                'postal_code' => '',
+                'address' => '',
+                'grade' => '',
+                'email' => '',
+                'phone' => '',
+                'foundation_head_name' => fake()->name(),
+                'foundation_head_tlpn' => "08950288199",
+                'foundation_head_email' => fake()->email(),
+                'name_pic' => fake()->name(),
+                'email_pic' => fake()->email()
+            ]
+        ])->assertInvalid(
+            [
+                'school_name',
+                'province',
+                'city',
+                'postal_code',
+                'address',
+                'grade',
+                'email',
+                'phone'
+            ]
+
+        );
 });
 
-it('requires the PIC name on create', function () {
+it('requires field the school foundation', function () {
     $name = $this->faker()->company();
     $this->actingAs($this->superAdmin)
         ->post(route('schools.store'), [
-            'school_id' => '',
-            'name' => $name,
-            'pic_name' => '',
-            'pic_email' => str($name)->slug() . "@gmail.com"
-        ])->assertInvalid(['pic_name' => 'required']);
+            [
+                'school_name' => fake()->name(),
+                'province' => fake()->city(),
+                'city' => fake()->city(),
+                'postal_code' => fake()->postcode(),
+                'address' => fake()->address(),
+                'grade' => fake()->randomElement(School::GRADE_SCHOOL),
+                'email' => fake()->email(),
+                'phone' => "08950288199",
+                'foundation_head_name' => '',
+                'foundation_head_tlpn' => '',
+                'foundation_head_email' => '',
+                'name_pic' => fake()->name(),
+                'email_pic' => fake()->email()
+            ]
+        ])->assertInvalid(
+            [
+                'foundation_head_name',
+                'foundation_head_tlpn',
+                'foundation_head_email',
+            ]
+
+        );
 });
 
-it('requires the PIC email on create', function () {
+it('requires field the school pic', function () {
     $name = $this->faker()->company();
     $this->actingAs($this->superAdmin)
         ->post(route('schools.store'), [
-            'school_id' => '',
-            'name' => $name,
-            'pic_name' => "PIC $name",
-            'pic_email' => ''
-        ])->assertInvalid(['pic_email' => 'required']);
+            [
+                'school_name' => fake()->name(),
+                'province' => fake()->city(),
+                'city' => fake()->city(),
+                'postal_code' => fake()->postcode(),
+                'address' => fake()->address(),
+                'grade' => fake()->randomElement(School::GRADE_SCHOOL),
+                'email' => fake()->email(),
+                'phone' => "08950288199",
+                'foundation_head_name' => fake()->name(),
+                'foundation_head_tlpn' => "08950288199",
+                'foundation_head_email' => fake()->email(),
+                'name_pic' => '',
+                'email_pic' => ''
+            ]
+        ])->assertInvalid(
+            [
+                'name_pic',
+                'email_pic',
+            ]
+
+        );
 });
 
-test('can create new Yayasan', function () {
-    $name = $this->faker()->company();
+
+
+test('C R E A T E school', function () {
     $data = [
-        'school_id' => '',
-        'name' => $name,
-        'pic_name' => "PIC $name",
-        'pic_email' => str($name)->slug() . "@gmail.com"
+        'school_name' => fake()->name(),
+        'province' => fake()->city(),
+        'city' => fake()->city(),
+        'postal_code' => fake()->postcode(),
+        'address' => fake()->address(),
+        'grade' => fake()->randomElement(School::GRADE_SCHOOL),
+        'email' => fake()->email(),
+        'phone' => "08950288199",
+        'foundation_head_name' => fake()->name(),
+        'foundation_head_tlpn' => "08950288199",
+        'foundation_head_email' => fake()->email(),
+        'name_pic' => fake()->name(),
+        'email_pic' => fake()->email()
     ];
+
 
     $this->actingAs($this->superAdmin)
         ->post(route('schools.store'), $data)
         ->assertRedirect(route('schools.index'));
 
-    $this->assertDatabaseHas('schools', [
-        'school_id' => null,
-        'name' => $name,
-    ]);
+    $this->assertDatabaseHas('schools', collect($data)->except(['name_pic', 'email_pic', 'foundation_head_email'])->toArray());
 
     $this->assertDatabaseHas('staff', [
-        'name' => "PIC $name",
+        'name' => $data['name_pic'],
     ]);
 
     $user = User::firstWhere([
-        'email' => str($name)->slug() . "@gmail.com"
-    ]);
-    expect($user->hasRole(User::ROLE_ADMIN_YAYASAN))->toBeTrue();
-});
-
-test('can create new School', function () {
-    $yayasan = School::factory()->create();
-    $name = $this->faker()->company();
-    $data = [
-        'school_id' => $yayasan->getKey(),
-        'name' => $name,
-        'pic_name' => "PIC $name",
-        'pic_email' => str($name)->slug() . "@gmail.com"
-    ];
-    $this->actingAs($this->superAdmin)
-        ->post(route('schools.store'), $data)
-        ->assertRedirect(route('schools.index'));
-
-    $this->assertDatabaseHas('schools', [
-        'school_id' => $yayasan->getKey(),
-        'name' => $name,
-    ]);
-
-    $this->assertDatabaseHas('staff', [
-        'name' => "PIC $name",
-    ]);
-
-    $user = User::firstWhere([
-        'email' => str($name)->slug() . "@gmail.com"
+        'email' => $data['email_pic']
     ]);
     expect($user->hasRole(User::ROLE_ADMIN_SEKOLAH))->toBeTrue();
 });
@@ -152,8 +190,8 @@ test('can create new School', function () {
 test('can render School index page as Sempoa Staff', function (User $user) {
     $school = School::factory()->create();
     $response = $this
-    ->actingAs($user)
-    ->get(route('schools.index'));
+        ->actingAs($user)
+        ->get(route('schools.index'));
 
     $response->assertOk();
     $this->assertModelExists($school);
@@ -191,15 +229,27 @@ test('can edit school as Sempoa Staff', function (User $user) {
     $school->staff_id = $_staff->getKey();
     $school->save();
 
-    $name = "Yayasan Edited";
+    $name = "Sekolah Editing";
 
     $this->actingAs($user)
         ->put(route('schools.update', $school->getKey()), [
-            'name' => $name
-        ])->assertRedirect(route('schools.index'));
+            'school_name' => $name,
+            'province' => fake()->city(),
+            'city' => fake()->city(),
+            'postal_code' => fake()->postcode(),
+            'address' => fake()->address(),
+            'grade' => fake()->randomElement(School::GRADE_SCHOOL),
+            'email' => fake()->email(),
+            'phone' => "08950288199",
+            'foundation_head_name' => fake()->name(),
+            'foundation_head_tlpn' => "08950288199",
+            'foundation_head_email' => fake()->email(),
+            'name_pic' => fake()->name(),
+            'email_pic' => fake()->email()
 
+        ])->assertRedirect(route('schools.index'));
     $this->assertDatabaseHas('schools', [
-        'name' => $name
+        'school_name' => $name
     ]);
 })->with('sempoa_staff');
 
@@ -208,8 +258,8 @@ test('can delete School as Super Admin', function () {
     $school = School::factory()->create();
 
     $this->actingAs($this->superAdmin)
-    ->delete(route('schools.destroy', $school->getKey()))
-    ->assertOk();
+        ->delete(route('schools.destroy', $school->getKey()))
+        ->assertOk();
 
     $this->assertSoftDeleted($school);
 });
@@ -262,7 +312,7 @@ test('can not create school as School Staff', function (User $user) {
 it('forbid guest to view School page', function () {
     $this
         ->get(route('schools.index'))
-        ->assertNotFound();
+        ->assertRedirect(route('login'));
 });
 
 test('can not render School index page as School Staff', function (User $user) {
@@ -280,15 +330,15 @@ test('can not render School edit page as School Staff', function (User $user) {
         'school_id' => $school->getKey()
     ]);
     $_staff = Staff::factory()->create([
-            'school_id' => $school->getKey(),
-            'user_id' => $_user->getKey()
-        ]);
+        'school_id' => $school->getKey(),
+        'user_id' => $_user->getKey()
+    ]);
     $school->staff_id = $_staff->getKey();
     $school->save();
 
     $response = $this
-    ->actingAs($user)
-    ->get(route('schools.edit', $school->getKey()));
+        ->actingAs($user)
+        ->get(route('schools.edit', $school->getKey()));
 
     $response->assertNotFound();
 })->with('school_staff');
