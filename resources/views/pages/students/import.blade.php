@@ -19,6 +19,10 @@
         {{-- Content --}}
         <div class="card">
             <div class="card-body">
+                <div class="alert alert-info">
+                    <a href="{{ asset('excel_import_template/students_import.xlsx') }}">Download</a> Format Import Excel
+                    Siswa
+                </div>
                 <form action="{{ route('students.importStudentByExcel') }}" enctype="multipart/form-data" method="post">
                     @csrf
 
