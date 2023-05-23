@@ -73,7 +73,7 @@ it('requires field the school information', function () {
                 'email' => '',
                 'phone' => '',
                 'foundation_head_name' => fake()->name(),
-                'foundation_head_tlpn' => fake()->phoneNumber(),
+                'foundation_head_tlpn' => "08950288199",
                 'foundation_head_email' => fake()->email(),
                 'name_pic' => fake()->name(),
                 'email_pic' => fake()->email()
@@ -105,7 +105,7 @@ it('requires field the school foundation', function () {
                 'address' => fake()->address(),
                 'grade' => fake()->randomElement(School::GRADE_SCHOOL),
                 'email' => fake()->email(),
-                'phone' => fake()->phoneNumber(),
+                'phone' => "08950288199",
                 'foundation_head_name' => '',
                 'foundation_head_tlpn' => '',
                 'foundation_head_email' => '',
@@ -134,9 +134,9 @@ it('requires field the school pic', function () {
                 'address' => fake()->address(),
                 'grade' => fake()->randomElement(School::GRADE_SCHOOL),
                 'email' => fake()->email(),
-                'phone' => fake()->phoneNumber(),
+                'phone' => "08950288199",
                 'foundation_head_name' => fake()->name(),
-                'foundation_head_tlpn' => fake()->phoneNumber(),
+                'foundation_head_tlpn' => "08950288199",
                 'foundation_head_email' => fake()->email(),
                 'name_pic' => '',
                 'email_pic' => ''
@@ -152,7 +152,7 @@ it('requires field the school pic', function () {
 
 
 
-test('can create new School', function () {
+test('C R E A T E school', function () {
     $data = [
         'school_name' => fake()->name(),
         'province' => fake()->city(),
@@ -161,20 +161,20 @@ test('can create new School', function () {
         'address' => fake()->address(),
         'grade' => fake()->randomElement(School::GRADE_SCHOOL),
         'email' => fake()->email(),
-        'phone' => fake()->phoneNumber(),
+        'phone' => "08950288199",
         'foundation_head_name' => fake()->name(),
-        'foundation_head_tlpn' => fake()->phoneNumber(),
+        'foundation_head_tlpn' => "08950288199",
         'foundation_head_email' => fake()->email(),
         'name_pic' => fake()->name(),
         'email_pic' => fake()->email()
     ];
 
+
     $this->actingAs($this->superAdmin)
         ->post(route('schools.store'), $data)
         ->assertRedirect(route('schools.index'));
 
-    dd(session());
-    $this->assertDatabaseHas('schools', $data);
+    $this->assertDatabaseHas('schools', collect($data)->except(['name_pic', 'email_pic', 'foundation_head_email'])->toArray());
 
     $this->assertDatabaseHas('staff', [
         'name' => $data['name_pic'],
@@ -229,15 +229,27 @@ test('can edit school as Sempoa Staff', function (User $user) {
     $school->staff_id = $_staff->getKey();
     $school->save();
 
-    $name = "Yayasan Edited";
+    $name = "Sekolah Editing";
 
     $this->actingAs($user)
         ->put(route('schools.update', $school->getKey()), [
-            'name' => $name
-        ])->assertRedirect(route('schools.index'));
+            'school_name' => $name,
+            'province' => fake()->city(),
+            'city' => fake()->city(),
+            'postal_code' => fake()->postcode(),
+            'address' => fake()->address(),
+            'grade' => fake()->randomElement(School::GRADE_SCHOOL),
+            'email' => fake()->email(),
+            'phone' => "08950288199",
+            'foundation_head_name' => fake()->name(),
+            'foundation_head_tlpn' => "08950288199",
+            'foundation_head_email' => fake()->email(),
+            'name_pic' => fake()->name(),
+            'email_pic' => fake()->email()
 
+        ])->assertRedirect(route('schools.index'));
     $this->assertDatabaseHas('schools', [
-        'name' => $name
+        'school_name' => $name
     ]);
 })->with('sempoa_staff');
 
@@ -300,7 +312,7 @@ test('can not create school as School Staff', function (User $user) {
 it('forbid guest to view School page', function () {
     $this
         ->get(route('schools.index'))
-        ->assertNotFound();
+        ->assertRedirect(route('login'));
 });
 
 test('can not render School index page as School Staff', function (User $user) {

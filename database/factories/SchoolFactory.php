@@ -18,7 +18,16 @@ class SchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            "school_name" => fake()->name(),
+            'school_name' => fake()->name(),
+            'province' => fake()->country(),
+            'city' => fake()->city(),
+            'postal_code' => fake()->postcode(),
+            'address' => fake()->address(),
+            'grade' => fake()->randomElement(School::GRADE_SCHOOL),
+            'email' => fake()->email(),
+            'phone' => '12345678910',
+            'foundation_head_name' => fake()->name(),
+            'foundation_head_tlpn' => "12345678910",
         ];
     }
 }
