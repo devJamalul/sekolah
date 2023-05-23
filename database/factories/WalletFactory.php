@@ -21,12 +21,10 @@ class WalletFactory extends Factory
      */
     public function definition(): array
     {
-        $randomNumber = rand(1, 2000);
-
         return [
-            'school_id' => session('school_id') ?? 2,
+            'school_id' => session('school_id') ?? 1,
             'name' => fake()->word(),
-            'init_value' => $randomNumber
+            'init_value' => fake()->randomNumber(9, true)
         ];
     }
 }
