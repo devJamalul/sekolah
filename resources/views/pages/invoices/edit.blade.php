@@ -16,7 +16,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('invoices.update', $invoice->getKey()) }}" method="post">
+                    <form action="{{ route('invoices.update', $invoice->getKey()) }}" method="post" id="invoice">
                         @csrf
                         @method('PUT')
 
@@ -79,9 +79,86 @@
 
 
                         <div class="btn-group float-right mt-2">
-                            <button type="submit" class="btn btn-primary ">Lanjutkan</button>
+                            <button type="submit" class="btn btn-primary ">Simpan</button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-primary text-light">
+                    Baris Invoice
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang<span class="text-small text-danger">*</span></th>
+                                <th style="width: 30%">Harga<span class="text-small text-danger">*</span></th>
+                                <th style="width: 20%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <form action="{{ route('invoice-details.store', $invoice->getKey()) }}" method="post">
+                                @csrf
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control @error('item_name') is-invalid @enderror"
+                                            name="item_name" id="item_name" value="{{ old('item_name') }}"
+                                            autocomplete="off" tabindex="5">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                            class="form-control harga @error('price') is-invalid @enderror" name="price"
+                                            id="price" value="{{ old('price') }}" autocomplete="off" tabindex="6">
+                                    </td>
+                                    <td>
+                                        <button name="tambah" id="tambah" class="btn btn-primary btn-sm"
+                                            type="submit">Tambah</button>
+                                    </td>
+                                </tr>
+                            </form>
+                            @php
+                                $index = 7;
+                            @endphp
+                            @foreach ($invoice->invoice_details as $key => $item)
+                                <input type="hidden" name="invoice_detail_id[{{ $key }}]"
+                                    value="{{ $item->getKey() }}" form="invoice">
+                                <tr>
+                                    <td>
+                                        <input type="text"
+                                            class="form-control @error('array_item_name.' . $key) is-invalid @enderror"
+                                            name="array_item_name[{{ $key }}]"
+                                            id="array_item_name[{{ $key }}]"
+                                            value="{{ old('array_item_name.' . $key, $item->item_name) }}"
+                                            autocomplete="off" form="invoice" tabindex="{{ $index++ }}" required>
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                            class="form-control harga @error('array_price.' . $key) is-invalid @enderror"
+                                            name="array_price[{{ $key }}]"
+                                            id="array_price[{{ $key }}]"
+                                            value="{{ old('array_price.' . $key, $item->price) }}" autocomplete="off"
+                                            form="invoice" tabindex="{{ $index++ }}" required>
+                                    </td>
+                                    <td>
+                                        <form
+                                            action="{{ route('invoice-details.destroy', [
+                                                'invoice' => $invoice->getKey(),
+                                                'invoice_detail' => $item->getKey(),
+                                            ]) }}"
+                                            method="post">
+                                            @csrf @method('DELETE')
+                                            <input type="hidden" name="invoice_detail_id"
+                                                value="{{ $item->getKey() }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <input type="hidden" name="array_max" value="{{ $key }}" form="invoice">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -90,3 +167,11 @@
     </div>
     {{-- END ROW --}}
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            formatAngka('.harga')
+        });
+    </script>
+@endpush

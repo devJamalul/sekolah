@@ -5,15 +5,27 @@ use App\Models\Staff;
 use App\Models\User;
 
 beforeEach(function () {
+    session(['school_id' => 1]);
+
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
     $this->opsAdmin = User::role(User::ROLE_OPS_ADMIN)->first();
-    $this->adminYayasan = User::role(User::ROLE_ADMIN_YAYASAN)->first();
-    $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->first();
-    $this->bendahara = User::role(User::ROLE_BENDAHARA)->first();
-    $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->first();
-    $this->kepalaSekolah = User::role(User::ROLE_KEPALA_SEKOLAH)->first();
-    $this->siswa = User::role(User::ROLE_SISWA)->first();
-    $this->alumni = User::role(User::ROLE_ALUMNI)->first();
+
+    $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->bendahara = User::role(User::ROLE_BENDAHARA)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
+    $this->kepalaSekolah = User::role(User::ROLE_KEPALA_SEKOLAH)->firstWhere([
+        'school_id' => session('school_id')
+    ]);
+
     $this->setupFaker();
 });
 
@@ -39,15 +51,13 @@ it('has Super Admin & Ops Admin users', function () {
 
 // Create
 
-test('can render School create page as Sempoa Staff', function (User $user) {
+test('can render School create page as Super Admin', function () {
     $response = $this
-        ->actingAs($user)
+        ->actingAs($this->superAdmin)
         ->get(route('schools.create'));
 
     $response->assertOk();
-})->with([
-    User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin]
-]);
+});
 
 it('requires field the school information', function () {
     $name = $this->faker()->company();

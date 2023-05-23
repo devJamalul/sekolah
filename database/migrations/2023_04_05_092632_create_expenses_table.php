@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double('price')->default(0);
             $table->text('note')->nullable();
             $table->enum('status', ["approved", "pending", "rejected"])->nullable();
+            $table->text('reject_reason')->nullable();
             $table->boolean('is_sempoa_processed')->nullable()->default(false);
             $table->foreignIdFor(User::class, 'request_by')->nullable();
             $table->foreignIdFor(User::class, 'approval_by')->nullable();

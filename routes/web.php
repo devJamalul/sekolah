@@ -152,7 +152,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::get('export-report-school-finances', [ReportSchoolFinancesController::class, 'export'])->name('report-school-finances.export');
 
     // Invoice
-    Route::resource('invoices', InvoiceController::class);
+    Route::resource('invoices', InvoiceController::class)->except('show');
     Route::get('invoices/{invoice}/publish', PublishInvoiceController::class)->name('invoices.publish');
     Route::get('invoices/{invoice}/pay', [PayInvoiceController::class, 'index'])->name('invoices.pay');
     Route::post('invoices/{invoice}/pay', [PayInvoiceController::class, 'store'])->name('invoices.payment')->middleware('password.confirm');
@@ -161,8 +161,6 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::controller(InvoiceDetailController::class)->prefix('invoices')->name('invoice-details.')->group(function () {
         Route::get('/{invoice}/detail', 'index')->name('index');
         Route::post('/{invoice}/detail', 'store')->name('store');
-        Route::get('/{invoice}/detail/{invoice_detail}', 'edit')->name('edit');
-        Route::put('/{invoice}/detail/{invoice_detail}', 'update')->name('update');
         Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
     });
     Route::get('reports/invoices', [InvoiceReportController::class, 'index'])->name('invoices.report');

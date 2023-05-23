@@ -38,7 +38,7 @@ class ExpenseDetailController extends Controller
         try {
 
             $wallet         = Wallet::find($request->wallet_id);
-            $danaBOS        = Wallet::danaBos()->first();
+            // $danaBOS        = Wallet::danaBos()->first();
 
             $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
                 $q->where('status', Expense::STATUS_PENDING);
@@ -46,32 +46,26 @@ class ExpenseDetailController extends Controller
                 ->where('wallet_id', $request->wallet_id)
                 ->sum(DB::raw('price * quantity'));
 
-            $totalExpensePendingDanaBos    = ExpenseDetail::whereHas('expense', function ($q) {
-                $q->where('status', Expense::STATUS_PENDING);
-            })
-                ->where('wallet_id', $danaBOS->id)
-                ->sum(DB::raw('price * quantity'));
-
-            info("totalExpensePending: $totalExpensePending");
+            // $totalExpensePendingDanaBos    = ExpenseDetail::whereHas('expense', function ($q) {
+            //     $q->where('status', Expense::STATUS_PENDING);
+            // })
+            //     ->where('wallet_id', $danaBOS->id)
+            //     ->sum(DB::raw('price * quantity'));
 
             $walletBalance  = $wallet->balance - $totalExpensePending;
-            $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
-
-            info("walletBalance: $walletBalance");
-            info("walletBos: $walletBos");
-
+            // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
 
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $request->expense_id;
 
             if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
                 $expenseDetail->wallet_id   = $request->wallet_id;
-            } else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
-                $expenseDetail->wallet_id   = $danaBOS->id;
-            } else {
-                $walletName = Wallet::find($request->wallet_id);
-
-                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet ' . $walletName->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            } 
+            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
+            //     $expenseDetail->wallet_id   = $danaBOS->id;
+            // } 
+            else {
+                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
 
             $expenseDetail->item_name   = $request->item_name;

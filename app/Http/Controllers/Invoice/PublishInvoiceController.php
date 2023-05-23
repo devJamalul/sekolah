@@ -39,7 +39,7 @@ class PublishInvoiceController extends Controller
             $invoice->save();
             DB::commit();
             if ($is_sent) {
-                // to-do kirim email
+                // todo: kirim email di App\Http\Controllers\Invoice\PublishInvoiceController
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
