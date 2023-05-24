@@ -22,7 +22,6 @@
                 @method('PUT')
                 @csrf
 
-                {{ session('errors') }}
 
                 {{-- Informasi Siswa Accordion --}}
                 <div class="card">
@@ -573,8 +572,8 @@
 
                                         <div id="file_photo_container">
                                             @if ($student->file_photo)
-                                            <img src="{{ $student->file_photo }}" id="file_photo_preview"
-                                                class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
+                                                <img src="{{ $student->file_photo }}" id="file_photo_preview"
+                                                    class="img-thumbnail img-fluid col-md-2" alt="Student's Photo">
                                             @endif
                                         </div>
 
@@ -603,10 +602,10 @@
 
                                         <div id="file_birth_certificate_container">
                                             @if ($student->file_birth_certificate)
-                                            <img src="{{ $student->file_birth_certificate }}"
-                                                id="file_birth_certificate_preview"
-                                                class="img-thumbnail img-fluid col-md-3"
-                                                alt="Student's Birth Certificate">
+                                                <img src="{{ $student->file_birth_certificate }}"
+                                                    id="file_birth_certificate_preview"
+                                                    class="img-thumbnail img-fluid col-md-3"
+                                                    alt="Student's Birth Certificate">
                                             @endif
                                         </div>
 
@@ -635,8 +634,8 @@
 
                                         <div id="file_family_card_container">
                                             @if ($student->file_family_card)
-                                            <img src="{{ $student->file_family_card }}" id="file_family_card_preview"
-                                                class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
+                                                <img src="{{ $student->file_family_card }}" id="file_family_card_preview"
+                                                    class="img-thumbnail img-fluid col-md-3" alt="Student's Family Card">
                                             @endif
                                         </div>
 
@@ -734,7 +733,9 @@
                 // Append element if there's no image
                 if (!document.getElementById("file_birth_certificate_preview")) {
                     $('#file_birth_certificate_container')
-                        .append('<img id="file_birth_certificate_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">')
+                        .append(
+                            '<img id="file_birth_certificate_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">'
+                            )
                     file = document.getElementById("file_birth_certificate")?.files?.[0]
                 }
 
@@ -750,7 +751,9 @@
                 // Append element if there's no image
                 if (!document.getElementById("file_photo_preview")) {
                     $('#file_photo_container')
-                        .append('<img id="file_photo_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">')
+                        .append(
+                            '<img id="file_photo_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">'
+                            )
                     file = document.getElementById("file_photo")?.files?.[0]
                 }
 
@@ -766,7 +769,9 @@
                 // Append element if there's no image
                 if (!document.getElementById("file_family_card_preview")) {
                     $('#file_family_card_container')
-                        .append('<img id="file_family_card_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">')
+                        .append(
+                            '<img id="file_family_card_preview" class="img-thumbnail img-fluid col-md-3" alt="Student Birth Certificate">'
+                            )
                     file = document.getElementById("file_family_card")?.files?.[0]
                 }
 
