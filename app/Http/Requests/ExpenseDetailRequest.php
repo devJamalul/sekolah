@@ -32,7 +32,6 @@ class ExpenseDetailRequest extends FormRequest
     public function postMethod(): array
     {
         return [
-            'expense_id' => 'required|exists:expenses,id',
             'wallet_id' => 'required|exists:wallets,id',
             'item_name' => 'required',
             'quantity' => 'required|min:0',

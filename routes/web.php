@@ -125,7 +125,12 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     // Expense
     Route::resource('expense', ExpenseController::class);
     Route::get('expense/{expense}/show-detail', [ExpenseController::class, 'ShowDetail'])->name('expense.show-detail');
-    Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
+    // Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
+    Route::controller(ExpenseDetailController::class)->prefix('expense')->name('expense-detail.')->group(function () {
+        Route::get('/{expense}/detail', 'index')->name('index');
+        Route::post('/{expense}/detail', 'store')->name('store');
+        Route::delete('/{expense}/detail/{expense_detail}', 'destroy')->name('destroy');
+    });
     Route::resource("expense-report", ExpenseReportController::class)->only(['index', 'store']);
 
     //staff

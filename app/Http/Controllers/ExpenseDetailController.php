@@ -31,7 +31,7 @@ class ExpenseDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ExpenseDetailRequest $request)
+    public function store(ExpenseDetailRequest $request, Expense $expense)
     {
         DB::beginTransaction();
 
@@ -56,7 +56,7 @@ class ExpenseDetailController extends Controller
             // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
 
             $expenseDetail              = new ExpenseDetail();
-            $expenseDetail->expense_id  = $request->expense_id;
+            $expenseDetail->expense_id  = $expense->getKey();
 
             if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
                 $expenseDetail->wallet_id   = $request->wallet_id;
@@ -75,16 +75,17 @@ class ExpenseDetailController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
+            dd($th);
             Log::error($th->getMessage(), [
                 'action' => 'Store expense detail',
                 'user' => auth()->user()->name,
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror Simpan Detail Pengeluaran!');
+            return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror Simpan Detail Pengeluaran!');
         }
 
-        return redirect()->route('expense.show', $request->expense_id)->withToastSuccess('Berhasil Simpan Detail Pengeluaran!');
+        return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Simpan Detail Pengeluaran!');
     }
 
     /**

@@ -32,7 +32,8 @@ class ExpenseController extends Controller
         $users = User::where('school_id', session('school_id'))->whereHas('roles', function($q){
             $q->whereIn('name',['admin sekolah','admin yayasan','tata usaha','bendahara','kepala sekolah']);
         })->get();
-        return view('pages.expense.create', compact('title', 'users', 'expenseNumber'));
+        $wallets = Wallet::where('school_id', session('school_id'))->get();
+        return view('pages.expense.create', compact('title', 'users', 'expenseNumber', 'wallets'));
     }
 
     /**
@@ -53,14 +54,22 @@ class ExpenseController extends Controller
             $expense->request_by        = Auth::id();
             $expense->save();
 
+            $expenseDetail              = new ExpenseDetail();
+            $expenseDetail->expense_id  = $expense->getKey();
+            $expenseDetail->wallet_id   = $request->wallet_id;
+            $expenseDetail->item_name   = $request->item_name;
+            $expenseDetail->quantity    = $request->quantity;
+            $expenseDetail->price       = $request->price;
+            $expenseDetail->save();
+
             DB::commit();
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('expense.index')->withToastError('Eror Simpan Pengeluaran Biaya!');
+            return redirect()->route('expense.create')->withToastError('Eror Simpan Pengeluaran Biaya!');
         }
 
-        return redirect()->route('expense.show', $expense->id)->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
+        return redirect()->route('expense.edit', $expense->id)->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
     }
 
     /**
@@ -69,7 +78,6 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         $title = "Tambah Detail Pengeluaran Biaya";
-        $wallets = Wallet::where('school_id', session('school_id'))->get();
         $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
         return view('pages.expense.detail.create', compact('title', 'wallets', 'expenseDetails', 'expense'));
     }
@@ -83,7 +91,8 @@ class ExpenseController extends Controller
         $users = User::where('school_id', session('school_id'))->whereHas('roles', function($q){
             $q->whereIn('name',['admin sekolah','admin yayasan','tata usaha','bendahara','kepala sekolah']);
         })->get();
-        return view('pages.expense.edit', compact('expense', 'title', 'users'));
+        $wallets = Wallet::where('school_id', session('school_id'))->get();
+        return view('pages.expense.edit', compact('expense', 'title', 'users', 'wallets'));
     }
 
     /**
@@ -91,6 +100,12 @@ class ExpenseController extends Controller
      */
     public function update(ExpenseRequest $request, Expense $expense)
     {
+        
+        // cek status dan kembalikan jika statusnya bukan DRAFT
+        if ($expense->approval_by != Null)
+            return to_route('expense.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
+
+
         DB::beginTransaction();
 
         try {
@@ -101,9 +116,26 @@ class ExpenseController extends Controller
             $expense->request_by        = Auth::id();
             $expense->save();
 
+            $arrayMax = $request->array_max;
+            foreach(range(0, $arrayMax) as $key => $item){
+                $expenseDetail = ExpenseDetail::updateOrCreate(
+                    [
+                        'id' => $request->expense_detail_id[$key]
+                    ],
+                    [
+                        'wallet_id' => $request->array_wallet_id[$key],
+                        'item_name' => $request->array_item_name[$key],
+                        'quantity' => $request->array_quantity[$key],
+                        'price' => $request->array_price[$key]
+                    ]
+                );
+                $expenseDetail->push();
+            }
+
             DB::commit();
 
         } catch (\Throwable $th) {
+            dd($th);
             return redirect()->route('expense.index')->withToastError('Eror Simpan Pengeluaran Biaya!');
         }
 
