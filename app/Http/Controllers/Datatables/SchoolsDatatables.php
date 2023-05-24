@@ -28,8 +28,8 @@ class SchoolsDatatables extends Controller
             ->editColumn('school_name', function (School $row) {
                 return "<a href='" . route('schools.show', $row->getKey()) . "'>" . Str::of($row->school_name)->limit(20, '...') . "</a>";
             })
-            ->addColumn('pic_name', fn ($row) => $row->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->name ?? '-')
-            ->addColumn('pic_email', fn ($row) => $row->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->email ?? '-')
+            ->addColumn('pic_name', fn ($row) => $row->staf()->withoutGlobalScopes()->first()?->user()->withoutGlobalScopes()->first()->name ?? '-')
+            ->addColumn('pic_email', fn ($row) => $row->staf()->withoutGlobalScopes()->first()?->user()->withoutGlobalScopes()->first()->email ?? '-')
             ->editColumn('induk', function ($row) {
                 return $row?->parent?->school_name ?? '-';
             })

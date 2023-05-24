@@ -25,7 +25,7 @@ class InvoiceFactory extends Factory
             'note' => fake()->sentence(),
             'payment_status' => Invoice::STATUS_PENDING,
             'is_posted' => Invoice::POSTED_DRAFT,
-            'is_original' => true
+            'is_original' => true,
         ];
     }
 }
