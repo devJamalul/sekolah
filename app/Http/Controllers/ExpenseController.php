@@ -158,6 +158,7 @@ class ExpenseController extends Controller
                     $q->where('status', Expense::STATUS_PENDING);
                 })
                     ->where('wallet_id', $request->wallet_id)
+                    ->where('id', '<>', $request->expense_detail_id[$key])
                     ->sum(DB::raw('price * quantity'));
                     
             $walletBalance  = $wallet->balance - $totalExpensePending;
