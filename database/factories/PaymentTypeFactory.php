@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,9 @@ class PaymentTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'school_id' => 1,
-            'name' => fake()->randomElement(['manual', 'cash', 'qris', 'bca', 'bni'])
+            'school_id' => session('school_id') ?? 1,
+            'name' => fake()->randomElement(['manual', 'cash', 'qris', 'bca', 'bni']),
+            'wallet_id' => Wallet::factory()
         ];
     }
 }
