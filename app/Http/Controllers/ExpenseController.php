@@ -78,6 +78,7 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         $title = "Tambah Detail Pengeluaran Biaya";
+        $wallets = Wallet::where('school_id', session('school_id'))->get();
         $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
         return view('pages.expense.detail.create', compact('title', 'wallets', 'expenseDetails', 'expense'));
     }
