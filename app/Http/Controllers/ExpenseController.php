@@ -166,7 +166,7 @@ class ExpenseController extends Controller
             $expenseDetail              = ExpenseDetail::find($request->expense_detail_id[$key]);
             $expenseDetail->expense_id  = $expense->getKey();
 
-            if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
+            if ((formatAngka($request->array_quantity[$key]) * formatAngka($request->array_price[$key])) <= $walletBalance) {
                 $expenseDetail->wallet_id   = $request->wallet_id;
             } 
             // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
