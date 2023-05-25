@@ -57,9 +57,9 @@ class ExpenseController extends Controller
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $expense->getKey();
             $expenseDetail->wallet_id   = $request->wallet_id;
-            $expenseDetail->item_name   = $request->formatAngka('item_name');
-            $expenseDetail->quantity    = $request->formatAngka('quantity');
-            $expenseDetail->price       = $request->price;
+            $expenseDetail->item_name   = $request->item_name;
+            $expenseDetail->quantity    = formatAngka($request->quantity);
+            $expenseDetail->price       = formatAngka($request->price);
             $expenseDetail->save();
 
             DB::commit();
