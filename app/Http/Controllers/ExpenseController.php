@@ -180,7 +180,7 @@ class ExpenseController extends Controller
     {
 
         try {
-            if($expense->expense_detail){
+            if($expense->expense_details){
                 $expenseDetails = ExpenseDetail::where('expense_id', $expense->id)->get();
                 foreach ($expenseDetails as $key => $expenseDetail) {
                     $expenseDetail->delete();
