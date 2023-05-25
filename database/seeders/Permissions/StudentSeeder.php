@@ -105,6 +105,6 @@ class StudentSeeder extends Seeder
             'name' => $roles['report'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $kepala_sekolah]);
     }
 }
