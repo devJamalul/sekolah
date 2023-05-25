@@ -156,7 +156,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            <input type="hidden" name="array_max" value="{{ $key }}" form="invoice">
+                            <input type="hidden" name="array_max" value="{{ $key ?? 0}}" form="invoice">
                         </tbody>
                     </table>
                 </div>
