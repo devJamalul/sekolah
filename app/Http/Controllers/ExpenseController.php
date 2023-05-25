@@ -151,13 +151,13 @@ class ExpenseController extends Controller
 
             $arrayMax = $request->array_max;
             foreach(range(0, $arrayMax) as $key => $item){
-                $wallet         = Wallet::find($request->wallet_id);
+                $wallet         = Wallet::find($request->array_wallet_id[$key]);
                 // $danaBOS        = Wallet::danaBos()->first();
     
                 $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
                     $q->where('status', Expense::STATUS_PENDING);
                 })
-                    ->where('wallet_id', $request->wallet_id)
+                    ->where('wallet_id', $request->array_wallet_id[$key])
                     ->where('id', '<>', $request->expense_detail_id[$key])
                     ->sum(DB::raw('price * quantity'));
                     
@@ -166,8 +166,8 @@ class ExpenseController extends Controller
             $expenseDetail              = ExpenseDetail::find($request->expense_detail_id[$key]);
             $expenseDetail->expense_id  = $expense->getKey();
 
-            if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
-                $expenseDetail->wallet_id   = $request->wallet_id;
+            if ((formatAngka($request->array_quantity[$key]) * formatAngka($request->array_price[$key])) <= $walletBalance) {
+                $expenseDetail->wallet_id   = $request->array_wallet_id[$key];
             } 
             // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
             //     $expenseDetail->wallet_id   = $danaBOS->id;
