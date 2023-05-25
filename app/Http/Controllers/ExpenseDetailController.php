@@ -138,7 +138,7 @@ class ExpenseDetailController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ExpenseDetail $expenseDetail)
+    public function destroy(Expense $expense, ExpenseDetail $expenseDetail)
     {
         DB::beginTransaction();
 
@@ -147,9 +147,11 @@ class ExpenseDetailController extends Controller
             $expenseDetail->delete();
             DB::commit();
 
-            return response()->json([
-                'msg' => 'Berhasil Hapus Detail Pengeluaran Biaya!'
-            ], 200);
+            // return response()->json([
+            //     'msg' => 'Berhasil Hapus Detail Pengeluaran Biaya!'
+            // ], 200);
+            
+        return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Simpan Detail Pengeluaran!');
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
