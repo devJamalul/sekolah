@@ -120,9 +120,13 @@ class InvoiceController extends Controller
      */
     public function update(Request $request, Invoice $invoice)
     {
-        $request->merge([
-            'array_price' => formatAngka($request->array_price)
-        ]);
+        if ($request->has('array_price')) {
+            foreach($request->array_price as $key => $price) {
+                $request->merge([
+                    'array_price.' . $key => formatAngka($price)
+                ]);
+            }
+        }
 
         Validator::make($request->all(), [
             'invoice_number'      => [
