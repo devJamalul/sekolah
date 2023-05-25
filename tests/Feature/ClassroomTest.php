@@ -44,7 +44,7 @@ it('has Super Admin & Ops Admin users', function () {
 it('forbid guest to view Classroom page', function () {
     $this
         ->get(route('classroom.index'))
-        ->assertNotFound();
+        ->assertRedirect('login');
 });
 
 // Render Create
@@ -65,7 +65,7 @@ it('can create new Classroom', function (User $user) {
     $academicYear = AcademicYear::factory()->create();
     $grade = Grade::factory()->create();
     $name = $this->faker()->word();
-    
+
     $this->actingAs($user)
         ->post(route('classroom.store'), [
             'school_id' => $school->getKey(),
@@ -74,40 +74,39 @@ it('can create new Classroom', function (User $user) {
             'name' => $name
         ])
         ->assertRedirect(route('classroom.index'));
-    
+
     $this->assertDatabaseHas('classrooms', [
         'name' => $name
-    ]); 
+    ]);
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
 ]);
 
-// Render Index 
+// Render Index
 it('can render Classroom index page', function (User $user) {
     $response = $this->actingAs($user)
-                    ->get(route('classroom.index'));
+        ->get(route('classroom.index'));
 
     $response->assertOk();
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
 ]);
 
-// Render Update 
+// Render Update
 it('can render Classroom edit page', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $academicYear = AcademicYear::factory()->create(['school_id' => $school->getKey()]);
     $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
     $name = $this->faker()->word();
-    
+
     $classroom = $school->classrooms()->create([
         'school_id' => $school->getKey(),
         'academic_year_id' => $academicYear->getKey(),
@@ -124,7 +123,7 @@ it('can render Classroom edit page', function (User $user) {
     ]);
 
     $response = $this->actingAs($user)
-                    ->get(route('classroom.edit', $classroom->getKey()));
+        ->get(route('classroom.edit', $classroom->getKey()));
 
     $response->assertOk();
 })->with([
@@ -146,12 +145,12 @@ it('can edit classroom', function (User $user) {
         'name' => $name
     ]);
     $this->actingAs($user)
-            ->put(route('classroom.update', $classroom->getKey()),[
-                'school_id' => $classroom->school_id,
-                'academic_year_id' => $classroom->academic_year_id,
-                'grade_id' => $classroom->grade_id,
-                'name' => $classroom->name,
-            ])
+        ->put(route('classroom.update', $classroom->getKey()), [
+            'school_id' => $classroom->school_id,
+            'academic_year_id' => $classroom->academic_year_id,
+            'grade_id' => $classroom->grade_id,
+            'name' => $classroom->name,
+        ])
         ->assertRedirect(route('classroom.index'));
     $this->assertDatabaseHas('classrooms', [
         'name' => $classroom->name
@@ -189,11 +188,10 @@ it('can delete Classroom', function (User $user) {
 // Negation CRUD
 it('can not render Classroom create page', function (User $user) {
     $response = $this->actingAs($user)
-                    ->get(route('classroom.create'));
+        ->get(route('classroom.create'));
 
     $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
@@ -203,7 +201,6 @@ it('can not create new Classroom with Invalid requires', function (User $user) {
     $this->actingAs($user)
         ->post(route('classroom.store'))
         ->assertSessionHasErrors(['academic_year_id', 'grade_id', 'name']);
-        
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
@@ -223,11 +220,10 @@ it('can not render Classroom edit page', function (User $user) {
     ]);
 
     $response = $this->actingAs($user)
-                    ->get(route('classroom.edit', $classroom->getKey()));
+        ->get(route('classroom.edit', $classroom->getKey()));
 
     $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
@@ -252,7 +248,7 @@ it('can not edit Classroom with Invalid requires', function (User $user) {
             'academic_year_id' => '',
             'grade_id' => '',
             'name' => ''
-        ])  
+        ])
         ->assertSessionHasErrors(['academic_year_id', 'grade_id', 'name']);;
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
@@ -266,12 +262,10 @@ it('can not delete Classroom', function (User $user) {
     $classroom = $school->classrooms()->create();
 
     $response = $this->actingAs($user)
-                    ->delete(route('classroom.destroy', $classroom->getKey()));
-    
-    $response->assertNotFound();
+        ->delete(route('classroom.destroy', $classroom->getKey()));
 
+    $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
