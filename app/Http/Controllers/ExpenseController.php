@@ -57,8 +57,8 @@ class ExpenseController extends Controller
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $expense->getKey();
             $expenseDetail->wallet_id   = $request->wallet_id;
-            $expenseDetail->item_name   = $request->item_name;
-            $expenseDetail->quantity    = $request->quantity;
+            $expenseDetail->item_name   = $request->formatAngka('item_name');
+            $expenseDetail->quantity    = $request->formatAngka('quantity');
             $expenseDetail->price       = $request->price;
             $expenseDetail->save();
 
@@ -125,8 +125,8 @@ class ExpenseController extends Controller
                     [
                         'wallet_id' => $request->array_wallet_id[$key],
                         'item_name' => $request->array_item_name[$key],
-                        'quantity' => $request->array_quantity[$key],
-                        'price' => $request->array_price[$key]
+                        'quantity' => formatAngka($request->array_quantity[$key]),
+                        'price' => formatAngka($request->array_price[$key])
                     ]
                 );
                 $expenseDetail->push();
