@@ -97,7 +97,7 @@
                                              tabindex="5">
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control quantity @error('quantity') is-invalid @enderror"
+                                        <input type="text" class="form-control harga @error('quantity') is-invalid @enderror"
                                             name="quantity" id="quantity" value="{{ old('quantity') }}" autocomplete="off"
                                              tabindex="6" pattern="[0-9]+">
                                     </td>
@@ -144,14 +144,14 @@
                                             form="expense" tabindex="{{ $index++ }}" required>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control quantity @error('array_quantity.' . $key) is-invalid @enderror"
+                                        <input type="text" class="form-control harga @error('array_quantity.' . $key) is-invalid @enderror"
                                         name="array_quantity[{{ $key }}]" 
                                         id="array_quantity[{{ $key }}]" 
                                         value="{{ old('array_quantity.'. $key, $item->quantity) }}" autocomplete="off"
                                         form="expense" tabindex="{{ $index++ }}" required pattern="[0-9]+">
                                     </td>
                                     <td>
-                                       <input type="text" class="form-control @error('array_price.' . $key) is-invalid @enderror"
+                                       <input type="text" class="form-control harga @error('array_price.' . $key) is-invalid @enderror"
                                             name="array_price[{{ $key }}]" 
                                             id="array_price[{{ $key }}]" 
                                             value="{{ old('array_price.'. $key, $item->price) }}" autocomplete="off"
@@ -172,7 +172,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            <input type="hidden" name="array_max" value="{{ $key }}" form="expense">
+                            <input type="hidden" name="array_max" value="{{ $key ?? 0 }}" form="expense">
                         </tbody>
                     </table>
                 </div>

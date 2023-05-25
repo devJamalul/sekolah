@@ -53,14 +53,45 @@ class ExpenseController extends Controller
             $expense->note              = $request->note;
             $expense->request_by        = Auth::id();
             $expense->save();
+            
+            $wallet         = Wallet::find($request->wallet_id);
+            // $danaBOS        = Wallet::danaBos()->first();
+
+            $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
+                $q->where('status', Expense::STATUS_PENDING);
+            })
+                ->where('wallet_id', $request->wallet_id)
+                ->sum(DB::raw('price * quantity'));
+
+            // $totalExpensePendingDanaBos    = ExpenseDetail::whereHas('expense', function ($q) {
+            //     $q->where('status', Expense::STATUS_PENDING);
+            // })
+            //     ->where('wallet_id', $danaBOS->id)
+            //     ->sum(DB::raw('price * quantity'));
+
+            $walletBalance  = $wallet->balance - $totalExpensePending;
+            // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
 
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $expense->getKey();
-            $expenseDetail->wallet_id   = $request->wallet_id;
+
+            if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
+                $expenseDetail->wallet_id   = $request->wallet_id;
+            } 
+            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
+            //     $expenseDetail->wallet_id   = $danaBOS->id;
+            // } 
+            else {
+                DB::rollBack();
+                return redirect()->route('expense.create')->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            }
+
             $expenseDetail->item_name   = $request->item_name;
-            $expenseDetail->quantity    = $request->quantity;
-            $expenseDetail->price       = $request->price;
+            $expenseDetail->quantity    = formatAngka($request->quantity);
+            $expenseDetail->price       = formatAngka($request->price);
             $expenseDetail->save();
+
+
 
             DB::commit();
 
@@ -78,6 +109,7 @@ class ExpenseController extends Controller
     public function show(Expense $expense)
     {
         $title = "Tambah Detail Pengeluaran Biaya";
+        $wallets = Wallet::where('school_id', session('school_id'))->get();
         $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
         return view('pages.expense.detail.create', compact('title', 'wallets', 'expenseDetails', 'expense'));
     }
@@ -125,8 +157,8 @@ class ExpenseController extends Controller
                     [
                         'wallet_id' => $request->array_wallet_id[$key],
                         'item_name' => $request->array_item_name[$key],
-                        'quantity' => $request->array_quantity[$key],
-                        'price' => $request->array_price[$key]
+                        'quantity' => formatAngka($request->array_quantity[$key]),
+                        'price' => formatAngka($request->array_price[$key])
                     ]
                 );
                 $expenseDetail->push();
@@ -148,14 +180,15 @@ class ExpenseController extends Controller
     {
 
         try {
-            $expense->delete();
-
-            if($expense->expense_detail){
+            if($expense->expense_details){
                 $expenseDetails = ExpenseDetail::where('expense_id', $expense->id)->get();
                 foreach ($expenseDetails as $key => $expenseDetail) {
                     $expenseDetail->delete();
                 }
             }
+            
+            $expense->delete();
+
 
             DB::commit();
 
