@@ -52,7 +52,7 @@ dataset('staff_cannot_crud', [
 it("forbid another  guest", function () {
     $this
         ->get(route('assign-classroom-student.index'))
-        ->assertNotFound();
+        ->assertRedirect(route('login'));
 });
 
 
