@@ -148,14 +148,15 @@ class ExpenseController extends Controller
     {
 
         try {
-            $expense->delete();
-
             if($expense->expense_detail){
                 $expenseDetails = ExpenseDetail::where('expense_id', $expense->id)->get();
                 foreach ($expenseDetails as $key => $expenseDetail) {
                     $expenseDetail->delete();
                 }
             }
+            
+            $expense->delete();
+
 
             DB::commit();
 
