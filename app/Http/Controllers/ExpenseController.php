@@ -135,11 +135,10 @@ class ExpenseController extends Controller
             DB::commit();
 
         } catch (\Throwable $th) {
-            dd($th);
-            return redirect()->route('expense.index')->withToastError('Eror Simpan Pengeluaran Biaya!');
+            return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror Simpan Pengeluaran Biaya!');
         }
 
-        return redirect()->route('expense.index')->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
+        return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
     }
 
     /**
