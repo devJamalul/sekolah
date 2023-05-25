@@ -54,13 +54,74 @@ class ExpenseController extends Controller
             $expense->request_by        = Auth::id();
             $expense->save();
 
+            $wallet         = Wallet::find($request->wallet_id);
+            // $danaBOS        = Wallet::danaBos()->first();
+
+            $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
+                $q->where('status', Expense::STATUS_PENDING);
+            })
+                ->where('wallet_id', $request->wallet_id)
+                ->sum(DB::raw('price * quantity'));
+
+            // $totalExpensePendingDanaBos    = ExpenseDetail::whereHas('expense', function ($q) {
+            //     $q->where('status', Expense::STATUS_PENDING);
+            // })
+            //     ->where('wallet_id', $danaBOS->id)
+            //     ->sum(DB::raw('price * quantity'));
+
+            $walletBalance  = $wallet->balance - $totalExpensePending;
+            // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
+
             $expenseDetail              = new ExpenseDetail();
             $expenseDetail->expense_id  = $expense->getKey();
-            $expenseDetail->wallet_id   = $request->wallet_id;
+
+            if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
+                $expenseDetail->wallet_id   = $request->wallet_id;
+            } 
+            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
+            //     $expenseDetail->wallet_id   = $danaBOS->id;
+            // } 
+            else {
+                return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            }
+
             $expenseDetail->item_name   = $request->item_name;
             $expenseDetail->quantity    = formatAngka($request->quantity);
             $expenseDetail->price       = formatAngka($request->price);
             $expenseDetail->save();
+
+            $wallet         = Wallet::find($request->wallet_id);
+            // $danaBOS        = Wallet::danaBos()->first();
+
+            $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
+                $q->where('status', Expense::STATUS_PENDING);
+            })
+                ->where('wallet_id', $request->wallet_id)
+                ->sum(DB::raw('price * quantity'));
+
+            // $totalExpensePendingDanaBos    = ExpenseDetail::whereHas('expense', function ($q) {
+            //     $q->where('status', Expense::STATUS_PENDING);
+            // })
+            //     ->where('wallet_id', $danaBOS->id)
+            //     ->sum(DB::raw('price * quantity'));
+
+            $walletBalance  = $wallet->balance - $totalExpensePending;
+            // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
+
+            $expenseDetail              = new ExpenseDetail();
+            $expenseDetail->expense_id  = $expense->getKey();
+
+            if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
+                $expenseDetail->wallet_id   = $request->wallet_id;
+            } 
+            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
+            //     $expenseDetail->wallet_id   = $danaBOS->id;
+            // } 
+            else {
+                return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            }
+
+
 
             DB::commit();
 
