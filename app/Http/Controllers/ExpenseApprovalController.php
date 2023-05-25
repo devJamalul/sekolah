@@ -75,7 +75,7 @@ class ExpenseApprovalController extends Controller
                 case 'reject':
                     if($request->reject_reason == null){
                         DB::rollBack();
-                        return redirect()->back()->withToastError('Ops, Alasan Penolakan Wajib Diisikan!');
+                        return redirect()->back()->withToastError('Ops, Alasan Penolakan Wajib Diisi!');
                     }
                         $expense_approval->status = Expense::STATUS_REJECTED;
                         $expense_approval->reject_reason  = $request->reject_reason;    
