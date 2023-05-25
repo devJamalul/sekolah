@@ -148,13 +148,12 @@ class ExpenseDetailController extends Controller
             DB::commit();
 
             
-        return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Simpan Detail Pengeluaran!');
+        return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Hapus Detail Pengeluaran!');
       
     } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json([
-                'msg' => 'Eror Hapus Detail Pengeluaran Biaya'
-            ]);
+            return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror Hapus Detail Pengeluaran!');
+        
         }
     }
 }
