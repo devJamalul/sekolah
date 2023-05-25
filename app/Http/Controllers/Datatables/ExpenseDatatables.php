@@ -19,7 +19,7 @@ class ExpenseDatatables extends Controller
                     return "<a href='" . route('expense.show-detail', $row->id) . "'>{$row->expense_number}</a>";
                 }
 
-                return "<a href='" . route('expense.show', $row->id) . "'>{$row->expense_number}</a>";
+                return "<a href='" . route('expense.edit', $row->id) . "'>{$row->expense_number}</a>";
             })
             ->editColumn('request_by', function ($row){
                 return $row->requested_by->name;
