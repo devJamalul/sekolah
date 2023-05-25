@@ -147,12 +147,10 @@ class ExpenseDetailController extends Controller
             $expenseDetail->delete();
             DB::commit();
 
-            // return response()->json([
-            //     'msg' => 'Berhasil Hapus Detail Pengeluaran Biaya!'
-            // ], 200);
             
         return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Simpan Detail Pengeluaran!');
-        } catch (\Throwable $th) {
+      
+    } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'msg' => 'Eror Hapus Detail Pengeluaran Biaya'
