@@ -73,10 +73,12 @@ class ExpenseApprovalController extends Controller
                     $expense_approval->status = Expense::STATUS_APPROVED;
                     break;
                 case 'reject':
-                    if($request->reject_reason != null){
+                    if($request->reject_reason == null){
+                        DB::rollBack();
+                        return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
+                    }
                         $expense_approval->status = Expense::STATUS_REJECTED;
                         $expense_approval->reject_reason  = $request->reject_reason;    
-                    }
                     break;
             }
             $expense_approval->save();
