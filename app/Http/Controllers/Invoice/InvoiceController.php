@@ -97,6 +97,7 @@ class InvoiceController extends Controller
      */
     public function update(InvoiceRequest $request, Invoice $invoice)
     {
+        dd($request->all());
         #used
         if ($invoice->school_id != session('school_id')) abort(404);
 

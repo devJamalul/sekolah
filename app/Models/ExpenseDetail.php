@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ExpenseDetail extends Model
 {
     use HasFactory, SoftDeletes;
+    
+    protected $guarded = [];
 
     public function expense(): BelongsTo
     {
