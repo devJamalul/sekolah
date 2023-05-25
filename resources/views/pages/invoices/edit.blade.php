@@ -123,8 +123,6 @@
                                 $index = 7;
                                 $total = 0;
                             @endphp
-                            {{-- @dump(old('array_price)) --}}
-                            @dump(old('array_price'))
                             @foreach ($invoice->invoice_details as $key => $item)
                                 @php
                                     $total += $item->price;
