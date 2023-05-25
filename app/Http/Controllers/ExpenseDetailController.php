@@ -65,7 +65,7 @@ class ExpenseDetailController extends Controller
             //     $expenseDetail->wallet_id   = $danaBOS->id;
             // } 
             else {
-                return redirect()->route('expense.show', $request->expense_id)->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+                return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
 
             $expenseDetail->item_name   = $request->item_name;
@@ -75,7 +75,6 @@ class ExpenseDetailController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            dd($th);
             Log::error($th->getMessage(), [
                 'action' => 'Store expense detail',
                 'user' => auth()->user()->name,
