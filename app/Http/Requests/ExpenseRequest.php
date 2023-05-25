@@ -58,7 +58,7 @@ class ExpenseRequest extends FormRequest
             'item_name' => 'required|string',
             'price' => 'required|string',
             'wallet_id' => 'required|exists:wallets,id',
-            'quantity' => 'required|numeric'
+            'quantity' => 'required|string'
         ];
     }
 
@@ -81,7 +81,7 @@ class ExpenseRequest extends FormRequest
             'array_price' => 'required|array',
             'array_price.*' => 'required|string',
             'array_quantity' => 'required|array',
-            'array_quantity.*' => 'required|numeric',
+            'array_quantity.*' => 'required|string',
             'expense_date' => 'required|date',
             'status'        => 'nullable',
             'requested_by' => 'nullable|exists:users,id',
