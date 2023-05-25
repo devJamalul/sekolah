@@ -105,12 +105,13 @@
                                     <td>
                                         <input type="text" class="form-control @error('item_name') is-invalid @enderror"
                                             name="item_name" id="item_name" value="{{ old('item_name') }}"
-                                            autocomplete="off" tabindex="5">
+                                            autocomplete="off" tabindex="5" required autocomplete="off">
                                     </td>
                                     <td>
                                         <input type="text"
                                             class="form-control harga @error('price') is-invalid @enderror" name="price"
-                                            id="price" value="{{ old('price') }}" autocomplete="off" tabindex="6">
+                                            id="price" value="{{ old('price') }}" autocomplete="off" tabindex="6"
+                                            required autocomplete="off">
                                     </td>
                                     <td>
                                         <button name="tambah" id="tambah" class="btn btn-primary btn-sm"
@@ -120,8 +121,14 @@
                             </form>
                             @php
                                 $index = 7;
+                                $total = 0;
                             @endphp
+                            {{-- @dump(old('array_price)) --}}
+                            @dump(old('array_price'))
                             @foreach ($invoice->invoice_details as $key => $item)
+                                @php
+                                    $total += $item->price;
+                                @endphp
                                 <input type="hidden" name="invoice_detail_id[{{ $key }}]"
                                     value="{{ $item->getKey() }}" form="invoice">
                                 <tr>
@@ -131,15 +138,15 @@
                                             name="array_item_name[{{ $key }}]"
                                             id="array_item_name[{{ $key }}]"
                                             value="{{ old('array_item_name.' . $key, $item->item_name) }}"
-                                            autocomplete="off" form="invoice" tabindex="{{ $index++ }}" required>
+                                            autocomplete="off" form="invoice" tabindex="{{ $index++ }}">
                                     </td>
                                     <td>
                                         <input type="text"
                                             class="form-control harga @error('array_price.' . $key) is-invalid @enderror"
                                             name="array_price[{{ $key }}]"
                                             id="array_price[{{ $key }}]"
-                                            value="{{ old('array_price.' . $key, $item->price) }}" autocomplete="off"
-                                            form="invoice" tabindex="{{ $index++ }}" required>
+                                            value="{{ strtr(old('array_price.' . $key, $item->price), ',.', '') }}" autocomplete="off"
+                                            form="invoice" tabindex="{{ $index++ }}">
                                     </td>
                                     <td>
                                         <form
@@ -156,7 +163,20 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            <input type="hidden" name="array_max" value="{{ $key ?? 0}}" form="invoice">
+                            <input type="hidden" name="array_max" value="{{ $key ?? 0 }}" form="invoice">
+                            <tr>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                            class="form-control harga" name="price"
+                                            id="price" value="{{ $total }}" autocomplete="off" disabled>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                 </div>

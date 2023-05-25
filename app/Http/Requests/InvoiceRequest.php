@@ -78,4 +78,40 @@ class InvoiceRequest extends FormRequest
             'array_price.*' => 'required|string',
         ];
     }
+
+    public function after()
+    {
+        # code...
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('price')) {
+            $this->merge([
+                'price' => formatAngka($this->price),
+            ]);
+        }
+        if ($this->has('array_price')) {
+            $this->merge([
+                'array_price' => formatAngka($this->array_price),
+            ]);
+        }
+    }
+
+    // protected function passedValidation(): void
+    // {
+    //     if ($this->has('price')) {
+    //         $this->replace(['price' => formatAngka($this->price)]);
+    //     }
+    // }
+
+    protected function passedValidation(): void
+    {
+        if ($this->has('price')) {
+            $this->replace(['price' => formatAngka($this->price)]);
+        }
+        if ($this->has('array_price')) {
+            $this->replace(['array_price' => formatAngka($this->array_price)]);
+        }
+    }
 }

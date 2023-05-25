@@ -7,8 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class InvoiceController extends Controller
 {
@@ -37,9 +40,29 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvoiceRequest $request, CreateNewInvoiceNumber $createNewInvoiceNumber)
+    public function store(Request $request, CreateNewInvoiceNumber $createNewInvoiceNumber)
     {
         #used
+        $request->merge([
+            'price' => formatAngka($request->price)
+        ]);
+
+        Validator::make($request->all(), [
+            'invoice_number' => [
+                'nullable',
+                Rule::unique('invoices')->where(function ($q) use ($request) {
+                    $q->where('invoice_number', $request->invoice_number);
+                    $q->where('school_id', session('school_id'));
+                    $q->whereNull('deleted_at');
+                })
+            ],
+            'note' => 'required|string',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after:invoice_date',
+            'item_name' => 'required|string',
+            'price' => 'required|string',
+        ])->validate();
+
         DB::beginTransaction();
         try {
             $invoice = new Invoice();
@@ -95,9 +118,31 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(InvoiceRequest $request, Invoice $invoice)
+    public function update(Request $request, Invoice $invoice)
     {
-        dd($request->all());
+        $request->merge([
+            'array_price' => formatAngka($request->array_price)
+        ]);
+
+        Validator::make($request->all(), [
+            'invoice_number'      => [
+                'required',
+                Rule::unique('invoices')->where(function ($q) use ($request, $invoice) {
+                    $q->where('invoice_number', $request->invoice_number);
+                    $q->where('school_id', session('school_id'));
+                    $q->whereNull('deleted_at');
+                })->ignore($invoice->id, 'id')
+            ],
+            'note' => 'required|string',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after:invoice_date',
+            'invoice_detail_id' => 'required|array',
+            'array_item_name' => 'required|array',
+            'array_item_name.*' => 'required|string',
+            'array_price' => 'required|array',
+            'array_price.*' => 'required|string',
+        ])->validate();
+
         #used
         if ($invoice->school_id != session('school_id')) abort(404);
 
