@@ -148,8 +148,33 @@ class ExpenseController extends Controller
             $expense->request_by        = Auth::id();
             $expense->save();
 
+
             $arrayMax = $request->array_max;
             foreach(range(0, $arrayMax) as $key => $item){
+                $wallet         = Wallet::find($request->array_wallet_id[$key]);
+                // $danaBOS        = Wallet::danaBos()->first();
+    
+                $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
+                    $q->where('status', Expense::STATUS_PENDING);
+                })
+                    ->where('wallet_id', $request->array_wallet_id[$key])
+                    ->where('id', '<>', $request->expense_detail_id[$key])
+                    ->sum(DB::raw('price * quantity'));
+                    
+            $walletBalance  = $wallet->balance - $totalExpensePending;
+
+            $expenseDetail              = ExpenseDetail::find($request->expense_detail_id[$key]);
+            $expenseDetail->expense_id  = $expense->getKey();
+
+            if ((formatAngka($request->array_quantity[$key]) * formatAngka($request->array_price[$key])) <= $walletBalance) {
+                $expenseDetail->wallet_id   = $request->array_wallet_id[$key];
+            } 
+            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
+            //     $expenseDetail->wallet_id   = $danaBOS->id;
+            // } 
+            else {
+                return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            }
                 $expenseDetail = ExpenseDetail::updateOrCreate(
                     [
                         'id' => $request->expense_detail_id[$key]
