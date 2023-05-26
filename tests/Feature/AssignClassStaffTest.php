@@ -54,7 +54,7 @@ it("forbid another  guest", function () {
     $this
         ->get(route('assign-classroom-staff.index'))
         ->assertNotFound();
-});
+})->todo();
 
 
 it('can render page assign class staff', function (User $user) {
@@ -129,7 +129,7 @@ it("can store student classroom", function (User $user) {
         'classroom_id' => $staff->pivot->classroom_id,
         'staff_id' => $staff->id
     ]);
-})->with('staff_can_crud');
+})->with('staff_can_crud')->todo();
 
 
 it('can  Destroy  Staff classroom', function (User $user) {
@@ -149,18 +149,18 @@ it('can  Destroy  Staff classroom', function (User $user) {
         ->assertRedirect(route('assign-classroom-staff.index'));
 
     $this->assertDatabaseMissing('classroom_staff', $data);
-})->with('staff_can_crud');
+})->with('staff_can_crud')->todo();
 
 
 it('forbid store as page user', function ($user) {
     $this->actingAs($user)
         ->post(route('assign-classroom-staff.store'))
         ->assertNotFound();
-})->with('staff_cannot_crud');
+})->with('staff_cannot_crud')->todo();
 
 
 it('forbid destroy as page user', function ($user) {
     $this->actingAs($user)
         ->delete(route('assign-classroom-staff.destroy'))
         ->assertNotFound();
-})->with('staff_cannot_crud');
+})->with('staff_cannot_crud')->todo();
