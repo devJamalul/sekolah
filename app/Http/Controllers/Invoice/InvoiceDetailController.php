@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceDetailRequest;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class InvoiceDetailController extends Controller
 {
@@ -32,10 +35,27 @@ class InvoiceDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvoiceDetailRequest $request, Invoice $invoice)
+    public function store(Request $request, Invoice $invoice)
     {
-        #used
-        if($invoice->school_id != session('school_id')) abort(404);
+        if ($invoice->school_id != session('school_id')) abort(404);
+
+        if ($request->has('price')) {
+            $request->merge([
+                'price' => formatAngka($request->price)
+            ]);
+        }
+
+        Validator::make($request->all(), [
+            'item_name' => [
+                'required',
+                Rule::unique('invoice_details')->where(function ($q) use ($invoice, $request) {
+                    $q->where('invoice_id', $invoice->id);
+                    $q->where('item_name', $request->item_name);
+                    $q->whereNull('deleted_at');
+                })
+            ],
+            'price' => 'required|min:0',
+        ])->validate();
 
         DB::beginTransaction();
         try {
@@ -60,7 +80,6 @@ class InvoiceDetailController extends Controller
      */
     public function destroy(Invoice $invoice, InvoiceDetail $invoiceDetail)
     {
-        #used
         if ($invoice->school_id != session('school_id') or $invoiceDetail->invoice != $invoice) abort(404);
 
         DB::beginTransaction();
@@ -69,8 +88,10 @@ class InvoiceDetailController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
+
             return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
+
         return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menghapus baris invoice!');
     }
 }

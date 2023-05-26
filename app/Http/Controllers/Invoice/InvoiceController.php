@@ -7,8 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class InvoiceController extends Controller
 {
@@ -19,7 +22,6 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        #used
         $data['title'] = $this->title;
         return view('pages.invoices.index', $data);
     }
@@ -29,7 +31,6 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        #used
         $data['title'] = "Tambah " . $this->title;
         return view('pages.invoices.create', $data);
     }
@@ -37,9 +38,30 @@ class InvoiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvoiceRequest $request, CreateNewInvoiceNumber $createNewInvoiceNumber)
+    public function store(Request $request, CreateNewInvoiceNumber $createNewInvoiceNumber)
     {
-        #used
+        if ($request->has('price')) {
+            $request->merge([
+                'price' => formatAngka($request->price)
+            ]);
+        }
+
+    Validator::make($request->all(), [
+        'invoice_number' => [
+            'nullable',
+            Rule::unique('invoices')->where(function ($q) use ($request) {
+                $q->where('invoice_number', $request->invoice_number);
+                $q->where('school_id', session('school_id'));
+                $q->whereNull('deleted_at');
+            })
+        ],
+        'note' => 'required|string',
+        'invoice_date' => 'required|date',
+        'due_date' => 'required|date|after:invoice_date',
+        'item_name' => 'required|string',
+        'price' => 'required|string',
+    ])->validate();
+
         DB::beginTransaction();
         try {
             $invoice = new Invoice();
@@ -66,8 +88,10 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
+            
             return to_route('invoices.create')->withToastError('Ups! ' . $th->getMessage());
         }
+
         return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
     }
 
@@ -76,7 +100,6 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
-        #used
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
@@ -95,10 +118,35 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(InvoiceRequest $request, Invoice $invoice)
-    {
-        dd($request->all());
-        #used
+public function update(Request $request, Invoice $invoice)
+{
+    if ($request->has('array_price')) {
+        foreach($request->array_price as $key => $price) {
+            $request->merge([
+                'array_price.' . $key => formatAngka($price)
+            ]);
+        }
+    }
+
+    Validator::make($request->all(), [
+        'invoice_number'      => [
+            'required',
+            Rule::unique('invoices')->where(function ($q) use ($request, $invoice) {
+                $q->where('invoice_number', $request->invoice_number);
+                $q->where('school_id', session('school_id'));
+                $q->whereNull('deleted_at');
+            })->ignore($invoice->id, 'id')
+        ],
+        'note' => 'required|string',
+        'invoice_date' => 'required|date',
+        'due_date' => 'required|date|after:invoice_date',
+        'invoice_detail_id' => 'required|array',
+        'array_item_name' => 'required|array',
+        'array_item_name.*' => 'required|string',
+        'array_price' => 'required|array',
+        'array_price.*' => 'required|string',
+    ])->validate();
+
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
@@ -118,12 +166,11 @@ class InvoiceController extends Controller
             $invoice->save();
 
             // update invoice_details
-            $array_max = $request->array_max;
-            foreach (range(0, $array_max) as $key => $item) {
+            foreach ($request->invoice_detail_id as $key => $invoice_detail_id) {
                 info($request->array_price[$key]);
                 $invoiceDetail = InvoiceDetail::updateOrCreate(
                     [
-                        'id' => $request->invoice_detail_id[$key]
+                        'id' => $invoice_detail_id
                     ],
                     [
                         'item_name' => $request->array_item_name[$key],
