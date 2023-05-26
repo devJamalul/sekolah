@@ -24,7 +24,7 @@ function getConfigBySchool($code,$school_id){
 /**
  * Menghapus "titik" pada value, misalnya 1.234 menjadi 1234
  */
-function formatAngka(string|array|null $nominal): int|array
+function formatAngka(string|int|array|null $nominal): mixed
 {
     if (is_array($nominal)) {
         $data = [];
@@ -35,5 +35,5 @@ function formatAngka(string|array|null $nominal): int|array
     }
 
     if (is_null($nominal)) $nominal = 0;
-    return (int) str_replace(".", "", $nominal);
+    return str_replace(".", "", $nominal);
 }

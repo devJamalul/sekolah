@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -79,39 +80,47 @@ class InvoiceRequest extends FormRequest
         ];
     }
 
-    public function after()
-    {
-        # code...
-    }
-
-    protected function prepareForValidation(): void
-    {
-        if ($this->has('price')) {
-            $this->merge([
-                'price' => formatAngka($this->price),
-            ]);
-        }
-        if ($this->has('array_price')) {
-            $this->merge([
-                'array_price' => formatAngka($this->array_price),
-            ]);
-        }
-    }
-
-    // protected function passedValidation(): void
+    // protected function formatAngka()
     // {
-    //     if ($this->has('price')) {
-    //         $this->replace(['price' => formatAngka($this->price)]);
+    //     if ($this->method() == 'POST') {
+    //         $this->merge([
+    //             'price' => formatAngka($this->price)
+    //         ]);
     //     }
     // }
 
-    protected function passedValidation(): void
-    {
-        if ($this->has('price')) {
-            $this->replace(['price' => formatAngka($this->price)]);
-        }
-        if ($this->has('array_price')) {
-            $this->replace(['array_price' => formatAngka($this->array_price)]);
-        }
-    }
+    // public function getValidatorInstance()
+    // {
+    //     $this->formatAngka();
+
+    //     return parent::getValidatorInstance();
+    // }
+
+    // protected function prepareForValidation(): void
+    // {
+    //     if ($this->method() == 'POST') {
+    //         $this->merge([
+    //             'price' => formatAngka($this->price),
+    //         ]);
+    //     }
+    //     if ($this->has('array_price')) {
+    //         $this->merge([
+    //             'array_price' => formatAngka($this->array_price),
+    //         ]);
+    //     }
+    // }
+
+    // protected function passedValidation()
+    // {
+    //     info($this->input('price'));
+    //     info('passed');
+    //     if ($this->method() == 'POST') {
+    //         info('passed');
+    //         $this->merge([
+    //             'price' => formatAngka($this->input('price')),
+    //             'note' => strtoupper($this->input('note'))
+    //         ]);
+    //         info($this->input('price'));
+    //     }
+    // }
 }

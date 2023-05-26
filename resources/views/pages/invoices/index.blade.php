@@ -16,7 +16,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'invoices'" :tableHeaders="['Nomor Invoice', 'Tanggal Invoice', 'Jatuh Tempo', 'Nominal', 'Pembayaran', 'Status', 'Aksi']" :tableColumns="[
+                    <x-datatable :tableId="'invoices'" :tableHeaders="['Nomor Invoice', 'Tanggal Invoice', 'Jatuh Tempo', 'Total', 'Pembayaran', 'Status', 'Aksi']" :tableColumns="[
                         ['data' => 'invoice_number'],
                         ['data' => 'invoice_date'],
                         ['data' => 'due_date'],

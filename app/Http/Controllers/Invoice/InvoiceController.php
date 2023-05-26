@@ -167,12 +167,11 @@ class InvoiceController extends Controller
             $invoice->save();
 
             // update invoice_details
-            $array_max = $request->array_max;
-            foreach (range(0, $array_max) as $key => $item) {
+            foreach ($request->invoice_detail_id as $key => $invoice_detail_id) {
                 info($request->array_price[$key]);
                 $invoiceDetail = InvoiceDetail::updateOrCreate(
                     [
-                        'id' => $request->invoice_detail_id[$key]
+                        'id' => $invoice_detail_id
                     ],
                     [
                         'item_name' => $request->array_item_name[$key],

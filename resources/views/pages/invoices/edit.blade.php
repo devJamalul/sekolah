@@ -127,24 +127,25 @@
                                 @php
                                     $total += $item->price;
                                 @endphp
-                                <input type="hidden" name="invoice_detail_id[{{ $key }}]"
-                                    value="{{ $item->getKey() }}" form="invoice">
+                                <input type="hidden" name="invoice_detail_id[]" value="{{ $item->getKey() }}"
+                                    form="invoice">
                                 <tr>
                                     <td>
                                         <input type="text"
                                             class="form-control @error('array_item_name.' . $key) is-invalid @enderror"
-                                            name="array_item_name[{{ $key }}]"
-                                            id="array_item_name[{{ $key }}]"
+                                            name="array_item_name[]" id="array_item_name[]"
                                             value="{{ old('array_item_name.' . $key, $item->item_name) }}"
                                             autocomplete="off" form="invoice" tabindex="{{ $index++ }}">
                                     </td>
                                     <td>
                                         <input type="text"
                                             class="form-control harga @error('array_price.' . $key) is-invalid @enderror"
-                                            name="array_price[{{ $key }}]"
-                                            id="array_price[{{ $key }}]"
-                                            value="{{ strtr(old('array_price.' . $key, $item->price), ',.', '') }}" autocomplete="off"
-                                            form="invoice" tabindex="{{ $index++ }}">
+                                            name="array_price[]" id="array_price[]"
+                                            value="{{ strtr(old('array_price.' . $key, $item->price), ',.', '') }}"
+                                            autocomplete="off" form="invoice" tabindex="{{ $index++ }}">
+                                        @error('array_price.' . $key)
+                                            {{ $message }}
+                                        @enderror
                                     </td>
                                     <td>
                                         <form
@@ -161,20 +162,18 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            <input type="hidden" name="array_max" value="{{ $key ?? 0 }}" form="invoice">
                             <tr>
-                                    <td>
-                                        &nbsp;
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                            class="form-control harga" name="price"
-                                            id="price" value="{{ $total }}" autocomplete="off" disabled>
-                                    </td>
-                                    <td>
-                                        &nbsp;
-                                    </td>
-                                </tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control harga" name="price" id="price"
+                                        value="{{ $total }}" autocomplete="off" disabled>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
