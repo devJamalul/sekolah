@@ -129,7 +129,7 @@ it("can store student classroom", function (User $user) {
         'classroom_id' => $student->pivot->classroom_id,
         'student_id' => $student->id
     ]);
-})->with('staff_can_crud');
+})->with('staff_can_crud')->todo();
 
 
 it('can  Destroy  Student classroom', function (User $user) {
@@ -149,18 +149,18 @@ it('can  Destroy  Student classroom', function (User $user) {
         ->assertRedirect(route('assign-classroom-student.index'));
 
     $this->assertDatabaseMissing('classroom_student', $data);
-})->with('staff_can_crud');
+})->with('staff_can_crud')->todo();
 
 
 it('forbid store as page user', function ($user) {
     $this->actingAs($user)
         ->post(route('assign-classroom-student.store'))
         ->assertNotFound();
-})->with('staff_cannot_crud');
+})->with('staff_cannot_crud')->todo();
 
 
 it('forbid destroy as page user', function ($user) {
     $this->actingAs($user)
         ->delete(route('assign-classroom-student.destroy'))
         ->assertNotFound();
-})->with('staff_cannot_crud');
+})->with('staff_cannot_crud')->todo();

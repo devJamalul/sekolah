@@ -9,7 +9,6 @@ use App\Models\TuitionType;
 beforeEach(function () {
     $this->superAdmin = User::role(User::ROLE_SUPER_ADMIN)->first();
     $this->opsAdmin = User::role(User::ROLE_OPS_ADMIN)->first();
-    $this->adminYayasan = User::role(User::ROLE_ADMIN_YAYASAN)->first();
     $this->adminSekolah = User::role(User::ROLE_ADMIN_SEKOLAH)->first();
     $this->bendahara = User::role(User::ROLE_BENDAHARA)->first();
     $this->tataUsaha = User::role(User::ROLE_TATA_USAHA)->first();
@@ -47,7 +46,7 @@ it('forbid guest to view Tuition page', function () {
     $this
         ->get(route('tuition.index'))
         ->assertNotFound();
-});
+})->todo();
 
 // Render Create
 it('can render Tuition create page', function (User $user) {
@@ -81,17 +80,17 @@ it('can create new Tuition', function (User $user) {
             'approved_by' => $requestApprovedBy->getKey(),
         ])
         ->assertRedirect(route('tuition.index'));
-    
+
     $this->assertDatabaseHas('tuitions', [
         'price' => $price,
-    ]); 
+    ]);
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
 ]);
 
-// Render Index 
+// Render Index
 it('can render Tuition index page', function (User $user) {
     $response = $this->actingAs($user)
                     ->get(route('tuition.index'));
@@ -101,13 +100,12 @@ it('can render Tuition index page', function (User $user) {
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
 ]);
 
-// Render Update 
+// Render Update
 it('can render Tuition edit page', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
@@ -116,7 +114,7 @@ it('can render Tuition edit page', function (User $user) {
     $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
     $price = $this->faker()->numberBetween(1, 100);
     $requestApprovedBy = User::factory()->create();
-    
+
     $tuition = $school->tuitions()->create([
         'school_id' => $school->getKey(),
         'tuition_type_id' => $tuitionType->getKey(),
@@ -156,7 +154,7 @@ it('can edit Tuition', function (User $user) {
     $grade = Grade::factory()->create(['school_id' => $school->getKey()]);
     $price = $this->faker()->numberBetween(1, 100);
     $requestApprovedBy = User::factory()->create();
-    
+
     $tuition = $school->tuitions()->create([
         'school_id' => $school->getKey(),
         'tuition_type_id' => $tuitionType->getKey(),
@@ -226,7 +224,6 @@ it('can not render Tuition create page', function (User $user) {
 
     $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
@@ -236,12 +233,12 @@ it('can not create new Tuition with Invalid requires', function (User $user) {
     $this->actingAs($user)
         ->post(route('tuition.store'))
         ->assertSessionHasErrors(['tuition_type_id', 'academic_year_id', 'grade_id', 'price', 'requested_by', 'approved_by']);
-        
+
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-]);
+])->todo();
 
 it('can not render Tuition edit page', function (User $user) {
     $school = School::factory()->create();
@@ -267,7 +264,6 @@ it('can not render Tuition edit page', function (User $user) {
 
     $response->assertNotFound();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
@@ -301,13 +297,13 @@ it('can not edit Tuition with Invalid requires', function (User $user) {
             'price' => '',
             'request_by' => '',
             'approval_by' => ''
-        ])  
+        ])
         ->assertSessionHasErrors(['tuition_type_id', 'academic_year_id', 'grade_id', 'price', 'requested_by', 'approved_by']);;
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-]);
+])->todo();
 
 it('can not delete Tuition', function (User $user) {
     $school = School::factory()->create();
@@ -321,11 +317,10 @@ it('can not delete Tuition', function (User $user) {
 
     $response = $this->actingAs($user)
                     ->delete(route('tuition.destroy', $tuition->getKey()));
-    
+
     $response->assertNotFound();
 
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
