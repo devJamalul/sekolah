@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label for="expense_number">No. Pengeluaran Biaya</label>
                                     <input type="text" class="form-control @error('expense_number') is-invalid @enderror"
-                                        name="expense_number" id="expense_number" 
+                                        name="expense_number" id="expense_number"
                                         autocomplete="off" tabindex="2" value="Exp/{{ date('Y') }}/{{ str_pad($expenseNumber == 0 ? ($expenseNumber += 1) : ($expenseNumber += 1), 4, '0', STR_PAD_LEFT) }}">
                                 </div>
                             </div>
@@ -69,7 +69,7 @@
                                     id="requested-by-select" form="expense">
                                     <option value="">-</option>
                                     @foreach ($wallets as $wallet)
-                                        <option value="{{ $wallet->id }}">
+                                        <option value="{{ $wallet->id }}" @selected(old('wallet_id') == $wallet->id)>
                                             {{ $wallet->name }}
                                         </option>
                                     @endforeach
@@ -86,9 +86,9 @@
                                         form="expense" tabindex="5">
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control quantity @error('quantity') is-invalid @enderror"
+                                    <input type="text" class="form-control harga @error('quantity') is-invalid @enderror"
                                         name="quantity" id="quantity" value="{{ old('quantity') }}" autocomplete="off"
-                                        form="expense" tabindex="6" pattern="[0-9]+">
+                                        form="expense" tabindex="6">
                                 </td>
                                 <td>
                                     <input type="text" class="form-control harga @error('price') is-invalid @enderror"
