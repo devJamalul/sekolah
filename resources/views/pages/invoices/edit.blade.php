@@ -105,13 +105,13 @@
                                     <td>
                                         <input type="text" class="form-control @error('item_name') is-invalid @enderror"
                                             name="item_name" id="item_name" value="{{ old('item_name') }}"
-                                            autocomplete="off" tabindex="5" required autocomplete="off">
+                                            autocomplete="off" tabindex="5"  autocomplete="off">
                                     </td>
                                     <td>
                                         <input type="text"
                                             class="form-control harga @error('price') is-invalid @enderror" name="price"
                                             id="price" value="{{ old('price') }}" autocomplete="off" tabindex="6"
-                                            required autocomplete="off">
+                                             autocomplete="off">
                                     </td>
                                     <td>
                                         <button name="tambah" id="tambah" class="btn btn-primary btn-sm"

@@ -22,7 +22,6 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        #used
         $data['title'] = $this->title;
         return view('pages.invoices.index', $data);
     }
@@ -32,7 +31,6 @@ class InvoiceController extends Controller
      */
     public function create()
     {
-        #used
         $data['title'] = "Tambah " . $this->title;
         return view('pages.invoices.create', $data);
     }
@@ -42,26 +40,27 @@ class InvoiceController extends Controller
      */
     public function store(Request $request, CreateNewInvoiceNumber $createNewInvoiceNumber)
     {
-        #used
-        $request->merge([
-            'price' => formatAngka($request->price)
-        ]);
+        if ($request->has('price')) {
+            $request->merge([
+                'price' => formatAngka($request->price)
+            ]);
+        }
 
-        Validator::make($request->all(), [
-            'invoice_number' => [
-                'nullable',
-                Rule::unique('invoices')->where(function ($q) use ($request) {
-                    $q->where('invoice_number', $request->invoice_number);
-                    $q->where('school_id', session('school_id'));
-                    $q->whereNull('deleted_at');
-                })
-            ],
-            'note' => 'required|string',
-            'invoice_date' => 'required|date',
-            'due_date' => 'required|date|after:invoice_date',
-            'item_name' => 'required|string',
-            'price' => 'required|string',
-        ])->validate();
+    Validator::make($request->all(), [
+        'invoice_number' => [
+            'nullable',
+            Rule::unique('invoices')->where(function ($q) use ($request) {
+                $q->where('invoice_number', $request->invoice_number);
+                $q->where('school_id', session('school_id'));
+                $q->whereNull('deleted_at');
+            })
+        ],
+        'note' => 'required|string',
+        'invoice_date' => 'required|date',
+        'due_date' => 'required|date|after:invoice_date',
+        'item_name' => 'required|string',
+        'price' => 'required|string',
+    ])->validate();
 
         DB::beginTransaction();
         try {
@@ -89,8 +88,10 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
+            
             return to_route('invoices.create')->withToastError('Ups! ' . $th->getMessage());
         }
+
         return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menambah invoice!');
     }
 
@@ -99,7 +100,6 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
-        #used
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
@@ -118,36 +118,35 @@ class InvoiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Invoice $invoice)
-    {
-        if ($request->has('array_price')) {
-            foreach($request->array_price as $key => $price) {
-                $request->merge([
-                    'array_price.' . $key => formatAngka($price)
-                ]);
-            }
+public function update(Request $request, Invoice $invoice)
+{
+    if ($request->has('array_price')) {
+        foreach($request->array_price as $key => $price) {
+            $request->merge([
+                'array_price.' . $key => formatAngka($price)
+            ]);
         }
+    }
 
-        Validator::make($request->all(), [
-            'invoice_number'      => [
-                'required',
-                Rule::unique('invoices')->where(function ($q) use ($request, $invoice) {
-                    $q->where('invoice_number', $request->invoice_number);
-                    $q->where('school_id', session('school_id'));
-                    $q->whereNull('deleted_at');
-                })->ignore($invoice->id, 'id')
-            ],
-            'note' => 'required|string',
-            'invoice_date' => 'required|date',
-            'due_date' => 'required|date|after:invoice_date',
-            'invoice_detail_id' => 'required|array',
-            'array_item_name' => 'required|array',
-            'array_item_name.*' => 'required|string',
-            'array_price' => 'required|array',
-            'array_price.*' => 'required|string',
-        ])->validate();
+    Validator::make($request->all(), [
+        'invoice_number'      => [
+            'required',
+            Rule::unique('invoices')->where(function ($q) use ($request, $invoice) {
+                $q->where('invoice_number', $request->invoice_number);
+                $q->where('school_id', session('school_id'));
+                $q->whereNull('deleted_at');
+            })->ignore($invoice->id, 'id')
+        ],
+        'note' => 'required|string',
+        'invoice_date' => 'required|date',
+        'due_date' => 'required|date|after:invoice_date',
+        'invoice_detail_id' => 'required|array',
+        'array_item_name' => 'required|array',
+        'array_item_name.*' => 'required|string',
+        'array_price' => 'required|array',
+        'array_price.*' => 'required|string',
+    ])->validate();
 
-        #used
         if ($invoice->school_id != session('school_id')) abort(404);
 
         // cek status dan kembalikan jika statusnya sudah PUBLISHED
