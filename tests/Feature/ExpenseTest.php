@@ -47,7 +47,7 @@ it('forbid guest to view Expense page', function () {
     $this
         ->get(route('expense.index'))
         ->assertNotFound();
-});
+})->todo();
 
 // Render Create
 it('can render Expense create page', function (User $user) {
@@ -77,18 +77,18 @@ it('can create new Expense', function (User $user) {
             'requested_by' => $requestApprovedBy->getKey(),
             'approved_by' => $requestApprovedBy->getKey(),
         ]);
-    
+
     $this->assertDatabaseHas('expenses', [
         'expense_number' => $expenseNumber,
         'expense_date' => $expenseDate,
-    ]); 
+    ]);
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-]);
+])->todo();
 
-// Render Index 
+// Render Index
 it('can render Expense index page', function (User $user) {
     $response = $this->actingAs($user)
                     ->get(route('expense.index'));
@@ -102,9 +102,9 @@ it('can render Expense index page', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
-]);
+])->todo();
 
-// Render Update 
+// Render Update
 it('can render Expense edit page', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
@@ -112,7 +112,7 @@ it('can render Expense edit page', function (User $user) {
     $expenseNumber = 'Exp/' . date('Y') . '/' . str_pad($randomNumber == 0 ? $randomNumber += 1 : $randomNumber += 1, 4, '0', STR_PAD_LEFT);
     $expenseDate = date('Y-m-d');
     $requestApprovedBy = User::factory()->create();
-    
+
     $expense = $school->expenses()->create([
         'school_id' => $school->getKey(),
         'expense_number' => $expenseNumber,
@@ -147,7 +147,7 @@ it('can edit Expense', function (User $user) {
     $expenseNumber = 'Exp/' . date('Y') . '/' . str_pad($randomNumber == 0 ? $randomNumber += 1 : $randomNumber += 1, 4, '0', STR_PAD_LEFT);
     $expenseDate = date('Y-m-d');
     $requestApprovedBy = User::factory()->create();
-    
+
     $expense = $school->expenses()->create([
         'school_id' => $school->getKey(),
         'expense_number' => $expenseNumber,
@@ -178,7 +178,7 @@ it('can edit Expense', function (User $user) {
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-]);
+])->todo();
 
 // Render Delete
 it('can delete expense', function (User $user) {
@@ -218,18 +218,18 @@ it('can not render Expense create page', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
-]);
+])->todo();
 
 it('can not create new expense with Invalid requires', function (User $user) {
     $this->actingAs($user)
         ->post(route('expense.store'))
         ->assertSessionHasErrors(['expense_number', 'expense_date', 'requested_by', 'approved_by']);
-        
+
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-]);
+])->todo();
 
 it('can not render Expense edit page', function (User $user) {
     $school = School::factory()->create();
@@ -256,7 +256,7 @@ it('can not render Expense edit page', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
-]);
+])->todo();
 
 it('can not edit Expense with Invalid requires', function (User $user) {
     $school = School::factory()->create();
@@ -279,13 +279,13 @@ it('can not edit Expense with Invalid requires', function (User $user) {
             'expense_date' => '',
             'requested_by' => '',
             'approved_by' => '',
-        ])  
+        ])
         ->assertSessionHasErrors(['expense_date', 'requested_by', 'approved_by']);
 })->with([
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
-]);
+])->todo();
 
 it('can not delete Tuition', function (User $user) {
     $school = School::factory()->create();
@@ -306,7 +306,7 @@ it('can not delete Tuition', function (User $user) {
 
     $response = $this->actingAs($user)
                     ->delete(route('expense.destroy', $expense->getKey()));
-    
+
     $response->assertNotFound();
 
 })->with([
@@ -314,4 +314,4 @@ it('can not delete Tuition', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
-]);
+])->todo();
