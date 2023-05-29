@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\AcademicYear;
 use App\Models\School;
 use App\Models\Student;
+use App\Models\Tuition;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 
@@ -24,29 +26,33 @@ beforeEach(function () {
 it('forbid guest to view Student Tuition Master page', function () {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
-    $student = Student::factory()->create();
+    $student = Student::factory()->create([
+        'school_id' => $school->getKey()
+    ]);
 
     $this
         ->get(route('tuition-master.index', ['id' => $student->getKey()]))
-        ->assertNotFound();
-})->todo();
+        ->assertRedirect('login');
+});
 
 it('can render Student Tuition Master index page as Sempoa Staff', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
-    $student = Student::factory()->create();
+    $student = Student::factory()->create(['school_id' => $school->getKey()]);
 
     $response = $this
         ->actingAs($user)
         ->get(route('tuition-master.index', ['id' => $student->getKey()]));
 
     $response->assertOk();
-})->with('sempoa_staff')->todo();
+})->with('sempoa_staff');
 
 it('can render Student Tuition Master index page', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
-    $student = Student::factory()->create();
+    $student = Student::factory()->create([
+        'school_id' => $school->getKey()
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -54,19 +60,31 @@ it('can render Student Tuition Master index page', function (User $user) {
 
     $response->assertOk();
 })->with([
-    User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('can render Student Tuition Master create page', function (User $user) {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
-    $student = Student::factory()->create();
+    $AcademicYear = AcademicYear::factory([
+        'school_id' => $school->getKey(),
+        'status_years' => AcademicYear::STATUS_STARTED
+    ]);
+
+    $Tuition = Tuition::factory()->create([
+        'academic_year_id' => $AcademicYear->id,
+        'school_id' => $school->id,
+    ]);
+
+    $student = Student::factory()->create([
+        'school_id' => $school->getKey()
+    ]);
+    dd(123);
 
     $response = $this
         ->actingAs($user)
@@ -78,7 +96,7 @@ it('can render Student Tuition Master create page', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('can not render Student Tuition Master create page', function (User $user) {
     $school = School::factory()->create();
@@ -94,7 +112,7 @@ it('can not render Student Tuition Master create page', function (User $user) {
     User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
-])->todo();
+]);
 
 it('can render Student Tuition Master edit page', function (User $user) {
     $school = School::factory()->create();
@@ -111,7 +129,7 @@ it('can render Student Tuition Master edit page', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('can not render Student Tuition Master edit page', function (User $user) {
     $school = School::factory()->create();
@@ -127,11 +145,11 @@ it('can not render Student Tuition Master edit page', function (User $user) {
     User::ROLE_ADMIN_YAYASAN => [fn () => $this->adminYayasan],
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
-])->todo();
+]);
 // End Check Page Response
 
 // Check Store Data
-it('requires validation on create student', function () {
+it('require validation on create student', function () {
     $this->actingAs($this->superAdmin)
         ->post(route('tuition-master.store'), [
             'school_id' => 2,
@@ -169,9 +187,9 @@ it('requires validation on create student', function () {
             'father_name',
             'mother_name',
         ]);
-})->todo();
+});
 
-test('length validation on create student', function () {
+it('length validation on create student', function () {
     $this->actingAs($this->superAdmin)
         ->post(route('tuition-master.store'), [
             'school_id' => 2,
@@ -209,9 +227,9 @@ test('length validation on create student', function () {
             'mother_phone_number',
             'guardian_phone_number'
         ]);
-})->todo();
+});
 
-test('numeric validation on create student', function () {
+it('numeric validation on create student', function () {
     $this->actingAs($this->tataUsaha)
         ->post(route('tuition-master.store'), [
             'school_id' => 2,
@@ -244,9 +262,9 @@ test('numeric validation on create student', function () {
             'nis',
             'nisn',
         ]);
-})->todo();
+});
 
-test('files validation on create student', function () {
+it('files validation on create student', function () {
     $this->actingAs($this->tataUsaha)
         ->post(route('tuition-master.store'), [
             'school_id' => 2,
@@ -279,9 +297,9 @@ test('files validation on create student', function () {
             'file_birth_certificate' => 'string',
             'file_family_card' => 'string',
         ])->assertInvalid(['file_photo', 'file_birth_certificate', 'file_family_card']);
-})->todo();
+});
 
-test('can create new Student', function (User $user) {
+it('can create new Student', function (User $user) {
     $school_id = 2;
 
     $name = $this->faker->name();
@@ -366,7 +384,7 @@ test('can create new Student', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('can create new Student with Documents', function (User $user) {
     $school_id = 2;
@@ -440,7 +458,7 @@ it('can create new Student with Documents', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('forbid create new Student', function (User $user) {
     $school_id = 2;
@@ -501,7 +519,7 @@ it('forbid create new Student', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_SISWA => [fn () => $this->siswa],
-])->todo();
+]);
 // End Check Store Data
 
 // Check Delete Data
@@ -516,7 +534,7 @@ it('can delete Student', function (User $user) {
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
-])->todo();
+]);
 
 it('forbid delete Student', function (User $user) {
     $school = School::factory()->create();
@@ -530,11 +548,11 @@ it('forbid delete Student', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_SISWA => [fn () => $this->siswa],
-])->todo();
+]);
 // Check Delete Data
 
 // Check Update Data
-test('require validation on update student', function () {
+it('require validation on update student', function () {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -576,9 +594,9 @@ test('require validation on update student', function () {
             'father_name',
             'mother_name',
         ]);
-})->todo();
+});
 
-test('length validation on update student', function () {
+it('length validation on update student', function () {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -620,9 +638,9 @@ test('length validation on update student', function () {
             'mother_phone_number',
             'guardian_phone_number'
         ]);
-})->todo();
+});
 
-test('numeric validation on update student', function () {
+it('numeric validation on update student', function () {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -659,9 +677,9 @@ test('numeric validation on update student', function () {
             'nis',
             'nisn',
         ]);
-})->todo();
+});
 
-test('Files validation on update student', function () {
+it('Files validation on update student', function () {
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -697,7 +715,7 @@ test('Files validation on update student', function () {
             'file_birth_certificate' => 'string',
             'file_family_card' => 'string',
         ])->assertInvalid(['file_photo', 'file_birth_certificate', 'file_family_card']);
-})->todo();
+});
 
 it('can update Student', function (User $user) {
     $student = Student::factory()->create();
@@ -784,7 +802,7 @@ it('can update Student', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('can update Student With Files', function (User $user) {
     $student = Student::factory()->create();
@@ -858,7 +876,7 @@ it('can update Student With Files', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-])->todo();
+]);
 
 it('forbid update Student', function (User $user) {
     $student = Student::factory()->create();
@@ -918,5 +936,5 @@ it('forbid update Student', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_SISWA => [fn () => $this->siswa],
-])->todo();
+]);
 // End Check Update Data

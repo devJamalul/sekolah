@@ -16,6 +16,8 @@
 <script src="{{ asset('js/autoNumeric.js') }}"></script>
 
 <script>
+    $("form").attr('autocomplete', 'off')
+    $("input").attr('autocomplete', false)
     $(".select2").select2({
         theme: "bootstrap",
         placeholder: function() {

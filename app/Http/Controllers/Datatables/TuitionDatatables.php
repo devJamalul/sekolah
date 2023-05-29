@@ -15,14 +15,24 @@ class TuitionDatatables extends Controller
     {
         $tuition = Tuition::with('tuition_type', 'academic_year', 'grade', 'requested_by', 'approved_by');
         return DataTables::of($tuition)
+            ->filterColumn('academic_year', function ($query, $keyword) {
+                $query->whereHas('academic_year', function ($q) use ($keyword) {
+                    $q->where('academic_year_name', 'like', "%$keyword%");
+                });
+            })
+            ->filterColumn('grade', function ($query, $keyword) {
+                $query->whereHas('grade', function ($q) use ($keyword) {
+                    $q->where('grade_name', 'like', "%$keyword%");
+                });
+            })
             ->editColumn('tuition_type', function ($row) {
-                return $row->tuition_type ? $row->tuition_type->name : '-' ;
+                return $row->tuition_type ? $row->tuition_type->name : '-';
             })
             ->editColumn('academic_year', function ($row) {
-                return $row->academic_year ? $row->academic_year->academic_year_name : '-' ;
+                return $row->academic_year ? $row->academic_year->academic_year_name : '-';
             })
             ->editColumn('grade', function ($row) {
-                return $row->grade ? $row->grade->grade_name : '-' ;
+                return $row->grade ? $row->grade->grade_name : '-';
             })
             ->editColumn('price', function ($row) {
                 return 'Rp. ' . number_format($row->price, 0, ',', '.');

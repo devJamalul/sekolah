@@ -99,26 +99,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <form action="{{ route('invoice-details.store', $invoice->getKey()) }}" method="post">
-                                @csrf
-                                <tr>
-                                    <td>
-                                        <input type="text" class="form-control @error('item_name') is-invalid @enderror"
-                                            name="item_name" id="item_name" value="{{ old('item_name') }}"
-                                            autocomplete="off" tabindex="5"  autocomplete="off">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                            class="form-control harga @error('price') is-invalid @enderror" name="price"
-                                            id="price" value="{{ old('price') }}" autocomplete="off" tabindex="6"
-                                             autocomplete="off">
-                                    </td>
-                                    <td>
-                                        <button name="tambah" id="tambah" class="btn btn-primary btn-sm"
-                                            type="submit">Tambah</button>
-                                    </td>
-                                </tr>
-                            </form>
                             @php
                                 $index = 7;
                                 $total = 0;
@@ -155,26 +135,49 @@
                                             ]) }}"
                                             method="post">
                                             @csrf @method('DELETE')
-                                            <input type="hidden" name="invoice_detail_id"
-                                                value="{{ $item->getKey() }}">
+                                            <input type="hidden" name="invoice_detail_id" value="{{ $item->getKey() }}">
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                         </form>
                                     </td>
                                 </tr>
                             @endforeach
+                            <form action="{{ route('invoice-details.store', $invoice->getKey()) }}" method="post">
+                                @csrf
+                                <tr>
+                                    <td>
+                                        <input type="text"
+                                            class="form-control @error('item_name') is-invalid @enderror" name="item_name"
+                                            id="item_name" value="{{ old('item_name') }}" autocomplete="off"
+                                            tabindex="5" autocomplete="off">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                            class="form-control harga @error('price') is-invalid @enderror" name="price"
+                                            id="price" value="{{ old('price') }}" autocomplete="off"
+                                            tabindex="6" autocomplete="off">
+                                    </td>
+                                    <td>
+                                        <button name="tambah" id="tambah" class="btn btn-primary btn-sm"
+                                            type="submit">Tambah</button>
+                                    </td>
+                                </tr>
+                            </form>
+
+                        </tbody>
+                        <tfoot>
                             <tr>
-                                <td>
-                                    &nbsp;
-                                </td>
-                                <td>
+                                <th>
+                                    Total
+                                </th>
+                                <th>
                                     <input type="text" class="form-control harga" name="price" id="price"
                                         value="{{ $total }}" autocomplete="off" disabled>
-                                </td>
-                                <td>
+                                </th>
+                                <th>
                                     &nbsp;
-                                </td>
+                                </th>
                             </tr>
-                        </tbody>
+                        </tfoot>
                     </table>
                 </div>
             </div>
