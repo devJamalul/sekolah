@@ -48,6 +48,7 @@ class Staff extends Model
     {
         return $this->belongsTo(School::class);
     }
+
     protected static function booted()
     {
         static::addGlobalScope(new StaffScope);

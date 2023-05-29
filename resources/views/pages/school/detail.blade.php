@@ -106,11 +106,11 @@
                                 <tbody>
                                     <tr>
                                         <td scope="row">Nama </td>
-                                        <td class="text-primary font-weight-bold">{{ $school->staf?->user?->name }}</td>
+                                        <td class="text-primary font-weight-bold">{{ $school->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->name }}</td>
                                     </tr>
                                     <tr>
                                         <td scope="row">Email</td>
-                                        <td class="text-primary font-weight-bold">{{ $school->staf?->user?->email }}</td>
+                                        <td class="text-primary font-weight-bold">{{ $school->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->email }}</td>
                                     </tr>
                                 </tbody>
                             </table>
