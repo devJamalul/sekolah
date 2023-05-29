@@ -21,16 +21,19 @@ function getConfigBySchool($code,$school_id){
     return json_encode($result);
 }
 
-function formatAngka(string|array|null $nominal): int|array
+/**
+ * Menghapus "titik" pada value, misalnya 1.234 menjadi 1234
+ */
+function formatAngka(string|int|array|null $nominal): mixed
 {
     if (is_array($nominal)) {
         $data = [];
         foreach ($nominal as $item) {
-            $data[] = (int) str_replace(".", "", $item);
+            $data[] = (int) strtr($item, ".,", "");
         }
         return $data;
     }
 
     if (is_null($nominal)) $nominal = 0;
-    return (int) str_replace(".", "", $nominal);
+    return str_replace(".", "", $nominal);
 }

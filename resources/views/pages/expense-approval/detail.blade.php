@@ -72,7 +72,7 @@
                                     @csrf
                                     @method('PUT')
                                     <div class="form-group col-12">
-                                        <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror" rows="5" placeholder="Alasan Penolakan (Opsional)"></textarea>
+                                        <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror" rows="5" placeholder="Alasan Penolakan"></textarea>
                                         @error('reject_reason')
                                             <div class="invalid-feedback">
                                                 {{ $message }}

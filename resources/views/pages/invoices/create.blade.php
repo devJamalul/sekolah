@@ -78,6 +78,9 @@
                                     <input type="text" class="form-control harga @error('price') is-invalid @enderror"
                                         name="price" id="price" value="{{ old('price') }}" autocomplete="off"
                                         form="invoice" tabindex="6">
+                                    @error('price')
+                                        {{ $message }}
+                                    @enderror
                                 </td>
                                 <td>
                                     <button name="tambah" id="tambah" class="btn btn-primary btn-sm" type="submit"

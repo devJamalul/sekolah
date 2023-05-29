@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Wallet\WalletTransaction;
 use App\Models\Expense;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Actions\Wallet\WalletTransaction;
 use App\Notifications\ExpenseApprovalNotification;
 
 class ExpenseApprovalController extends Controller
@@ -63,6 +64,8 @@ class ExpenseApprovalController extends Controller
      */
     public function update(Request $request, Expense $expense_approval)
     {
+        DB::beginTransaction();
+        
         try {
             switch ($request->action) {
                 case 'approve':
@@ -70,11 +73,17 @@ class ExpenseApprovalController extends Controller
                     $expense_approval->status = Expense::STATUS_APPROVED;
                     break;
                 case 'reject':
-                    $expense_approval->status = Expense::STATUS_REJECTED;
-                    $expense_approval->reject_reason  = $request->reject_reason;    
+                    if($request->reject_reason == null){
+                        DB::rollBack();
+                        return redirect()->back()->withToastError('Ops, Alasan Penolakan Wajib Diisi!');
+                    }
+                        $expense_approval->status = Expense::STATUS_REJECTED;
+                        $expense_approval->reject_reason  = $request->reject_reason;    
                     break;
             }
             $expense_approval->save();
+
+            DB::commit();
 
             // pengurangan saldo jika diterima
             if ($request->action == 'approve') {
@@ -88,6 +97,7 @@ class ExpenseApprovalController extends Controller
 
             return redirect()->route('expense-approval.index')->withToastSuccess('Berhasil mengubah Status!');
         } catch (\Throwable $th) {
+            DB::rollBack();
             return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
         }
     }

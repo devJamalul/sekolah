@@ -10,6 +10,8 @@ use App\Models\ExpenseDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ExpenseRequest;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ExpenseController extends Controller
 {
@@ -29,8 +31,8 @@ class ExpenseController extends Controller
     {
         $title = "Tambah Pengeluaran Biaya";
         $expenseNumber = Expense::whereYear('created_at', date('Y'))->withTrashed()->count();
-        $users = User::where('school_id', session('school_id'))->whereHas('roles', function($q){
-            $q->whereIn('name',['admin sekolah','admin yayasan','tata usaha','bendahara','kepala sekolah']);
+        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+            $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
         })->get();
         $wallets = Wallet::where('school_id', session('school_id'))->get();
         return view('pages.expense.create', compact('title', 'users', 'expenseNumber', 'wallets'));
@@ -39,8 +41,45 @@ class ExpenseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ExpenseRequest $request)
+    public function store(Request $request)
     {
+        if ($request->has('quantity')) {
+            $request->merge([
+                'quantity' => formatAngka($request->quantity)
+            ]);
+        }
+        if ($request->has('price')) {
+            $request->merge([
+                'price' => formatAngka($request->price)
+            ]);
+        }
+
+        Validator::make(
+            $request->all(),
+            [
+                'expense_number'      => [
+                    'required',
+                    Rule::unique('expenses')->where(function ($q) use ($request) {
+                        $q->where('expense_number', $request->expense_number);
+                        $q->where('school_id',  session('school_id'));
+                        $q->whereNull('deleted_at');
+                    })
+                ],
+                'expense_date' => 'required|date',
+                'status'        => 'nullable',
+                'requested_by' => 'nullable|exists:users,id',
+                'approved_by' => 'nullable|exists:users,id',
+                'note' => 'required|string',
+                'item_name' => 'required|string',
+                'price' => 'required|string',
+                'wallet_id' => 'required|exists:wallets,id',
+                'quantity' => 'required|string'
+            ],
+            [
+                'wallet_id.required' => 'Harus diisi',
+            ]
+        )->validate();
+
         DB::beginTransaction();
 
         try {
@@ -53,7 +92,7 @@ class ExpenseController extends Controller
             $expense->note              = $request->note;
             $expense->request_by        = Auth::id();
             $expense->save();
-            
+
             $wallet         = Wallet::find($request->wallet_id);
             // $danaBOS        = Wallet::danaBos()->first();
 
@@ -77,10 +116,10 @@ class ExpenseController extends Controller
 
             if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
                 $expenseDetail->wallet_id   = $request->wallet_id;
-            } 
+            }
             // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
             //     $expenseDetail->wallet_id   = $danaBOS->id;
-            // } 
+            // }
             else {
                 DB::rollBack();
                 return redirect()->route('expense.create')->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
@@ -94,7 +133,6 @@ class ExpenseController extends Controller
 
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('expense.create')->withToastError('Eror Simpan Pengeluaran Biaya!');
@@ -120,8 +158,8 @@ class ExpenseController extends Controller
     public function edit(Expense $expense)
     {
         $title = 'Ubah Pengeluaran Biaya';
-        $users = User::where('school_id', session('school_id'))->whereHas('roles', function($q){
-            $q->whereIn('name',['admin sekolah','admin yayasan','tata usaha','bendahara','kepala sekolah']);
+        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+            $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
         })->get();
         $wallets = Wallet::where('school_id', session('school_id'))->get();
         return view('pages.expense.edit', compact('expense', 'title', 'users', 'wallets'));
@@ -132,7 +170,7 @@ class ExpenseController extends Controller
      */
     public function update(ExpenseRequest $request, Expense $expense)
     {
-        
+
         // cek status dan kembalikan jika statusnya bukan DRAFT
         if ($expense->approval_by != Null)
             return to_route('expense.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
@@ -150,31 +188,31 @@ class ExpenseController extends Controller
 
 
             $arrayMax = $request->array_max;
-            foreach(range(0, $arrayMax) as $key => $item){
+            foreach (range(0, $arrayMax) as $key => $item) {
                 $wallet         = Wallet::find($request->array_wallet_id[$key]);
                 // $danaBOS        = Wallet::danaBos()->first();
-    
+
                 $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
                     $q->where('status', Expense::STATUS_PENDING);
                 })
                     ->where('wallet_id', $request->array_wallet_id[$key])
                     ->where('id', '<>', $request->expense_detail_id[$key])
                     ->sum(DB::raw('price * quantity'));
-                    
-            $walletBalance  = $wallet->balance - $totalExpensePending;
 
-            $expenseDetail              = ExpenseDetail::find($request->expense_detail_id[$key]);
-            $expenseDetail->expense_id  = $expense->getKey();
+                $walletBalance  = $wallet->balance - $totalExpensePending;
 
-            if ((formatAngka($request->array_quantity[$key]) * formatAngka($request->array_price[$key])) <= $walletBalance) {
-                $expenseDetail->wallet_id   = $request->array_wallet_id[$key];
-            } 
-            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
-            //     $expenseDetail->wallet_id   = $danaBOS->id;
-            // } 
-            else {
-                return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
-            }
+                $expenseDetail              = ExpenseDetail::find($request->expense_detail_id[$key]);
+                $expenseDetail->expense_id  = $expense->getKey();
+
+                if ((formatAngka($request->array_quantity[$key]) * formatAngka($request->array_price[$key])) <= $walletBalance) {
+                    $expenseDetail->wallet_id   = $request->array_wallet_id[$key];
+                }
+                // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
+                //     $expenseDetail->wallet_id   = $danaBOS->id;
+                // }
+                else {
+                    return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+                }
                 $expenseDetail = ExpenseDetail::updateOrCreate(
                     [
                         'id' => $request->expense_detail_id[$key]
@@ -190,7 +228,6 @@ class ExpenseController extends Controller
             }
 
             DB::commit();
-
         } catch (\Throwable $th) {
             return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror Simpan Pengeluaran Biaya!');
         }
@@ -205,13 +242,13 @@ class ExpenseController extends Controller
     {
 
         try {
-            if($expense->expense_details){
+            if ($expense->expense_details) {
                 $expenseDetails = ExpenseDetail::where('expense_id', $expense->id)->get();
                 foreach ($expenseDetails as $key => $expenseDetail) {
                     $expenseDetail->delete();
                 }
             }
-            
+
             $expense->delete();
 
 
@@ -220,7 +257,6 @@ class ExpenseController extends Controller
             return response()->json([
                 'msg' => 'Berhasil Hapus Pengeluaran Biaya!'
             ], 200);
-
         } catch (\Throwable $th) {
             DB::rollback();
 

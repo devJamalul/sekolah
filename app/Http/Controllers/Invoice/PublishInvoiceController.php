@@ -29,6 +29,10 @@ class PublishInvoiceController extends Controller
         if (count($invoice->invoice_details) == 0)
             return to_route('invoices.index')->withToastError('Ups! Invoice belum memiliki baris data.');
 
+        // cek harus memiliki nilai lebih dari 0
+        if ($invoice->total_amount <= 0)
+            return to_route('invoices.index')->withToastError('Ups! Invoice tidak boleh bernilai 0.');
+
         // ambil status kirim emailnya
         $is_sent = $request->get('sent') ?? false;
 

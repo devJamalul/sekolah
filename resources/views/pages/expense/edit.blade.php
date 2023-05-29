@@ -39,7 +39,7 @@
                                 <div class="form-group">
                                     <label for="expense_number">No. Pengeluaran Biaya</label>
                                     <input type="text" class="form-control @error('expense_number') is-invalid @enderror"
-                                        name="expense_number" id="expense_number" 
+                                        name="expense_number" id="expense_number"
                                         autocomplete="off" tabindex="2" value="{{ old('expense_number', $expense->expense_number) }}" >
                                         @error('expense_number')
                                     <div class="invalid-feedback">
@@ -99,7 +99,7 @@
                                     <td>
                                         <input type="text" class="form-control harga @error('quantity') is-invalid @enderror"
                                             name="quantity" id="quantity" value="{{ old('quantity') }}" autocomplete="off"
-                                             tabindex="6" pattern="[0-9]+">
+                                             tabindex="6">
                                     </td>
                                     <td>
                                         <input type="text" class="form-control harga @error('price') is-invalid @enderror"
@@ -114,13 +114,19 @@
                             </form>
                             @php
                                 $index = 7;
+                                $total_barang = 0;
+                                $total_harga = 0;
                             @endphp
                             @foreach ($expense->expense_details as $key => $item)
+                            @php
+                                $total_barang += $item->quantity;
+                                $total_harga += $item->price * $item->quantity;
+                            @endphp
                                 <input type="hidden" name="expense_detail_id[{{ $key }}]"
                                 value="{{ $item->getKey() }}" form="expense">
                                 <tr>
                                     <td>
-                                        <select class="form-control select2 @error('array_wallet_id.'. $key) is-invalid @enderror" 
+                                        <select class="form-control select2 @error('array_wallet_id.'. $key) is-invalid @enderror"
                                         name="array_wallet_id[{{ $key }}]"
                                         id="requested-by-select" form="expense">
                                         <option value="">-</option>
@@ -138,22 +144,22 @@
                                     </td>
                                     <td>
                                         <input type="text" class="form-control @error('array_item_name.' . $key) is-invalid @enderror"
-                                            name="array_item_name[{{ $key }}]" 
-                                            id="array_item_name[{{ $key }}]" 
+                                            name="array_item_name[{{ $key }}]"
+                                            id="array_item_name[{{ $key }}]"
                                             value="{{ old('array_item_name.'. $key, $item->item_name) }}" autocomplete="off"
                                             form="expense" tabindex="{{ $index++ }}" required>
                                     </td>
                                     <td>
                                         <input type="text" class="form-control harga @error('array_quantity.' . $key) is-invalid @enderror"
-                                        name="array_quantity[{{ $key }}]" 
-                                        id="array_quantity[{{ $key }}]" 
+                                        name="array_quantity[{{ $key }}]"
+                                        id="array_quantity[{{ $key }}]"
                                         value="{{ old('array_quantity.'. $key, $item->quantity) }}" autocomplete="off"
-                                        form="expense" tabindex="{{ $index++ }}" required pattern="[0-9]+">
+                                        form="expense" tabindex="{{ $index++ }}" required>
                                     </td>
                                     <td>
                                        <input type="text" class="form-control harga @error('array_price.' . $key) is-invalid @enderror"
-                                            name="array_price[{{ $key }}]" 
-                                            id="array_price[{{ $key }}]" 
+                                            name="array_price[{{ $key }}]"
+                                            id="array_price[{{ $key }}]"
                                             value="{{ old('array_price.'. $key, $item->price) }}" autocomplete="off"
                                             form="expense" tabindex="{{ $index++ }}" required>
                                     </td>
@@ -173,6 +179,15 @@
                                 </tr>
                             @endforeach
                             <input type="hidden" name="array_max" value="{{ $key ?? 0 }}" form="expense">
+                            <tr>
+                                <td colspan="2">&nbsp;</td>
+                                <td>
+                                    <input type="text" class="form-control" value="{{ number_format($total_barang, 0, ',', '.') }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" value="{{ number_format($total_harga, 0, ',', '.') }}" readonly>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
