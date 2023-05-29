@@ -62,37 +62,52 @@
                                 @if ($tuition->reject_reason)
                                     <tr>
                                         <td scope="row">Alasan Penolakan</td>
-                                        <td class="text-primary font-weight-bold">{{ $tuition->reject_reason}}</td>
+                                        <td class="text-primary font-weight-bold">{{ $tuition->reject_reason }}</td>
                                     </tr>
                                 @endif
-                            </tbody>
-                        </table>
-
-                        @can(['tuition-approval.update'])
-                            @if ($tuition->status == \App\Models\Tuition::STATUS_PENDING )
-                                <div style="width: 100%; display: flex; justify-content: end; ">
+                                @can(['tuition-approval.update'])
                                     <form
                                         action="{{ route('tuition-approval.update', ['tuition_approval' => $tuition->getKey()]) }}"
                                         method="post">
                                         @csrf
                                         @method('PUT')
-                                        <div class="form-group col-12">
-                                            <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror" rows="5" placeholder="Alasan Penolakan (Opsional)"></textarea>
-                                            @error('reject_reason')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
+                                        @if ($tuition->status == \App\Models\Tuition::STATUS_PENDING)
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div style="width: 100%; display: flex; justify-content: end; ">
 
-                                        <button type="submit" name="action" value="reject"
-                                            class="btn btn-danger ml-2">Tolak</button>
-                                        <button type="submit" name="action" value="approve"
-                                            class="btn btn-primary ml-2">Setujui</button>
+                                                        <div class="form-group col-12">
+                                                            <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror"
+                                                                rows="5" placeholder="Alasan Penolakan "></textarea>
+                                                            @error('reject_reason')
+                                                                <div class="invalid-feedback">
+                                                                    {{ $message }}
+                                                                </div>
+                                                            @enderror
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="float-right">
+                                                        <button type="submit" name="action" value="reject"
+                                                            class="btn btn-danger ml-2">Tolak</button>
+                                                        <button type="submit" name="action" value="approve"
+                                                            class="btn btn-primary ml-2">Setujui</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </form>
-                                </div>
-                            @endif
-                        @endcan
+                                @endcan
+                            </tbody>
+                        </table>
+
+
                     </div>
                 </div>
             </div>
