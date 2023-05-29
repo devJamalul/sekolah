@@ -14,6 +14,11 @@ class ClassroomStudent extends Model
 
     protected $table = "classroom_student";
 
+    protected $fillable = [
+        'classroom_id',
+        'student_id'
+    ];
+
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);

@@ -45,8 +45,13 @@ class TuitionApprovalController extends Controller
                     $tuition_approval->approval_by = Auth::user()->id;
                     break;
                 case 'reject':
+
+                    if ($request->reject_reason == '') {
+                        return redirect()->back()->withToastError('Ops,Alasan Penolakan Wajib Diisi !');
+                    }
+
                     $tuition_approval->status = Tuition::STATUS_REJECTED;
-                    $tuition_approval->reject_reason  = $request->reject_reason;    
+                    $tuition_approval->reject_reason  = $request->reject_reason;
                     break;
             }
             $tuition_approval->save();

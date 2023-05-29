@@ -45,7 +45,8 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body p-3">
-                    <h6><b>Dana Akhir</b> : Rp. {{ number_format($wallet->last_balance, 0, ',', '.') }} </h6>
+                    <h6><b>Dana Akhir</b> : Rp.
+                        {{ number_format($wallet->last_balance + $wallet->init_value, 0, ',', '.') }} </h6>
 
                 </div>
             </div>

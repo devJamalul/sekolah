@@ -20,7 +20,10 @@ class ClassroomFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement(['1a', '2b', '3c', '4d', '5e'])
+            'school_id' => School::factory(),
+            'academic_year_id' => AcademicYear::factory(),
+            'name' => fake()->randomElement(['1a', '2b', '3c', '4d', '5e']),
+            'grade_id' => Grade::factory()
         ];
     }
 }
