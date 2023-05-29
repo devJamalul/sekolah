@@ -519,11 +519,7 @@ it('forbid create new Student', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_SISWA => [fn () => $this->siswa],
-<<<<<<< HEAD
 ]);
-=======
-])->todo();
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
 // End Check Store Data
 
 // Check Delete Data
@@ -538,11 +534,7 @@ it('can delete Student', function (User $user) {
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
     User::ROLE_TATA_USAHA => [fn () => $this->tataUsaha],
-<<<<<<< HEAD
 ]);
-=======
-])->todo();
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
 
 it('forbid delete Student', function (User $user) {
     $school = School::factory()->create();
@@ -556,19 +548,11 @@ it('forbid delete Student', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_SISWA => [fn () => $this->siswa],
-<<<<<<< HEAD
 ]);
 // Check Delete Data
 
 // Check Update Data
 it('require validation on update student', function () {
-=======
-])->todo();
-// Check Delete Data
-
-// Check Update Data
-test('require validation on update student', function () {
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -610,15 +594,9 @@ test('require validation on update student', function () {
             'father_name',
             'mother_name',
         ]);
-<<<<<<< HEAD
 });
 
 it('length validation on update student', function () {
-=======
-})->todo();
-
-test('length validation on update student', function () {
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -660,15 +638,9 @@ test('length validation on update student', function () {
             'mother_phone_number',
             'guardian_phone_number'
         ]);
-<<<<<<< HEAD
 });
 
 it('numeric validation on update student', function () {
-=======
-})->todo();
-
-test('numeric validation on update student', function () {
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -705,15 +677,9 @@ test('numeric validation on update student', function () {
             'nis',
             'nisn',
         ]);
-<<<<<<< HEAD
 });
 
 it('Files validation on update student', function () {
-=======
-})->todo();
-
-test('Files validation on update student', function () {
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
     $school = School::factory()->create();
     session(['school_id' => $school->getKey()]);
     $student = Student::factory()->create();
@@ -749,11 +715,7 @@ test('Files validation on update student', function () {
             'file_birth_certificate' => 'string',
             'file_family_card' => 'string',
         ])->assertInvalid(['file_photo', 'file_birth_certificate', 'file_family_card']);
-<<<<<<< HEAD
 });
-=======
-})->todo();
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
 
 it('can update Student', function (User $user) {
     $student = Student::factory()->create();
@@ -840,11 +802,7 @@ it('can update Student', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-<<<<<<< HEAD
 ]);
-=======
-])->todo();
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
 
 it('can update Student With Files', function (User $user) {
     $student = Student::factory()->create();
@@ -918,11 +876,7 @@ it('can update Student With Files', function (User $user) {
     User::ROLE_BENDAHARA => [fn () => $this->bendahara],
     User::ROLE_SUPER_ADMIN => [fn () => $this->superAdmin],
     User::ROLE_OPS_ADMIN => [fn () => $this->opsAdmin],
-<<<<<<< HEAD
 ]);
-=======
-])->todo();
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
 
 it('forbid update Student', function (User $user) {
     $student = Student::factory()->create();
@@ -982,9 +936,5 @@ it('forbid update Student', function (User $user) {
     User::ROLE_ADMIN_SEKOLAH => [fn () => $this->adminSekolah],
     User::ROLE_KEPALA_SEKOLAH => [fn () => $this->kepalaSekolah],
     User::ROLE_SISWA => [fn () => $this->siswa],
-<<<<<<< HEAD
 ]);
-=======
-])->todo();
->>>>>>> c1203156ba3130935eb526a7f0497944a3616ca2
 // End Check Update Data
