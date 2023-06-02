@@ -102,32 +102,34 @@ class PublishTuition extends Command
                 );
             }
 
-            // Job batching
-            Bus::batch($jobs)->then(function (Batch $batch) use ($school) {
-                // All jobs completed successfully...
-                Log::withContext([
-                    'context' => 'Publish tuitions',
-                    'school' => $school->school_name,
-                    'period' => now()->addMonth()->startOfMonth(),
-                ])->info("Publish tuitions completed successfully...");
-            })->catch(function (Batch $batch, Throwable $e) use ($school) {
-                // First batch job failure detected...
-                Log::withContext([
-                    'context' => 'Publish tuitions',
-                    'school' => $school->school_name,
-                    'period' => now()->addMonth()->startOfMonth(),
-                    'error' => $e->getMessage()
-                ])->error("Publish tuitions failure detected...");
-            })->finally(function (Batch $batch) use ($school) {
-                // The batch has finished executing...
-                Log::withContext([
-                    'context' => 'Publish tuitions',
-                    'school' => $school->school_name,
-                    'period' => now()->addMonth()->startOfMonth(),
-                ])->info("Publish tuitions finished executing...");
-            })
-                ->name('Publish tuitions for school : ' . $school->school_name)
-                ->dispatch();
+            if ($jobs) {
+                // Job batching
+                Bus::batch($jobs)->then(function (Batch $batch) use ($school) {
+                    // All jobs completed successfully...
+                    Log::withContext([
+                        'context' => 'Publish tuitions',
+                        'school' => $school->school_name,
+                        'period' => now()->addMonth()->startOfMonth(),
+                    ])->info("Publish tuitions completed successfully...");
+                })->catch(function (Batch $batch, Throwable $e) use ($school) {
+                    // First batch job failure detected...
+                    Log::withContext([
+                        'context' => 'Publish tuitions',
+                        'school' => $school->school_name,
+                        'period' => now()->addMonth()->startOfMonth(),
+                        'error' => $e->getMessage()
+                    ])->error("Publish tuitions failure detected...");
+                })->finally(function (Batch $batch) use ($school) {
+                    // The batch has finished executing...
+                    Log::withContext([
+                        'context' => 'Publish tuitions',
+                        'school' => $school->school_name,
+                        'period' => now()->addMonth()->startOfMonth(),
+                    ])->info("Publish tuitions finished executing...");
+                })
+                    ->name('Publish tuitions for school : ' . $school->school_name)
+                    ->dispatch();
+            }
         }
     }
 }
