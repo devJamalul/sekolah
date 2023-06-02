@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TuitionRequest;
 use App\Notifications\TuitionApprovalNotification;
+use Illuminate\Support\Facades\Log;
 
 class TuitionController extends Controller
 {
@@ -72,6 +73,7 @@ class TuitionController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
+            Log::error($th->getMessage());
             return redirect()->route('tuition.index')->withToastError('Eror Simpan Biaya!');
         }
 
@@ -127,6 +129,7 @@ class TuitionController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
+            Log::error($th->getMessage());
             return redirect()->route('tuition.index')->withToastError('Eror Simpan Biaya!');
         }
 
@@ -149,6 +152,7 @@ class TuitionController extends Controller
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
+            Log::error($th->getMessage());
             return response()->json([
                 'msg' => 'Eror Hapus Biaya!'
             ]);
