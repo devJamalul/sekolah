@@ -1,7 +1,6 @@
 @extends('layout.master-page')
 
 @section('content')
-
     {{-- start ROW --}}
 
     <div class="row">
@@ -16,11 +15,11 @@
                 <div class="card-body">
                     <form action="{{ route('publish-tuition.store') }}" method="post">
                         @csrf
-                        
+
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Periode</th>
+                                    <th>Biaya</th>
                                     <th>
                                         <button type="submit" class="btn btn-primary float-right btn-sm">Terbitkan</button>
                                     </th>
@@ -30,10 +29,20 @@
                                 @foreach ($tuitions as $tuition)
                                     <tr>
                                         <td>
-                                            <label for="checkbox{{$tuition->id}}">{{$tuition->period}}</label>
+                                            <label for="checkbox{{ $tuition->getKey() }}">
+                                                {{ $tuition->tuition_type->name }}
+                                                {{ $tuition->academic_year->academic_year_name }}
+                                                - Tingkat {{ $tuition->grade->grade_name }}
+                                            </label>
                                         </td>
                                         <td>
-                                            <input type="checkbox" name="tuitions[]" id="checkbox{{$tuition->id}}" value="{{$tuition->id}}">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="tuitions[]" id="checkbox{{ $tuition->getKey() }}"
+                                                value="{{ $tuition->getKey() }}">
+                                                <label class="form-check-label" for="checkbox{{ $tuition->getKey() }}">
+                                                    Pilih
+                                                </label>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -46,5 +55,4 @@
         {{-- END table Publish Tuition --}}
     </div>
     {{-- END ROW --}}
-
 @endsection
