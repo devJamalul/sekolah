@@ -5,13 +5,17 @@
 
     <div class="row">
 
-        {{-- start table Publish Tuition --}}
-        <div class="col-lg-10">
-            <div class="card">
-                <div class="card-header d-flex">
-                    <h6 class="mr-auto font-weight-bold text-primary">{{ $title }}</h6>
-                    <a href="{{ route('tuition.index') }}" class="btn btn-secondary btn-sm">Kembali</a>
+        <div class="col-lg-6">
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
+                <div>
+                    @can('tuition.index')
+                        <a href="{{ route('tuition.index') }}"
+                            class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">Kembali</a>
+                    @endcan
                 </div>
+            </div>
+            <div class="card">
                 <div class="card-body">
                     <form action="{{ route('publish-tuition.store') }}" method="post">
                         @csrf
@@ -37,8 +41,9 @@
                                         </td>
                                         <td>
                                             <div class="form-check">
-                                                <input type="checkbox" name="tuitions[]" id="checkbox{{ $tuition->getKey() }}"
-                                                value="{{ $tuition->getKey() }}">
+                                                <input type="checkbox" name="tuitions[]"
+                                                    id="checkbox{{ $tuition->getKey() }}"
+                                                    value="{{ $tuition->getKey() }}">
                                                 <label class="form-check-label" for="checkbox{{ $tuition->getKey() }}">
                                                     Pilih
                                                 </label>
@@ -52,7 +57,6 @@
                 </div>
             </div>
         </div>
-        {{-- END table Publish Tuition --}}
     </div>
     {{-- END ROW --}}
 @endsection

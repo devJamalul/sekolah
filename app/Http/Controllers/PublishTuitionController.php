@@ -22,10 +22,11 @@ class PublishTuitionController extends Controller
     {
         $title = 'Penerbitan Biaya Manual';
         $tuitions = Tuition::query()
-        ->whereHas('tuition_type', function ($query) {
-            $query->where('recurring', false);
-        })
-        ->get();
+            ->whereNotNull('approval_by')
+            ->whereHas('tuition_type', function ($query) {
+                $query->where('recurring', false);
+            })
+            ->get();
         return view('pages.publish-tuition.index', compact('title', 'tuitions'));
     }
 
@@ -87,7 +88,6 @@ class PublishTuitionController extends Controller
             }
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage());
