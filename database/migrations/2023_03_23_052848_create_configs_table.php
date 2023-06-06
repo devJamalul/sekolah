@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->string("name")->nullable();
+            $table->string('name')->nullable();
+            $table->boolean('is_enabled')->default(true);
             $table->timestamps();
         });
     }

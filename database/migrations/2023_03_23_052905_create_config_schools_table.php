@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('config_schools', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(School::class)->nullable()->constrained()->nullOnDelete();
-            $table->string('code_config');
-            $table->string("value")->nullable();
+            $table->foreignIdFor(Config::class)->constrained()->cascadeOnDelete();
+            $table->string('value')->nullable();
             $table->timestamps();
         });
     }

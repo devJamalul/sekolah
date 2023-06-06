@@ -16,7 +16,7 @@ class ConfigController extends Controller
     public function index()
     {
         //
-        $title = "Master Configuration";
+        $title = "Master Konfigurasi";
         return view('pages.config.index', compact('title'));
     }
 

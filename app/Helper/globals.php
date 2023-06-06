@@ -21,6 +21,16 @@ function getConfigBySchool($code,$school_id){
     return json_encode($result);
 }
 
+function schoolConfig($config_id)
+{
+    $data = ConfigSchool::where([
+        'config_id' => $config_id,
+        "school_id" => session('school_id')
+    ])->first();
+
+    return $data->value ?? '';
+}
+
 /**
  * Menghapus "titik" pada value, misalnya 1.234 menjadi 1234
  */
