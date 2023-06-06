@@ -44,8 +44,8 @@
                                     <th>Kelas</th>
                                     <th>Tipe Uang Sekolah</th>
                                     <th>Tipe Pembayaran</th>
-                                    <th>Sisa Bayar</th>
                                     <th>Total Bayar</th>
+                                    <th>Sisa Bayar</th>
                                     <th>Status</th>
                                     <th>Tanggal Invoice</th>
                                 </tr>
@@ -190,9 +190,9 @@
                 $(api.table().footer()).html(`
                     <tr>
                                 <th colspan="7">Total Pembayaran</th>
-                                <th><span id="total_remaining_debt">${total_remaining_debt}</span></th>
-                                <th colspan="3"><span id="total_payment">${total_payment}</span></th>
-                            </tr>
+                                <th><span id="total_payment">${total_payment}</span></th>
+                                <th colspan="3"><span id="total_remaining_debt">${total_remaining_debt}</span></th>
+                                </tr>
                     `)
             };
             const table = $("#student-tuitions")
@@ -219,10 +219,10 @@
                     data: 'payment_type'
                 },
                 {
-                    data: 'remaining_debt'
+                    data: 'grand_total'
                 },
                 {
-                    data: 'grand_total'
+                    data: 'remaining_debt'
                 },
                 {
                     data: 'status_payment'

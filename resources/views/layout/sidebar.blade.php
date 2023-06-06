@@ -1,6 +1,6 @@
 @php
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*', 'school-profile') ? 'show' : '';
-    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'tuition-approval', 'tuition-approval/*', 'expense-approval', 'expense-approval/*') ? 'show' : '';
+    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'tuition-approval', 'tuition-approval/*', 'expense-approval', 'expense-approval/*', 'expense-outgoing', 'expense-outgoing/*') ? 'show' : '';
     $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
@@ -118,6 +118,17 @@
                     @can('expense-approval.index')
                         <a href="{{ route('expense-approval.index') }}"
                             class="collapse-item {{ Request::is('expense-approval', 'expense-approval/*') ? 'active' : '' }}">
+                            Pengeluaran Biaya
+                        </a>
+                    @endcan
+
+                    @canany(['expense-outgoing.index'])
+                        <h6 class="collapse-header">Realisasi</h6>
+                    @endcanany
+                    
+                    @can('expense-outgoing.index')
+                        <a href="{{ route('expense-outgoing.index') }}"
+                            class="collapse-item {{ Request::is('expense-outgoing', 'expense-outgoing/*') ? 'active' : '' }}">
                             Pengeluaran Biaya
                         </a>
                     @endcan

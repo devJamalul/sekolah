@@ -125,7 +125,7 @@
                                                 <td>{{ 'Rp. ' . number_format($student_tuition->grand_total, 0, ',', '.') }}
                                                 </td>
                                                 <td><span
-                                                        class="text-capitalize badge badge-danger text-white">{{ $student_tuition->status == 'pending' ? 'Belum lunas' : 'Lunas' }}</span>
+                                                        class="text-capitalize badge {{$student_tuition->status == 'paid' ? 'badge-success' : 'badge-danger' }} text-white">{{ $student_tuition->status == 'pending' ? 'Belum lunas' : 'Lunas' }}</span>
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('transactions.show', $student_tuition->student_id) }}"

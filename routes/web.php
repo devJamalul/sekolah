@@ -23,6 +23,7 @@ use App\Http\Controllers\Wallet\WalletController;
 use App\Http\Controllers\PublishTuitionController;
 use App\Http\Controllers\SchoolSelectorController;
 use App\Http\Controllers\ExpenseApprovalController;
+use App\Http\Controllers\ExpenseOutgoingController;
 use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\TuitionApprovalController;
 use App\Http\Controllers\Wallet\WalletLogController;
@@ -82,6 +83,9 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     // Approvals
     Route::resource('tuition-approval', TuitionApprovalController::class);
     Route::resource('expense-approval', ExpenseApprovalController::class);
+
+    // Outgoing
+    Route::resource('expense-outgoing', ExpenseOutgoingController::class);
 
     // Student
     Route::get('students/import', [StudentsController::class, 'importStudent'])->name('students.import');

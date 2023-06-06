@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class ExpenseApprovalSeeder extends Seeder
+class ExpenseOutgoingSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -25,15 +25,15 @@ class ExpenseApprovalSeeder extends Seeder
 
         // expense approvals
         $roles = [
-            'index' => 'expense-approval.index',
-            'create' => 'expense-approval.create',
-            'store' => 'expense-approval.store',
-            'show' => 'expense-approval.show',
-            'edit' => 'expense-approval.edit',
-            'update' => 'expense-approval.update',
-            'destroy' => 'expense-approval.destroy',
-            'restore' => 'expense-approval.restore',
-            'report' => 'expense-approval.report',
+            'index' => 'expense-outgoing.index',
+            'create' => 'expense-outgoing.create',
+            'store' => 'expense-outgoing.store',
+            'show' => 'expense-outgoing.show',
+            'edit' => 'expense-outgoing.edit',
+            'update' => 'expense-outgoing.update',
+            'destroy' => 'expense-outgoing.destroy',
+            'restore' => 'expense-outgoing.restore',
+            'report' => 'expense-outgoing.report',
         ];
 
         // index expense approvals
@@ -55,7 +55,7 @@ class ExpenseApprovalSeeder extends Seeder
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
 
         // show expense approvals
         $permission = Permission::firstOrCreate([
@@ -69,21 +69,21 @@ class ExpenseApprovalSeeder extends Seeder
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
 
         // update expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
 
         // destroy expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
 
         // restore expense approvals
         $permission = Permission::firstOrCreate([

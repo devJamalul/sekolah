@@ -8,6 +8,7 @@ use App\Http\Controllers\Datatables\WalletLogDatatables;
 use App\Http\Controllers\Datatables\TransactionDatatables;
 use App\Http\Controllers\Datatables\ExpenseReportDatatables;
 use App\Http\Controllers\Datatables\ExpenseApprovalDatatables;
+use App\Http\Controllers\Datatables\ExpenseOutgoingDatatables;
 use App\Http\Controllers\Datatables\TuitionApprovalDatatables;
 use App\Http\Controllers\Datatables\TransactionReportDatatables;
 use App\Http\Controllers\Datatables\StudentTuitionMasterDatatables;
@@ -64,4 +65,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('expense-approval', [ExpenseApprovalDatatables::class, 'index'])->name('expense-approval');
 
     Route::get('invoices', App\Http\Controllers\Datatables\InvoiceDatatables::class)->name('invoices');
+
+    Route::get('expense-outgoing', [ExpenseOutgoingDatatables::class, 'index'])->name('expense-outgoing');
 });

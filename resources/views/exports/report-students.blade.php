@@ -15,8 +15,7 @@
                 <td>{{ $row['name'] }}</td>
                 <td>{{ $row['gender'] == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
                 <td>{{ $row['email'] }}</td>
-
-                @if (isset($row['classrooms']) && count($row['classrooms']) > 1)
+                @if (isset($row['classrooms']) && count($row['classrooms']) >= 1)
                     <td>{{ $row['classrooms'][0]['grade']['grade_name'] }} - {{ $row['classrooms'][0]['name'] }} </td>
                 @else
                     <td>Belum Mendapat Kelas</td>
