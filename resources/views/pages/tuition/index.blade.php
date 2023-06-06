@@ -10,7 +10,10 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
                 <div>
-                    {{-- <a href="{{ route('publish-tuition.create') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">TERBITKAN</a> --}}
+                    @can('tuition-approval.store')
+                        <a href="{{ route('publish-tuition.index') }}"
+                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Penerbitan Manual</a>
+                    @endcan
                     @can('tuition.create')
                         <a href="{{ route('tuition.create') }}"
                             class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Tambah {{ $title }}</a>
