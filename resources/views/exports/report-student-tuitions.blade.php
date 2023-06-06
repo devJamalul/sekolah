@@ -8,8 +8,8 @@
             <th>Kelas</th>
             <th>Tipe Uang Sekolah</th>
             <th>Tipe Pembayaran</th>
-            <th>Sisa Bayar</th>
             <th>Total Bayar</th>
+            <th>Sisa Bayar</th>
             <th>Status</th>
             <th>Tanggal Invoice</th>
         </tr>
@@ -35,8 +35,8 @@
                 <td>{{ $row->student->classrooms->first()->name }}</td>
                 <td>{{ $tuitionType }}</td>
                 <td>{{ $row->payment_type?->name }}</td>
-                <td>{{ $remainingDebt > 0 ? $remainingDebt : 0 }}</td>
                 <td>{{ $row->grand_total }}</td>
+                <td>{{ $remainingDebt > 0 ? $remainingDebt : 0 }}</td>
                 <td>{{ $statusPayment($row->status) }}</td>
                 <td>{{ $row->created_at->format('d F Y') }}</td>
             </tr>

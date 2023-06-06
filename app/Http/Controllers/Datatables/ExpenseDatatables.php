@@ -27,8 +27,10 @@ class ExpenseDatatables extends Controller
             ->editColumn('status', function ($row){
                 return match ($row->status) {
                     Expense::STATUS_APPROVED => '<span class="badge badge-success">Disetujui</span>',
-                    Expense::STATUS_PENDING => '<span class="badge badge-warning">Pending</span>',
-                    Expense::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>'
+                    Expense::STATUS_PENDING => '<span class="badge badge-dark">Pending</span>',
+                    Expense::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>',
+                    Expense::STATUS_DONE => '<span class="badge badge-success">Selesai</span>',
+                    Expense::STATUS_OUTGOING => '<span class="badge badge-info">Realisasi</span>',
                 };
             })
             ->editColumn('is_sempoa_processed', function ($row){

@@ -23,6 +23,10 @@ class Expense extends Model
 
     const STATUS_REJECTED   = "rejected";
 
+    const STATUS_OUTGOING    = "outgoing";
+
+    const STATUS_DONE   = "done";
+
     protected static function booted()
     {
         static::addGlobalScope(new ExpenseScope);

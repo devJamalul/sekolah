@@ -85,12 +85,6 @@ class ExpenseApprovalController extends Controller
 
             DB::commit();
 
-            // pengurangan saldo jika diterima
-            if ($request->action == 'approve') {
-                foreach ($expense_approval->expense_details as $detail) {
-                    WalletTransaction::decrement($detail->wallet_id, $detail->quantity * $detail->price, 'Pengeluaran ' . $expense_approval->expense_number . ' untuk ' . $detail->item_name);
-                }
-            }
 
             // Notification
             $expense_approval->requested_by->notify(new ExpenseApprovalNotification($expense_approval));

@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ExpenseDetail;
 
-class ExpenseApprovalDatatables extends Controller
+class ExpenseOutgoingDatatables extends Controller
 {
     public function index(Request $request)
     {
         $expense = Expense::where('school_id', session('school_id'))
                                 ->where('price', '>', '0')
-                                ->where('status', '=', 'pending')
+                                ->whereIn('status', ['approved', 'outgoing'])
                                 ->with('expense_details')
                                 ->orderByDesc('created_at')
                                 ->withTrashed()
@@ -43,12 +43,12 @@ class ExpenseApprovalDatatables extends Controller
                         })
                         ->addColumn('action', function (Expense $row) use($request) {
                             $data = [
-                                'redirect_url' => route('expense-approval.index'),
-                                'resource'     => 'expense-approval',
+                                'redirect_url' => route('expense-outgoing.index'),
+                                'resource'     => 'expense-outgoing',
                                 'custom_links' => [
                                     [
                                         'label' => 'Detail',
-                                        'url' => route('expense-approval.show', ['expense_approval' => $row->getKey()]),
+                                        'url' => route('expense-outgoing.show', ['expense_outgoing' => $row->getKey()]),
                                     ]
                                 ]
                             ];
