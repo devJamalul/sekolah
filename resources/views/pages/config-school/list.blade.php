@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label for="config-school-input">{{ $config->name }}</label>
                                 <input type="text" class="form-control @error('value.' . $key) is-invalid @enderror"
-                                    name="value[]" value="{{ old('value.' . $key, schoolConfig($config->getKey())) }}"
+                                    name="value[]" value="{{ old('value.' . $key, schoolConfig($config->code)) }}"
                                     id="config-school-input">
                                 @error('value.' . $key)
                                     <div class="invalid-feedback">
