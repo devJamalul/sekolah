@@ -32,7 +32,7 @@ class StudentTuitionMasterRequest extends FormRequest
         return [
             'student_id' => 'required|exists:students,id',
             'tuition_id' => 'required|exists:tuitions,id',
-            'price' => 'numeric',
+            'price' => 'string',
             'note' => 'nullable',
         ];
     }
@@ -42,7 +42,7 @@ class StudentTuitionMasterRequest extends FormRequest
         return [
             'student_id' => 'required|exists:students,id',
             'tuition_id' => 'required|exists:tuitions,id',
-            'price' => 'numeric',
+            'price' => 'string',
             'note' => 'nullable',
         ];
     }
