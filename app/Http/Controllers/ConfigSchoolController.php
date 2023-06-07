@@ -6,37 +6,37 @@ use Illuminate\Http\Request;
 use App\Models\Config;
 use App\Models\ConfigSchool;
 use App\Http\Requests\SchoolConfigRequest;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
-use DB;
 
 class ConfigSchoolController extends Controller
 {
-    public function index(){
-        //
-        $title = "School Configuration";
-        $data = Config::leftJoin("config_schools","configs.code","=","code_config")->get();
-        return view('pages.config-school.list', compact('title','data'));
+    public function index()
+    {
+        $data['title'] = "Konfigurasi";
+        $data['configs'] = Config::active()->get();
+        // $data = Config::where('config_schools.school_id', session('school_id'))->leftJoin("config_schools", "configs.code", "=", "code_config")->get();
+        return view('pages.config-school.list', $data);
     }
 
-    public function save(SchoolConfigRequest $request){
-
+    public function save(SchoolConfigRequest $request)
+    {
         DB::beginTransaction();
         try {
-            foreach($request->config as $key=>$val){
-                $save = ConfigSchool::firstOrNew(array('school_id'=>'2','code_config'=>$key));
-                $save->value = $val;
-                $save->code_config = $key;
+            foreach ($request->config as $key => $val) {
+                $save = ConfigSchool::firstOrNew([
+                    'school_id' => session('school_id'),
+                    'config_id' => $val
+                ]);
+                $save->value = $request->value[$key];
                 $save->save();
             }
-
-            // $config            = new config();
-            // $config->name      = $request->name;
-            // $config->save();
 
             DB::commit();
             Alert::toast('Save Config Success ', 'success');
         } catch (\Throwable $th) {
             DB::rollback();
+            info($th->getMessage());
             Alert::toast('Ops Error Save Config', 'error');
         }
 

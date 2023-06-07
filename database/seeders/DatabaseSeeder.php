@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             TuitionTypesSeeder::class,
             // StudentTuitionsSeeder::class,
             PermissionsSeeder::class,
+            ConfigSeeder::class,
         ]);
         // \App\Models\User::factory(10)->create();
 

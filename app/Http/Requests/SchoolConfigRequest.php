@@ -29,28 +29,21 @@ class SchoolConfigRequest extends FormRequest
         };
     }
 
-    public function messages(): array
-    {
-    foreach($this->get('config') as $key=>$val){
-        $name = config::where('code',$key)->first();
-        $message['config.'.$key.'.required'] = $name->name." is required";
-    }
-        return $message;
-    }
+    // public function messages(): array
+    // {
+    //     foreach ($this->get('value') as $key => $val) {
+    //         $name = Config::where('code', $key)->first();
+    //         $message['value.' . $key . '.required'] = $name->name . " is required";
+    //     }
+    //     return $message;
+    // }
 
     public function postMethod(): array
     {
         return [
-            'config.*'      => 'required'
+            'config' => 'required|array',
+            'value' => 'required|array',
+            'value.*'      => 'nullable|string'
         ];
     }
-
-    // public function putMethod(): array
-    // {
-
-    //     return [
-    //         'code' => 'required',
-    //         'name'      =>'required'
-    //     ];
-    // }
 }
