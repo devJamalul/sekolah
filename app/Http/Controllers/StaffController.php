@@ -64,8 +64,6 @@ class StaffController extends Controller
                 $uploadedFile = $request->file('file_photo');
                 if ($staff->file_photo) Storage::delete($staff->getRawOriginal('file_photo')); // Delete old photo
                 $staff->file_photo = Storage::putFileAs('staff_photo', $uploadedFile, $uploadedFile->hashName());
-            } else {
-                $staff->file_photo = 'default-profile.jpg';
             }
             // End Upload Staff Photo
 
@@ -133,8 +131,6 @@ class StaffController extends Controller
                 $uploadedFile = $request->file('file_photo');
                 if ($staff->file_photo) Storage::delete($staff->getRawOriginal('file_photo')); // Delete old photo
                 $staff->file_photo = Storage::putFileAs('staff_photo', $uploadedFile, $uploadedFile->hashName());
-            } else {
-                $staff->file_photo = 'default-profile.jpg';
             }
             // End Upload Staff Photo
 

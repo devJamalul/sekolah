@@ -172,7 +172,7 @@
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control @error('name_pic') is-invalid @enderror"
-                                    name="name_pic" value="{{ $school->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->name ?? "-" }}" readonly
+                                    name="name_pic" value="{{ $school->staf()->withoutGlobalScopes()->first()?->user()->withoutGlobalScopes()->first()->name ?? "-" }}" readonly
                                     autocomplete="off">
                                 @error('name_pic')
                                     <div class="invalid-feedback">
@@ -182,7 +182,7 @@
                             </div>
                             <div class="form-group col-12">
                                 <label>Email <small class="text-danger">*</small> </label>
-                                <input type="email" value="{{ $school->staf()->withoutGlobalScopes()->first()->user()->withoutGlobalScopes()->first()->email ?? "-" }}"
+                                <input type="email" value="{{ $school->staf()->withoutGlobalScopes()->first()?->user()->withoutGlobalScopes()->first()->email ?? "-" }}"
                                     class="form-control @error('email_pic') is-invalid @enderror" readonly
                                     name="email_pic" autocomplete="off">
                                 @error('email_pic')

@@ -37,7 +37,7 @@ class StudentTuitionMasterController extends Controller
         if (!$academicYear) return redirect()->back()->withToastError('Belum ada data tahun akademik');
 
         $selectedStudentTuitionMaster = StudentTuitionMaster::where('student_id', $student->id)->get();
-        $studentTuitionMaster = collect(Tuition::with('tuition_type', 'grade')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get())
+        $studentTuitionMaster = collect(Tuition::with('tuition_type', 'grade')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->where('status', '=', Tuition::STATUS_APPROVED)->get())
                                 ->reject(function($tuitionMasters) use($selectedStudentTuitionMaster){
                                     foreach ($selectedStudentTuitionMaster as $selectedTuition) {
 
@@ -73,6 +73,7 @@ class StudentTuitionMasterController extends Controller
             $studentTuitionMaster->save();
             return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');
         } catch (\Throwable $th) {
+            dd($th);
             return redirect()->back()->withInput()->withToastError('Ops, ada kesalahan saat menambahkan Biaya Khusus Siswa!');
         }
     }

@@ -107,8 +107,6 @@ class StudentsController extends Controller
                     $uploadedFile = $request->file('file_photo');
                     if ($student->file_photo) Storage::delete($student->getRawOriginal('file_photo')); // Delete old photo
                     $student->file_photo = Storage::putFileAs('student_photo', $uploadedFile, $uploadedFile->hashName());
-                } else {
-                    $student->file_photo = 'default-profile.jpg';
                 }
                 // End Upload Student's Photo
 
@@ -229,8 +227,6 @@ class StudentsController extends Controller
                     $uploadedFile = $request->file('file_photo');
                     if ($student->file_photo) Storage::delete($student->getRawOriginal('file_photo')); // Delete old photo
                     $student->file_photo = Storage::putFileAs('student_photo', $uploadedFile, $uploadedFile->hashName());
-                } else {
-                    $student->file_photo = 'default-profile.jpg';
                 }
                 // End Upload Student's Photo
 
