@@ -37,7 +37,7 @@ class ExpenseSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
 
         // create school
         $permission = Permission::firstOrCreate([
@@ -56,7 +56,6 @@ class ExpenseSeeder extends Seeder
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-
         $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],

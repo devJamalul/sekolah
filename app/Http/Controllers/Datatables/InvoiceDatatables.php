@@ -41,9 +41,9 @@ class InvoiceDatatables extends Controller
                     array_push($data['custom_links'], ['label' => 'Bayar', 'url' => route('invoices.pay', ['invoice' => $invoice->id]), 'name' => 'invoices.pay']);
                 }
 
-                if ($invoice->is_posted != Invoice::VOID and $invoice->is_posted != Invoice::POSTED_DRAFT) {
-                    array_push($data['custom_links'], ['label' => 'Void', 'url' => route('invoices.void', ['invoice' => $invoice->id]), 'name' => 'invoices.void']);
-                }
+                // if ($invoice->is_posted != Invoice::VOID and $invoice->is_posted != Invoice::POSTED_DRAFT) {
+                //     array_push($data['custom_links'], ['label' => 'Void', 'url' => route('invoices.void', ['invoice' => $invoice->id]), 'name' => 'invoices.void']);
+                // }
 
                 return view('components.datatable-action', $data);
             })

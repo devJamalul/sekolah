@@ -55,7 +55,7 @@ class ExpenseOutgoingSeeder extends Seeder
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // show expense approvals
         $permission = Permission::firstOrCreate([

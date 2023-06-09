@@ -83,9 +83,9 @@ class TuitionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Tuition $tuition)
     {
-        //
+        return self::edit($tuition);
     }
 
     /**
@@ -93,6 +93,12 @@ class TuitionController extends Controller
      */
     public function edit(Tuition $tuition)
     {
+        if ($tuition->status != Tuition::STATUS_PENDING) {
+            return response()->json([
+                'msg' => 'Biaya sudah tidak bisa diubah'
+            ]);
+        }
+
         $title = 'Ubah Biaya';
         $tuitionTypes = TuitionType::orderBy('name')->get();
         $academicYears = AcademicYear::orderByDesc('academic_year_name')->get();
@@ -114,7 +120,12 @@ class TuitionController extends Controller
      */
     public function update(TuitionRequest $request, Tuition $tuition)
     {
-        //
+        if ($tuition->status != Tuition::STATUS_PENDING) {
+            return response()->json([
+                'msg' => 'Biaya sudah tidak bisa diubah'
+            ]);
+        }
+
         DB::beginTransaction();
         try {
 
@@ -141,6 +152,12 @@ class TuitionController extends Controller
      */
     public function destroy(Tuition $tuition)
     {
+        if ($tuition->status != Tuition::STATUS_PENDING) {
+            return response()->json([
+                'msg' => 'Biaya sudah tidak bisa dihapus'
+            ]);
+        }
+
         DB::beginTransaction();
         try {
 

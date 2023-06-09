@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('wallet_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Wallet::class)->nullable()->constrained()->cascadeOnDelete();
-            $table->enum('cashflow_type', ['in', 'out'])->nullable();
+            $table->string('cashflow_type', 20)->nullable();
             $table->double('amount')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();
