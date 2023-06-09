@@ -55,41 +55,41 @@ class TuitionApprovalSeeder extends Seeder
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // show tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['show'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha, $bendahara]);
 
         // edit tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // update tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // destroy tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // restore tuition approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['restore'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah]);
     }
 }

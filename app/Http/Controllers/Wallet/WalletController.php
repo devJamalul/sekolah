@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Wallet;
 
+use App\Actions\Wallet\WalletTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -36,12 +37,13 @@ class WalletController extends Controller
     {
         DB::beginTransaction();
         $DanaBosCount = Wallet::where('danabos', 1)->count();
+        $init_value = formatAngka($request->init_value);
 
         try {
             $wallet                 = new Wallet();
             $wallet->school_id      = session('school_id');
             $wallet->name           = $request->name;
-            $wallet->init_value     = formatAngka($request->init_value);
+            $wallet->init_value     = $init_value;
             if ($request->has('danabos') and $DanaBosCount == 0) {
                 $wallet->danabos = true;
             }
@@ -49,6 +51,15 @@ class WalletController extends Controller
             $wallet->save();
 
             DB::commit();
+            DB::afterCommit(function () use ($wallet) {
+                if ($wallet->init_value > 0) {
+                    WalletTransaction::init(
+                        wallet: $wallet,
+                        nominal: $wallet->init_value,
+                        note: "Saldo awal oleh " . auth()->user()->name ?? "Sistem"
+                    );
+                }
+            });
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('wallet.index')->withToastError('Eror Simpan Dompet!');
@@ -95,26 +106,26 @@ class WalletController extends Controller
      */
     public function destroy(Wallet $wallet)
     {
-       DB::beginTransaction();
+        DB::beginTransaction();
 
-       if ($wallet->balance > 0) {
+        if ($wallet->balance > 0) {
             return response()->json([
                 'msg' => 'Tidak bisa menghapus Dompet!'
             ]);
-       }
+        }
 
-       try {
-        $wallet->delete();
-        DB::commit();
+        try {
+            $wallet->delete();
+            DB::commit();
 
-        return response()->json([
-            'msg' => 'Berhasil Hapus Dompet!'
-        ], 200);
-       } catch (\Throwable $th) {
+            return response()->json([
+                'msg' => 'Berhasil Hapus Dompet!'
+            ], 200);
+        } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
                 'msg' => 'Eror Hapus Dompet!'
             ]);
-       }
+        }
     }
 }

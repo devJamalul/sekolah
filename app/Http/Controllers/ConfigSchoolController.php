@@ -43,7 +43,6 @@ class ConfigSchoolController extends Controller
             Alert::toast('Save Config Success ', 'success');
         } catch (\Throwable $th) {
             DB::rollback();
-            info($th->getMessage());
             Alert::toast('Ops Error Save Config. ' . $th->getMessage(), 'error');
         }
 

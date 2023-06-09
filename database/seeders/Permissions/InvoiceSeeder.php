@@ -43,73 +43,73 @@ class InvoiceSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
 
         // create school
         $permission = Permission::firstOrCreate([
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
 
         // update school
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
 
         // destroy school
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
 
         // payment
         $permission = Permission::firstOrCreate([
             'name' => $roles['pay'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['payment'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
 
         // publication
         $permission = Permission::firstOrCreate([
             'name' => $roles['publish'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['void'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
 
         // report
         $permission = Permission::firstOrCreate([
             'name' => $roles['report'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $admin_sekolah, $kepala_sekolah, $admin_yayasan]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $admin_sekolah, $kepala_sekolah, $admin_yayasan]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['report-result'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $tata_usaha, $admin_sekolah, $kepala_sekolah, $admin_yayasan]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $admin_sekolah, $kepala_sekolah, $admin_yayasan]);
     }
 }

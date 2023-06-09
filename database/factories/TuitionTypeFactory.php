@@ -18,7 +18,7 @@ class TuitionTypeFactory extends Factory
     {
         return [
             'school_id' => 1,
-            'name' => fake()->name(),
+            'name' => fake()->word(),
             'recurring' => false,
         ];
     }

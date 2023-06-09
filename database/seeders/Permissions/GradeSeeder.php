@@ -44,30 +44,30 @@ class GradeSeeder extends Seeder
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
         // update school
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
         // destroy school
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
     }
 }

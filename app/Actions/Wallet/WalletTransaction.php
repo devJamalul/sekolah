@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class WalletTransaction
 {
-    public static function increment(Wallet|int|string $wallet, int $nominal, string $note = null, bool $increment = true)
+    public static function increment(Wallet|int|string $wallet, int $nominal, string $note = null, string|bool $increment = true)
     {
         if (is_int($wallet)) {
             $dompet = Wallet::findOrFail($wallet);
@@ -28,15 +28,22 @@ class WalletTransaction
         DB::beginTransaction();
 
         try {
+            $increment = match($increment) {
+                true => WalletLog::CASHFLOW_TYPE_IN,
+                false => WalletLog::CASHFLOW_TYPE_OUT,
+                'init' => WalletLog::CASHFLOW_TYPE_INIT,
+            };
+
             $dompet->wallet_logs()->create([
-                'cashflow_type' => $increment ? WalletLog::CASHFLOW_TYPE_IN : WalletLog::CASHFLOW_TYPE_OUT,
+                'cashflow_type' => $increment,
                 'amount' => $nominal,
                 'note' => $note
             ]);
 
-            if ($increment) {
+            if ($increment == WalletLog::CASHFLOW_TYPE_IN) {
                 $dompet->increment('last_balance', $nominal);
-            } else {
+            }
+            if ($increment == WalletLog::CASHFLOW_TYPE_OUT) {
                 $dompet->decrement('last_balance', $nominal);
             }
             DB::commit();
@@ -57,5 +64,10 @@ class WalletTransaction
     public static function decrement(Wallet|int|string $wallet, int $nominal, string $note = null)
     {
         return self::increment($wallet, $nominal, $note, false);
+    }
+
+    public static function init(Wallet|int|string $wallet, int $nominal, string $note = null)
+    {
+        return self::increment($wallet, $nominal, $note, 'init');
     }
 }
