@@ -55,7 +55,7 @@ class ExpenseApprovalSeeder extends Seeder
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // show expense approvals
         $permission = Permission::firstOrCreate([
@@ -69,27 +69,27 @@ class ExpenseApprovalSeeder extends Seeder
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // update expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // destroy expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $kepala_sekolah]);
 
         // restore expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['restore'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah]);
     }
 }
