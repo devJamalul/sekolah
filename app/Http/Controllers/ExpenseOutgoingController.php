@@ -83,7 +83,7 @@ class ExpenseOutgoingController extends Controller
             DB::commit();
 
             // pengurangan saldo jika diterima
-            if ($request->action == 'approve') {
+            if ($request->action == 'outgoing') {
                 foreach ($expense_outgoing->expense_details as $detail) {
                     WalletTransaction::decrement($detail->wallet_id, $detail->quantity * $detail->price, 'Pengeluaran ' . $expense_outgoing->expense_number . ' untuk ' . $detail->item_name);
                 }
