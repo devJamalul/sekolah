@@ -173,7 +173,13 @@ class ExpenseController extends Controller
 
         // cek status dan kembalikan jika statusnya bukan DRAFT
         if ($expense->approval_by != Null)
-            return to_route('expense.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
+            return to_route('expense.index')->withToastError('Ups! Pengeluaran Biaya tidak berhak untuk diubah.');
+
+        if($expense->status != Expense::STATUS_PENDING){
+            return response()->json([
+                'msg' => 'Pengeluaran Biaya sudah tidak bisa diubah'
+            ]);
+        }
 
 
         DB::beginTransaction();
@@ -242,6 +248,13 @@ class ExpenseController extends Controller
     {
 
         try {
+
+            if($expense->status != Expense::STATUS_PENDING){
+                return response()->json([
+                    'msg' => 'Pengeluaran Biaya sudah tidak bisa dihapus'
+                ]);
+            }
+
             if ($expense->expense_details) {
                 $expenseDetails = ExpenseDetail::where('expense_id', $expense->id)->get();
                 foreach ($expenseDetails as $key => $expenseDetail) {

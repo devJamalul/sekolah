@@ -125,11 +125,29 @@
                                                 <td>{{ 'Rp. ' . number_format($student_tuition->grand_total, 0, ',', '.') }}
                                                 </td>
                                                 <td><span
-                                                        class="text-capitalize badge {{$student_tuition->status == 'paid' ? 'badge-success' : 'badge-danger' }} text-white">{{ $student_tuition->status == 'pending' ? 'Belum lunas' : 'Lunas' }}</span>
+                                                        class="text-capitalize badge  
+                                                        @if ($student_tuition->status == "pending")
+                                                            badge-danger
+                                                        @elseif($student_tuition->status == "partial")
+                                                            badge-warning
+                                                        @else
+                                                            badge-success
+                                                        @endif
+                                                        text-white">
+                                                            @if ($student_tuition->status == "pending")
+                                                                Belum Lunas
+                                                            @elseif($student_tuition->status == "partial")
+                                                                Partial Lunas
+                                                            @else
+                                                                Lunas
+                                                            @endif
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('transactions.show', $student_tuition->student_id) }}"
-                                                        class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Bayar</a>
+                                                    @if ($student_tuition->status != "paid")
+                                                        <a href="{{ route('transactions.show', $student_tuition->student_id) }}"
+                                                            class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Bayar</a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @empty

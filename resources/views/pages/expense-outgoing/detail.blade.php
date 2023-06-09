@@ -61,20 +61,24 @@
                             <div class="col-12" style="width: 100%; display: flex; justify-content: end; ">
                                 <form
                                     action="{{ route('expense-outgoing.update', ['expense_outgoing' => $expense->getKey()]) }}"
-                                    method="post">
+                                    method="post" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
+                                    
+                                    
                                     <div class="form-group">
-                                        <input type="file" name="file_photo" accept=".doc, .docx, .pdf"
+                                        <input type="file" name="file_photo" accept=".doc, .docx, .pdf, image/*"
                                         class="custom-file-input form-control @error('file_photo') is-invalid @enderror"
                                         id="file_photo" required>
-                                        <label class="custom-file-label" for="file_photo"
+                                        <label class="custom-file-label" for="file_photo" id="file_photo"
                                         data-browse="Pilih Berkas">Unggah Berkas...</label>
                                         
                                         @error('file_photo')
                                             <small class="text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
+                                    
+                                    <img id="file_photo_preview" class="col-12">
 
                                     <div style="margin-left: 65%">
                                         {{-- <button type="submit" name="action" value="reject"
@@ -92,3 +96,20 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+    <script>
+
+            // Files Input
+            document.querySelector('#file_photo').addEventListener('change', function(e) {
+                var file = document.getElementById("file_photo").files[0];
+
+                const preview = document.querySelector('#file_photo_preview')
+                preview.classList = 'img-thumbnail img-fluid col-md-3'
+                preview.src = URL.createObjectURL(file)
+
+                e.target.nextElementSibling.innerText = file.name
+            })
+
+    </script>
+@endpush

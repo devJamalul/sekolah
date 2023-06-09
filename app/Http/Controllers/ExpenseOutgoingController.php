@@ -75,8 +75,10 @@ class ExpenseOutgoingController extends Controller
             // Upload Expense Photo 
               if ($request->hasFile('file_photo')) {
                 $uploadedFile = $request->file('file_photo');
+                // dd($uploadedFile);
                 if ($expense_outgoing->file_photo) Storage::delete($expense_outgoing->getRawOriginal('file_photo')); // Delete old photo
                 $expense_outgoing->file_photo = Storage::putFileAs('expense_photo', $uploadedFile, $uploadedFile->hashName());
+                // dd($expense_outgoing->file_photo);
             } 
             $expense_outgoing->save();
 
@@ -94,6 +96,7 @@ class ExpenseOutgoingController extends Controller
 
             return redirect()->route('expense-outgoing.index')->withToastSuccess('Berhasil mengubah Status!');
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
         }

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\ExpenseDetail;
 use App\Models\Scopes\ExpenseScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,5 +51,15 @@ class Expense extends Model
     public function approved_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approval_by');
+    }
+
+    public function getFilePhotoAttribute($value)
+    {
+        if (is_null($value)) return null;
+        if (strpos($value, 'http') === false) {
+            return Storage::url($value);
+        } else {
+            return $value;
+        }
     }
 }

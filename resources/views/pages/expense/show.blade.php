@@ -50,6 +50,9 @@
                                 <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
                                     id="note-input" placeholder="" value="{{ $expense->note }}" disabled>
                             </div>
+                            @if ($expense->file_photo)
+                                <a class="btn btn-primary" href="{{ $expense->file_photo }}" rel="">Bukti Pengeluaran Biaya</a>
+                            @endif
                         </div>
                     </div>
                 </div>
