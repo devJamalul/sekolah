@@ -195,6 +195,7 @@ class StudentsController extends Controller
                 $student->address                   = $request->address;
                 $student->dob                       = $request->dob;
                 $student->religion                  = $request->religion;
+                $student->phone_number              = $request->phone_number;
                 $student->family_card_number        = $request->family_card_number;
                 $student->nik                       = $request->nik;
                 $student->nis                       = $request->nis;
