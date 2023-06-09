@@ -75,10 +75,8 @@ class ExpenseOutgoingController extends Controller
             // Upload Expense Photo 
               if ($request->hasFile('file_photo')) {
                 $uploadedFile = $request->file('file_photo');
-                // dd($uploadedFile);
                 if ($expense_outgoing->file_photo) Storage::delete($expense_outgoing->getRawOriginal('file_photo')); // Delete old photo
                 $expense_outgoing->file_photo = Storage::putFileAs('expense_photo', $uploadedFile, $uploadedFile->hashName());
-                // dd($expense_outgoing->file_photo);
             } 
             $expense_outgoing->save();
 
