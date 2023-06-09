@@ -50,6 +50,10 @@ class ExpenseDatatables extends Controller
                         ],
                     ]
                 ];
+                if($row->status != "pending"){
+                    $data['edit_url'] = null;
+                    $data['delete_url'] = null;
+                }
                 return view('components.datatable-action', $data);
 
             })

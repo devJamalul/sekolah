@@ -1,5 +1,5 @@
 <x-mail::message>
-# Notifikasi Persetujuan PengeluaranBiaya
+# Notifikasi Realisasi Pengeluaran Biaya
 
 No Pengeluaran Biaya : **{{ $expense->expense_number }}** <br>
 
@@ -16,7 +16,9 @@ Disetujui oleh : **{{ $expense->approved_by?->name ?? '-' }}** <br>
     
 @endphp
 
-Status : **{{ $expense->status == 'outgoing' ? "Sudah Direlisasi" : "Belum Direlasiasi" }}**
+Status : **{{ $expense->status == 'done' ? "Sudah Direalisasi" : "Belum Direalisasi" }}**
+
+<a href="{{$expense->file_photo}}">Lihat Bukti</a>
 
 Terima kasih,<br>
 {{ config('app.name') }}
