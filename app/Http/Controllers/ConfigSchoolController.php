@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Sempoa\CheckToken;
 use Illuminate\Http\Request;
 use App\Models\Config;
 use App\Models\ConfigSchool;
@@ -24,6 +25,12 @@ class ConfigSchoolController extends Controller
         DB::beginTransaction();
         try {
             foreach ($request->config as $key => $val) {
+                // check Token Sempoa
+                $config = Config::find($val);
+                if ($config->code == config('sempoa.check_token') && !is_null($request->value[$key])) {
+                    CheckToken::run($request->value[$key]);
+                }
+
                 $save = ConfigSchool::firstOrNew([
                     'school_id' => session('school_id'),
                     'config_id' => $val
@@ -37,7 +44,7 @@ class ConfigSchoolController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
             info($th->getMessage());
-            Alert::toast('Ops Error Save Config', 'error');
+            Alert::toast('Ops Error Save Config. ' . $th->getMessage(), 'error');
         }
 
         return redirect()->route('config.index');
