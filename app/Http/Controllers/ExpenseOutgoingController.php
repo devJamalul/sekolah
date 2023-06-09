@@ -94,7 +94,6 @@ class ExpenseOutgoingController extends Controller
 
             return redirect()->route('expense-outgoing.index')->withToastSuccess('Berhasil mengubah Status!');
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
             return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
         }
