@@ -42,7 +42,7 @@
                                             <input type="email" name="email"
                                                 class="form-control form-control-user @error('email') is-invalid  @enderror"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Enter Email Address...">
+                                                placeholder="Enter Email Address..." autofocus>
                                             @error('email')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}

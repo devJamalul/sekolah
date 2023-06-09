@@ -19,7 +19,7 @@ class TuitionTypeDatatables extends Controller
             ->addColumn('action', function ($row) {
                 $data = [
                     'edit_url'     => route('tuition-type.edit', ['tuition_type' => $row->id]),
-                    'delete_url'   => route('tuition-type.destroy', ['tuition_type' => $row->id]),
+                    // 'delete_url'   => route('tuition-type.destroy', ['tuition_type' => $row->id]),
                     'redirect_url' => route('tuition-type.index'),
                     'resource'     => 'tuition-type',
                 ];

@@ -88,7 +88,7 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            
+
             return to_route('invoices.create')->withToastError('Ups! ' . $th->getMessage());
         }
 
@@ -167,7 +167,6 @@ public function update(Request $request, Invoice $invoice)
 
             // update invoice_details
             foreach ($request->invoice_detail_id as $key => $invoice_detail_id) {
-                info($request->array_price[$key]);
                 $invoiceDetail = InvoiceDetail::updateOrCreate(
                     [
                         'id' => $invoice_detail_id

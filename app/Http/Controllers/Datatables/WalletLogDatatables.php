@@ -16,15 +16,15 @@ class WalletLogDatatables extends Controller
     public function __invoke(Wallet $wallet)
     {
         $data = WalletLog::where('wallet_id', $wallet->getKey())->orderByDesc('created_at');
-        info($wallet);
         return DataTables::of($data)
             ->editColumn('amount', function ($row) {
                 return "Rp. " . number_format($row->amount, 0, ',', '.');
             })
             ->editColumn('cashflow_type', function ($row) {
                 return match ($row->cashflow_type) {
-                    WalletLog::CASHFLOW_TYPE_IN => 'Masuk',
-                    WalletLog::CASHFLOW_TYPE_OUT => 'Keluar',
+                    WalletLog::CASHFLOW_TYPE_IN => 'Pemasukan',
+                    WalletLog::CASHFLOW_TYPE_OUT => 'Pengeluaran',
+                    WalletLog::CASHFLOW_TYPE_INIT => 'Saldo Awal'
                 };
             })
             ->editColumn('created_at', function ($row) {

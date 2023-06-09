@@ -16,6 +16,7 @@ class WalletLog extends Model
 
     protected $table = 'wallet_logs';
 
+    const CASHFLOW_TYPE_INIT = 'init';
     const CASHFLOW_TYPE_IN = 'in';
     const CASHFLOW_TYPE_OUT = 'out';
 

@@ -47,49 +47,49 @@ class WalletSeeder extends Seeder
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // update Wallet
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // destroy Wallet
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // Wallet logs
         $permission = Permission::firstOrCreate([
             'name' => $roles['logs'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara, $kepala_sekolah]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $kepala_sekolah]);
 
         // topup Wallet
         $permission = Permission::firstOrCreate([
             'name' => $roles['topup.show'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['topup.store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
     }
 }

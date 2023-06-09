@@ -45,8 +45,8 @@ class TuitionDatatables extends Controller
             })
             ->addColumn('action', function (Tuition $row) {
                 $data = [
-                    'edit_url'     => route('tuition.edit', ['tuition' => $row->id]),
-                    'delete_url'   => route('tuition.destroy', ['tuition' => $row->id]),
+                    'edit_url'     => $row->status == Tuition::STATUS_PENDING ? route('tuition.edit', ['tuition' => $row->id]) : null,
+                    'delete_url'   => $row->status == Tuition::STATUS_PENDING ? route('tuition.destroy', ['tuition' => $row->id]) : null,
                     'redirect_url' => route('tuition.index'),
                     'resource' => 'tuition'
                 ];
