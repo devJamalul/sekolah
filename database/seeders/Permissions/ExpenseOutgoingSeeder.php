@@ -69,21 +69,21 @@ class ExpenseOutgoingSeeder extends Seeder
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // update expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // destroy expense approvals
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // restore expense approvals
         $permission = Permission::firstOrCreate([

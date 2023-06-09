@@ -39,37 +39,37 @@ class TransactionSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // create
         $permission = Permission::firstOrCreate([
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // update
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // destroy
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
     }
 }

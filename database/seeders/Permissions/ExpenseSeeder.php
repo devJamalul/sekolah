@@ -44,12 +44,12 @@ class ExpenseSeeder extends Seeder
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // update school
         $permission = Permission::firstOrCreate([
@@ -57,18 +57,18 @@ class ExpenseSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // destroy expense
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
     }
 }

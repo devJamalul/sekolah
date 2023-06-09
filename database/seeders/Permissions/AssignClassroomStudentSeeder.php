@@ -40,13 +40,13 @@ class AssignClassroomStudentSeeder extends Seeder
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
 
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
     }
 }
