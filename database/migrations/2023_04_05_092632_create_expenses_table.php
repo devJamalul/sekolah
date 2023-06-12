@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('status', ["approved", "pending", "rejected", "outgoing", "done"])->nullable();
             $table->string('file_photo')->nullable();
             $table->text('reject_reason')->nullable();
+            $table->date('expense_outgoing_date')->nullable();
             $table->boolean('is_sempoa_processed')->nullable()->default(false);
             $table->foreignIdFor(User::class, 'request_by')->nullable();
             $table->foreignIdFor(User::class, 'approval_by')->nullable();
