@@ -71,6 +71,7 @@ class ExpenseOutgoingController extends Controller
         try {
             $expense_outgoing->approval_by = Auth::user()->id;
             $expense_outgoing->status = Expense::STATUS_DONE;
+            $expense_outgoing->expense_outgoing_date = now();
               
             // Upload Expense Photo 
               if ($request->hasFile('file_photo')) {
