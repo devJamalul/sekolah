@@ -33,7 +33,7 @@
                             <option value="">--- Pilih Biaya Sekolah ---</option>
                             @foreach ($tuitions as $tuition)
                                 <option value="{{ $tuition->getKey() }}" @selected($tuition->getKey() == old('tuition_id', $current_tuition->tuition_id))>
-                                    {{ $tuition->tuition_type->name }}
+                                    {{ $tuition->tuition_type->name }} - {{ $tuition->grade->grade_name }}
                                 </option>
                             @endforeach
                         </select>

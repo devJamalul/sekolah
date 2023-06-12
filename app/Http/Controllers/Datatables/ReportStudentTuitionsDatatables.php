@@ -59,7 +59,17 @@ class ReportStudentTuitionsDatatables extends Controller
         return DataTables::of($studentTuitions)
             ->addColumn('bill_num', fn (StudentTuition $row) => $row->bill_number)
             ->addColumn('name_student', fn (StudentTuition $row) => $row->student->name)
-            ->addColumn('payment_type', fn (StudentTuition $row) => $row->payment_type?->name)
+            // ->addColumn('payment_type', fn (StudentTuition $row) => $row->payment_type?->name)
+            ->addColumn('payment_type', function (StudentTuition $row) {
+                $res = '<ul>';
+                $res = '';
+                foreach($row->student_tuition_payment_histories as $histori) {
+                    $res .= '<li>'.$histori->payment_type->name.'<br />Rp '. number_format($histori->price, 0, ',', '.') .'</li>';
+                }
+                $res .= '</li>';
+
+                return $res;
+            })
             ->addColumn('date_invoice', fn (StudentTuition $row) => $row->created_at->format('d F Y'))
             ->addColumn('academy_year', function (StudentTuition $row) {
                 $tuition = $row->student_tuition_details->first();
@@ -100,7 +110,7 @@ class ReportStudentTuitionsDatatables extends Controller
                 'total_payment' => RupiahFormat::currency($total_payment),
                 'total_remaining_debt' => RupiahFormat::currency($totalRemainingDebt > 0 ? $totalRemainingDebt : 0)
             ])
-            ->rawColumns(['status_payment', 'grand_total', 'tuition_type'])
+            ->rawColumns(['status_payment', 'grand_total', 'tuition_type', 'payment_type'])
 
             ->only([
                 'id',
