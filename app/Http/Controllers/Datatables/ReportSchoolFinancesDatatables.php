@@ -18,6 +18,7 @@ class ReportSchoolFinancesDatatables extends Controller
     public function __invoke(Request $request)
     {
         $WalletLog = WalletLog::where('wallet_id', $request->wallet_id)
+            ->orderBy('created_at', 'DESC')
             ->when($request->has('reportrange'), function ($q) use ($request) {
                 $reportDate = $this->parseDate($request->reportrange);
                 $q->whereBetween('created_at', [
@@ -40,7 +41,7 @@ class ReportSchoolFinancesDatatables extends Controller
                     WalletLog::CASHFLOW_TYPE_INIT => '<span class="badge badge-primary">Saldo Awal</span>',
                 };
             })
-            ->editColumn('created_at', fn ($row) => TanggalFormat::DateIndo($row->created_at))
+            ->editColumn('created_at', fn ($row) => TanggalFormat::DateIndo($row->created_at, 'Y M d H:i'))
             ->rawColumns(['cashflow_type'])
             ->toJson();
     }

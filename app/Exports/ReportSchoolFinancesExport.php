@@ -22,6 +22,7 @@ class ReportSchoolFinancesExport implements FromView
     {
         $request = $this->request;
         $WalletLog = WalletLog::with('wallet')->where('wallet_id', $request->wallet_id)
+            ->orderBy('created_at', 'DESC')
             ->when($request->has('reportrange'), function ($q) use ($request) {
                 $reportDate = $this->parseDate($request->reportrange);
                 $q->whereBetween('created_at', [
@@ -29,7 +30,7 @@ class ReportSchoolFinancesExport implements FromView
                     $reportDate->transaction_report_end->endOfDay()->format('Y-m-d H:i:s'),
                 ]);
             })
-            ->when(in_array($request->cashflow_type, [WalletLog::CASHFLOW_TYPE_IN, WalletLog::CASHFLOW_TYPE_OUT]), function ($q) use ($request) {
+            ->when(in_array($request->cashflow_type, [WalletLog::CASHFLOW_TYPE_IN, WalletLog::CASHFLOW_TYPE_OUT, WalletLog::CASHFLOW_TYPE_INIT]), function ($q) use ($request) {
                 $q->where('cashflow_type', $request->cashflow_type);
             })->get();
         return view('exports.report-school-finance', compact('WalletLog'));
