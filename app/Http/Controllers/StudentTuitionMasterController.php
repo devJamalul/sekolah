@@ -15,7 +15,7 @@ class StudentTuitionMasterController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $req)
-    {    
+    {
         $student = Student::findOrFail($req->id);
         $data = [
             'id' => $req->id,
@@ -31,22 +31,35 @@ class StudentTuitionMasterController extends Controller
     public function create(Request $req)
     {
         $student = Student::findOrFail($req->id);
-        $academicYear = AcademicYear::where('status_years', '!=', 'closed')->first();
+        $academicYear = AcademicYear::where('status_years', '!=', AcademicYear::STATUS_CLOSED)->first();
+        $grades = [];
+        $classNow = $student->classNow();
+        if (!is_null($classNow)) {
+            $grades[] = $classNow->grade_id;
+        }
+        $classNext = $student->classNext();
+        if (!is_null($classNext)) {
+            $grades[] = $classNext->grade_id;
+        }
 
         // If no Academic Year data
         if (!$academicYear) return redirect()->back()->withToastError('Belum ada data tahun akademik');
 
         $selectedStudentTuitionMaster = StudentTuitionMaster::where('student_id', $student->id)->get();
-        $studentTuitionMaster = collect(Tuition::with('tuition_type', 'grade')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->where('status', '=', Tuition::STATUS_APPROVED)->get())
-                                ->reject(function($tuitionMasters) use($selectedStudentTuitionMaster){
-                                    foreach ($selectedStudentTuitionMaster as $selectedTuition) {
+        $studentTuitionMaster = collect(Tuition::with('tuition_type', 'grade')
+            ->where('school_id', $student->school_id)
+            ->where('academic_year_id', $academicYear->id)
+            ->whereIn('grade_id', $grades)
+            ->where('status', '=', Tuition::STATUS_APPROVED)
+            ->get())
+            ->reject(function ($tuitionMasters) use ($selectedStudentTuitionMaster) {
+                foreach ($selectedStudentTuitionMaster as $selectedTuition) {
 
-                                        // Remove if has same id with SelectedStudentMasterTuition
-                                        if ($tuitionMasters->id == $selectedTuition->tuition_id) return $tuitionMasters; 
+                    // Remove if has same id with SelectedStudentMasterTuition
+                    if ($tuitionMasters->id == $selectedTuition->tuition_id) return $tuitionMasters;
+                }
+            });
 
-                                    }
-                                });
-        
         // If no Tuition data
         if (count($studentTuitionMaster) == 0) return redirect()->back()->withToastError('Belum ada data biaya');
 
@@ -55,7 +68,7 @@ class StudentTuitionMasterController extends Controller
             'title' => "Tambah Biaya Khusus $student->name",
             'tuitions' => $studentTuitionMaster,
         ];
-        
+
         return view('pages.students.tuition-master.create', $data);
     }
 
@@ -92,18 +105,32 @@ class StudentTuitionMasterController extends Controller
     public function edit(Request $request)
     {
         $student = Student::findOrFail($request->id);
-        $academicYear = AcademicYear::where('status_years', 'started')->first();
+        $academicYear = AcademicYear::where('status_years', '!=', AcademicYear::STATUS_CLOSED)->first();
+        $grades = [];
+        $classNow = $student->classNow();
+        if (!is_null($classNow)) {
+            $grades[] = $classNow->grade_id;
+        }
+        $classNext = $student->classNext();
+        if (!is_null($classNext)) {
+            $grades[] = $classNext->grade_id;
+        }
         $studentTuitionMaster = StudentTuitionMaster::findOrFail($request->tuition_master);
 
         $selectedStudentTuitionMasterData = StudentTuitionMaster::where('student_id', $student->id)->get();
-        $tuitions = Tuition::with('tuition_type')->where('school_id', $student->school_id)->where('academic_year_id', $academicYear->id)->get();
-        $studentTuitionMasterData = collect($tuitions)->reject(function($tuitionMasters) use($selectedStudentTuitionMasterData){
-                                        foreach ($selectedStudentTuitionMasterData as $selectedTuition) {
-                                            if ($tuitionMasters->id == $selectedTuition->tuition_id) return $tuitionMasters; 
-                                        }
-                                    });
-        $selectedStudentTuitionMaster = collect($tuitions)->first(function($tuitionMasters) use($studentTuitionMaster){
-            if ($tuitionMasters->id == $studentTuitionMaster->tuition_id) return $tuitionMasters; 
+        $tuitions = Tuition::with('tuition_type')
+            ->where('school_id', $student->school_id)
+            ->whereIn('grade_id', $grades)
+            ->where('status', '=', Tuition::STATUS_APPROVED)
+            ->where('academic_year_id', $academicYear->id)
+            ->get();
+        $studentTuitionMasterData = collect($tuitions)->reject(function ($tuitionMasters) use ($selectedStudentTuitionMasterData) {
+            foreach ($selectedStudentTuitionMasterData as $selectedTuition) {
+                if ($tuitionMasters->id == $selectedTuition->tuition_id) return $tuitionMasters;
+            }
+        });
+        $selectedStudentTuitionMaster = collect($tuitions)->first(function ($tuitionMasters) use ($studentTuitionMaster) {
+            if ($tuitionMasters->id == $studentTuitionMaster->tuition_id) return $tuitionMasters;
         });
 
         $data = [
