@@ -51,7 +51,10 @@
                                     id="note-input" placeholder="" value="{{ $expense->note }}" disabled>
                             </div>
                             @if ($expense->file_photo)
-                                <a class="btn btn-primary" href="{{ $expense->file_photo }}" rel="">Bukti Pengeluaran Biaya</a>
+                                    <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    Bukti Pengeluaran Biaya
+                                </button>
                             @endif
                         </div>
                     </div>
@@ -107,6 +110,29 @@
         {{-- END table expense detail --}}
     </div>
     {{-- END ROW --}}
+
+  
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Bukti Pengeluaran Biaya</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            @if (in_array($fileExtension, $extensionType))
+                <img src="{{ $expense->file_photo }}" alt="Bukti Pengeluaran Biaya" srcset="">
+            @else
+                <a class="btn btn-primary" href="{{ $expense->file_photo }}" rel="" target="_blank" download>Download</a>
+            @endif
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @push('js')

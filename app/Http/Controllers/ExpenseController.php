@@ -284,6 +284,8 @@ class ExpenseController extends Controller
         $title = "Detail Pengeluaran Biaya";
         $wallets = Wallet::where('school_id', session('school_id'))->get();
         $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
-        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense'));
+        $extensionType = ['img', 'png', 'jpg', 'gif', 'jpeg'];
+        $fileExtension = pathinfo($expense->file_photo, PATHINFO_EXTENSION);
+        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'fileExtension', 'extensionType'));
     }
 }
