@@ -6,6 +6,7 @@
             <th width="30%"><strong>Tanggal Pengeluaran Biaya</strong></th>
             <th width="30%"><strong>Total Biaya</strong></th>
             <th width="30%"><strong>Tanggal Realisasi</strong></th>
+            <th width="30%"><strong>Bukti</strong></th>
         </tr>
     </thead>
     <tbody>
@@ -16,6 +17,7 @@
                 <td>{{ $row['expense_date'] }}</td>
                 <td>Rp. {{ number_format($row->expense_details()->sum(DB::raw('price * quantity')), 0, ', ', '.') }}</td>
                 <td>{{ $row['expense_outgoing_date'] }}</td>
+                <td><a href="{{ $row['file_photo'] }}">Download</a></td>
             </tr>
         @endforeach
     </tbody>
