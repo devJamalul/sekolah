@@ -18,7 +18,12 @@
                 <td>{{ $no++ }}</td>
                 <td>{{ $row->wallet->name }}</td>
                 <td>{{ $row->amount }}</td>
-                <td>{{ $row->cashflow_type == 'in' ? 'Masuk' : 'Keluar' }}</td>
+                <td>{{ match ($row->cashflow_type) {
+                    App\Models\WalletLog::CASHFLOW_TYPE_IN => 'Masuk',
+                    App\Models\WalletLog::CASHFLOW_TYPE_OUT => 'Keluar',
+                    App\Models\WalletLog::CASHFLOW_TYPE_INIT => 'Saldo Awal',
+                } }}
+                </td>
                 <td>{{ $row->note }}</td>
                 <td>{{ $row?->created_at->format('m-d-Y') }}</td>
 

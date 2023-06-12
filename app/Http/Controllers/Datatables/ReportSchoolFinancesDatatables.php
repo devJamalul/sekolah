@@ -35,8 +35,9 @@ class ReportSchoolFinancesDatatables extends Controller
             })
             ->addColumn('cashflow_type', function ($row) {
                 return match ($row->cashflow_type) {
-                    WalletLog::CASHFLOW_TYPE_IN => '<span class="badge badge-success">Masuk</span',
-                    WalletLog::CASHFLOW_TYPE_OUT => '<span class="badge badge-danger">Keluar</span',
+                    WalletLog::CASHFLOW_TYPE_IN => '<span class="badge badge-success">Masuk</span>',
+                    WalletLog::CASHFLOW_TYPE_OUT => '<span class="badge badge-danger">Keluar</span>',
+                    WalletLog::CASHFLOW_TYPE_INIT => '<span class="badge badge-primary">Saldo Awal</span>',
                 };
             })
             ->editColumn('created_at', fn ($row) => TanggalFormat::DateIndo($row->created_at))
