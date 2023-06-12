@@ -24,7 +24,7 @@ class Tuition extends Model
     const STATUS_APPROVED   = "approved";
     const STATUS_PENDING    = "pending";
     const STATUS_REJECTED   = "rejected";
-    
+
     protected static function booted()
     {
         static::addGlobalScope(new TuitionScope);
@@ -59,7 +59,7 @@ class Tuition extends Model
     {
         return $this->belongsToMany(StudentTuitionMaster::class);
     }
-    
+
     public function requested_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'request_by');
@@ -68,5 +68,10 @@ class Tuition extends Model
     public function approved_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approval_by');
+    }
+
+    public function rejector(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
     }
 }
