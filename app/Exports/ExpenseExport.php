@@ -23,7 +23,10 @@ class ExpenseExport implements FromView, WithColumnWidths
         return [
             'A' => 10,
             'B' => 20,            
-            'C' => 20,            
+            'C' => 20,             
+            'D' => 20,           
+            'E' => 20,          
+            'F' => 20,           
         ];
     }
 }
