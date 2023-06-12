@@ -25,7 +25,7 @@
                 } }}
                 </td>
                 <td>{{ $row->note }}</td>
-                <td>{{ $row?->created_at->format('m-d-Y') }}</td>
+                <td>{{ $row?->created_at->format('Y M d H:i') }}</td>
 
             </tr>
         @endforeach
