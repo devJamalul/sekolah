@@ -14,6 +14,7 @@
 <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('vendor/select2/select2.min.js') }}"></script>
 <script src="{{ asset('js/autoNumeric.js') }}"></script>
+<script src="{{ asset('js/bs-custom-file-input.min.js') }}"></script>
 
 <script>
     $("form").attr('autocomplete', 'off')
@@ -23,6 +24,9 @@
         placeholder: function() {
             $(this).data('placeholder');
         }
+    })
+    $(document).ready(function() {
+        bsCustomFileInput.init()
     })
 </script>
 

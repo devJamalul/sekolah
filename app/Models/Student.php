@@ -8,6 +8,7 @@ use App\Models\Scopes\StudentScope;
 use App\Models\StudentTuition;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,16 @@ class Student extends Model
     public function classrooms(): BelongsToMany
     {
         return $this->belongsToMany(Classroom::class)->withTimestamps();
+    }
+
+    public function classNow() {
+        $current_academic_year = AcademicYear::active()->first();
+        return $this->classrooms()->where('academic_year_id', $current_academic_year?->getKey())->first();
+    }
+
+    public function classNext() {
+        $next_academic_year = AcademicYear::ppdb()->first();
+        return $this->classrooms()->where('academic_year_id', $next_academic_year?->getKey())->first();
     }
 
     public function student_tuitions(): HasMany

@@ -24,7 +24,7 @@
                             return $row->tuition->tuition_type->name;
                         })
                         ->implode(',');
-                    
+
                     $remainingDebt = $row->grand_total - $row->student_tuition_payment_histories->sum('price');
                 @endphp
 
@@ -34,7 +34,16 @@
                 <td>{{ $tuition->tuition->grade->grade_name }}</td>
                 <td>{{ $row->student->classrooms->first()->name }}</td>
                 <td>{{ $tuitionType }}</td>
-                <td>{{ $row->payment_type?->name }}</td>
+                <td>
+                    @php
+                    $res = '';
+                        foreach ($row->student_tuition_payment_histories as $histori) {
+                            $res .= $histori->payment_type->name . ' (Rp ' . number_format($histori->price, 0, ',', '.') . '), ';
+                        }
+                    @endphp
+                    {{-- {{ $row->payment_type?->name }} --}}
+                    {{ $res }}
+                </td>
                 <td>{{ $row->grand_total }}</td>
                 <td>{{ $remainingDebt > 0 ? $remainingDebt : 0 }}</td>
                 <td>{{ $statusPayment($row->status) }}</td>

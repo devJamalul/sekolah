@@ -8,11 +8,10 @@ class CheckToken
 {
     public static function run(string $token)
     {
-        $response = Http::post(config('sempoa.base_url') . 'check', [
-            'token' => $token
-        ]);
+        $response = Http::withToken($token)
+        ->post(config('sempoa.base_url') . 'check');
 
-        if ($response->badRequest()) {
+        if (!$response->ok()) {
             throw new \Exception($response->body());
         }
     }
