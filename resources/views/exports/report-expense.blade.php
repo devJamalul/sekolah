@@ -6,10 +6,7 @@
             <th width="30%"><strong>Tanggal Pengeluaran Biaya</strong></th>
             <th width="30%"><strong>Total Biaya</strong></th>
             <th width="30%"><strong>Tanggal Realisasi</strong></th>
-            {{-- @dd($expense)
-            @if ($expense->file_photo) --}}
-                <th width="30%"><strong>Bukti</strong></th>
-            {{-- @endif --}}
+            <th width="30%"><strong>Bukti</strong></th>
         </tr>
     </thead>
     <tbody>
