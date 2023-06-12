@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Tuition;
 use App\Notifications\TuitionApprovalNotification;
+use App\Notifications\TuitionRejectionNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TuitionApprovalController extends Controller
 {
@@ -38,6 +40,7 @@ class TuitionApprovalController extends Controller
      */
     public function update(Request $request, Tuition $tuition_approval)
     {
+        DB::beginTransaction();
         try {
             switch ($request->action) {
                 case 'approve':
@@ -59,11 +62,21 @@ class TuitionApprovalController extends Controller
             }
             $tuition_approval->save();
 
+            DB::commit();
+
             // Notification
-            $tuition_approval->requested_by->notify(new TuitionApprovalNotification($tuition_approval));
+            switch ($request->action) {
+                case 'approve':
+                    $tuition_approval->requested_by->notify(new TuitionApprovalNotification($tuition_approval));
+                    break;
+                    case 'reject':
+                        $tuition_approval->requested_by->notify(new TuitionRejectionNotification($tuition_approval));
+                    break;
+            }
 
             return redirect()->route('tuition-approval.index')->withToastSuccess('Berhasil mengubah Status!');
         } catch (\Throwable $th) {
+            DB::rollBack();
             return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
         }
     }
