@@ -20,7 +20,7 @@
                 <td>{{ $row['expense_date'] }}</td>
                 <td>Rp. {{ number_format($row->expense_details()->sum(DB::raw('price * quantity')), 0, ', ', '.') }}</td>
                 @if ($row['status'] == 'rejected')
-                <td>-</td>
+                <td>-</td> 
                 <td>-</td>
                 @else
                 <td>{{ $row['expense_outgoing_date'] }}</td>
