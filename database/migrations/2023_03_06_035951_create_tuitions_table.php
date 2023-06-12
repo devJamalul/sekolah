@@ -27,6 +27,9 @@ return new class extends Migration
             $table->text('reject_reason')->nullable();
             $table->foreignIdFor(User::class, 'request_by')->nullable();
             $table->foreignIdFor(User::class, 'approval_by')->nullable();
+            $table->timestamp('approved_at')->nullable();
+            $table->foreignIdFor(User::class, 'rejected_by')->nullable();
+            $table->timestamp('rejected_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
