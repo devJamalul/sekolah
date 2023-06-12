@@ -43,6 +43,7 @@ class TuitionApprovalController extends Controller
                 case 'approve':
                     $tuition_approval->status = Tuition::STATUS_APPROVED;
                     $tuition_approval->approval_by = Auth::user()->id;
+                    $tuition_approval->approved_at = now();
                     break;
                 case 'reject':
 
@@ -52,6 +53,8 @@ class TuitionApprovalController extends Controller
 
                     $tuition_approval->status = Tuition::STATUS_REJECTED;
                     $tuition_approval->reject_reason  = $request->reject_reason;
+                    $tuition_approval->rejected_at = now();
+                    $tuition_approval->rejected_by = Auth::user()->id;
                     break;
             }
             $tuition_approval->save();

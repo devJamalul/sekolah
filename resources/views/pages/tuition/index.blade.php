@@ -6,7 +6,7 @@
     <div class="row">
 
         {{-- start table Grade --}}
-        <div class="col-lg-10">
+        <div class="col-lg-12">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
                 <div>
@@ -27,8 +27,9 @@
                         'Tahun Akademik',
                         'Tingkat',
                         'Nominal',
-                        'Permintaan dari',
-                        'Disetujui Oleh',
+                        'Peminta',
+                        'Status',
+                        'Konfirmasi',
                         'Aksi',
                     ]" :tableColumns="[
                         ['data' => 'tuition_type', 'name' => 'price'],
@@ -36,6 +37,7 @@
                         ['data' => 'grade'],
                         ['data' => 'price'],
                         ['data' => 'request_by'],
+                        ['data' => 'status'],
                         ['data' => 'approval_by'],
                         ['data' => 'action'],
                     ]" :getDataUrl="route('datatable.tuition')" />

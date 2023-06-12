@@ -40,8 +40,21 @@ class TuitionDatatables extends Controller
             ->editColumn('request_by', function ($row) {
                 return $row->requested_by->name;
             })
+            ->editColumn('status', function ($row) {
+                return match ($row->status) {
+                    Tuition::STATUS_PENDING => '<span class="badge badge-dark">Menunggu</span>',
+                    Tuition::STATUS_APPROVED => '<span class="badge badge-success">Diterima</span>',
+                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>',
+                };
+                // return $row->requested_by->name;
+            })
             ->editColumn('approval_by', function ($row) {
-                return $row->approved_by ? $row->approved_by->name : '-';
+                return match ($row->status) {
+                    Tuition::STATUS_PENDING => '-',
+                    Tuition::STATUS_APPROVED => '<span class="badge badge-success">' . $row->approved_by->name . '</span>',
+                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger">'. $row->rejector->name.'</span>',
+                };
+                // return $row->approved_by ? $row->approved_by->name : '-';
             })
             ->addColumn('action', function (Tuition $row) {
                 $data = [
@@ -51,6 +64,8 @@ class TuitionDatatables extends Controller
                     'resource' => 'tuition'
                 ];
                 return view('components.datatable-action', $data);
-            })->toJson();
+            })
+            ->rawColumns(['status', 'approval_by'])
+            ->toJson();
     }
 }
