@@ -127,7 +127,7 @@
             @if (in_array($fileExtension, $extensionType))
                 <img src="{{ $expense->file_photo }}" alt="Bukti Pengeluaran Biaya" srcset="">
             @else
-                <a class="btn btn-primary" href="{{ $expense->file_photo }}" rel="" target="_blank">Bukti Pengeluaran Biaya</a>
+                <a class="btn btn-primary" href="{{ $expense->file_photo }}" rel="" target="_blank" download>Download</a>
             @endif
         </div>
       </div>
