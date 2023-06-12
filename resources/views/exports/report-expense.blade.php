@@ -16,8 +16,13 @@
                 <td>{{ $row['expense_number'] }}</td>
                 <td>{{ $row['expense_date'] }}</td>
                 <td>Rp. {{ number_format($row->expense_details()->sum(DB::raw('price * quantity')), 0, ', ', '.') }}</td>
+                @if ($row['status'] == 'rejected')
+                <td>-</td> 
+                <td>-</td>
+                @else
                 <td>{{ $row['expense_outgoing_date'] }}</td>
-                <td><a href="{{ $row['file_photo'] }}">Download</a></td>
+                <td><a href="{{ $row['file_photo'] }}" target="_blank" download>Download</a></td>
+                @endif
             </tr>
         @endforeach
     </tbody>
