@@ -123,7 +123,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body text-center">
             @if (in_array($fileExtension, $extensionType))
                 <img src="{{ $expense->file_photo }}" alt="Bukti Pengeluaran Biaya" srcset="">
             @else
