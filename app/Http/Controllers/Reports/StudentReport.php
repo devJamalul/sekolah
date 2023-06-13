@@ -11,7 +11,7 @@ use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Excel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentReport extends Controller
 {
@@ -68,7 +68,7 @@ class StudentReport extends Controller
             $query->when($request->classroom, function($query) use($request){
                 $query->where('id', $request->classroom);
             });
-            
+
             $classrooms = $query->get();
 
             $students = collect($classrooms)->map(function($classroom){

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ReportSchoolFinancesExport;
+use Illuminate\Support\Facades\Cache;
 
 class ReportSchoolFinancesController extends Controller
 {
@@ -26,8 +27,15 @@ class ReportSchoolFinancesController extends Controller
     public function report(Request $request)
     {
         $wallet = Wallet::findOrFail($request->wallet_id);
-        $queryParameter = $this->queryParameter($request);
         $title = $this->title;
+        $cacheName = str('school_finance_query_report_data' . $request->cashflow_type . '-' . $request->wallet_id . '-' . $request->reportrange)->slug();
+
+        if (Cache::has($cacheName)) {
+            $queryParameter = Cache::get($cacheName);
+        } else {
+            $queryParameter = $this->queryParameter($request);
+            Cache::put($cacheName, $queryParameter, config('school.cache_time'));
+        }
         return view('pages.report.school-finances.report', compact('title', 'wallet', 'queryParameter'));
     }
 
