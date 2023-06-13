@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceReportController extends Controller
@@ -37,25 +38,30 @@ class InvoiceReportController extends Controller
     {
         self::parseDate($request->range);
 
-        $invoices = Invoice::query()
-            ->where('is_posted', '!=', Invoice::POSTED_DRAFT)
-            ->whereBetween('invoice_date', [
-                session('invoice_report_start')->startOfDay()->format('Y-m-d H:i:s'),
-                session('invoice_report_end')->endOfDay()->format('Y-m-d H:i:s'),
-            ])
-            ->when($request->payment_status != "*", function ($query) use ($request) {
-                $query->where('payment_status', $request->payment_status);
-            })
-            ->orderBy('invoice_date')
-            ->orderBy('payment_status')
-            ->get();
+        if (Cache::has('invoice_report_data')) {
+            $invoices = Cache::get('invoice_report_data');
+        } else {
+            $invoices = Invoice::query()
+                ->where('is_posted', '!=', Invoice::POSTED_DRAFT)
+                ->whereBetween('invoice_date', [
+                    session('invoice_report_start')->startOfDay()->format('Y-m-d H:i:s'),
+                    session('invoice_report_end')->endOfDay()->format('Y-m-d H:i:s'),
+                ])
+                ->when($request->payment_status != "*", function ($query) use ($request) {
+                    $query->where('payment_status', $request->payment_status);
+                })
+                ->orderBy('invoice_date')
+                ->orderBy('payment_status')
+                ->get();
+
+            Cache::put('invoice_report_data', $invoices, config('school.cache_time'));
+        }
 
         $filename = "invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " periode " . session('invoice_report_start')->format('d F Y') . " -  " . session('invoice_report_end')->format('d F Y');
 
         if (count($invoices) == 0) {
             return redirect()->back()->withToastError("Ups! Tidak ada data invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " pada periode " . session('invoice_report_start')->format('d F Y') . " sampai " . session('invoice_report_end')->format('d F Y'));
         }
-        // dd($invoices->toArray());
 
         switch ($request->action) {
             case 'excel':
