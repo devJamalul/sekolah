@@ -7,6 +7,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Exports\ExpenseExport;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExpenseReportController extends Controller
@@ -45,7 +46,25 @@ class ExpenseReportController extends Controller
     public function exportExpenseReport(Request $request)
     {
         $query = null;
-        $expense = Expense::with('expense_details')->where('school_id', session('school_id'))->get();
+        self::parseDate($request->reportrange);
+
+        if (Cache::has('expense_report_data')) {
+            $expense = Cache::get('expense_report_data');
+        } else {
+            $expense = Expense::with('expense_details')
+            ->where('school_id', session('school_id'))
+                ->whereBetween('expense_date', [
+                    session('expense_report_start')->startOfDay()->format('Y-m-d H:i:s'),
+                    session('expense_report_end')->endOfDay()->format('Y-m-d H:i:s'),
+                ])
+            ->get();
+
+            Cache::put('expense_report_data', $expense, config('school.cache_time'));
+        }
+
+        if (count($expense) == 0) {
+            return redirect()->back()->withToastError("Ups! Tidak ada data pengeluaran biaya pada periode " . session('expense_report_start')->format('d F Y') . " sampai " . session('expense_report_end')->format('d F Y'));
+        }
 
         switch ($request->action) {
             case 'excel':
