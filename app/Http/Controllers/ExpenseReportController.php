@@ -47,9 +47,10 @@ class ExpenseReportController extends Controller
     {
         $query = null;
         self::parseDate($request->reportrange);
+        $cacheName = str('expense_report_data_' . $request->reportrange)->slug();
 
-        if (Cache::has('expense_report_data')) {
-            $expense = Cache::get('expense_report_data');
+        if (Cache::has($cacheName)) {
+            $expense = Cache::get($cacheName);
         } else {
             $expense = Expense::with('expense_details')
             ->where('school_id', session('school_id'))
@@ -59,10 +60,11 @@ class ExpenseReportController extends Controller
                 ])
             ->get();
 
-            Cache::put('expense_report_data', $expense, config('school.cache_time'));
+            Cache::put($cacheName, $expense, config('school.cache_time'));
         }
 
         if (count($expense) == 0) {
+            Cache::forget($cacheName);
             return redirect()->back()->withToastError("Ups! Tidak ada data pengeluaran biaya pada periode " . session('expense_report_start')->format('d F Y') . " sampai " . session('expense_report_end')->format('d F Y'));
         }
 
