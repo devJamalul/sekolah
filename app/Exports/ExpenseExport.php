@@ -26,7 +26,8 @@ class ExpenseExport implements FromView, WithColumnWidths
             'C' => 20,             
             'D' => 20,           
             'E' => 20,          
-            'F' => 20,           
+            'F' => 20,          
+            'G' => 20,           
         ];
     }
 }

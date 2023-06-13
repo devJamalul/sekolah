@@ -52,6 +52,11 @@ class Expense extends Model
     {
         return $this->belongsTo(User::class, 'approval_by');
     }
+    
+    public function reject_by(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
+    }
 
     public function getFilePhotoAttribute($value)
     {

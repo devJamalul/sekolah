@@ -16,10 +16,11 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'expense'" :tableHeaders="['No Pengeluaran', 'Tanggal Pengeluaran', 'Diproses Sempoa', 'Status', 'Aksi']" :tableColumns="[
+                    <x-datatable :tableId="'expense'" :tableHeaders="['No Pengeluaran', 'Tanggal Pengeluaran', 'Peminta', 'Konfirmasi', 'Status', 'Aksi']" :tableColumns="[
                         ['data' => 'expense_number'],
                         ['data' => 'expense_date'],
-                        ['data' => 'is_sempoa_processed'],
+                        ['data' => 'request_by'],
+                        ['data' => 'confirmation'],
                         ['data' => 'status'],
                         ['data' => 'action'],
                     ]" :getDataUrl="route('datatable.expense')" />
