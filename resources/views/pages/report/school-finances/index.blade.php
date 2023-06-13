@@ -65,6 +65,7 @@
                             <div class="input-group">
                                 <select name="cashflow_type" id="" class="form-control no-border">
                                     <option value="all">Semua</option>
+                                    <option value="init">Saldo Awal</option>
                                     <option value="in">Masuk</option>
                                     <option value="out">Keluar</option>
                                 </select>
