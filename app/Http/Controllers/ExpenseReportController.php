@@ -52,7 +52,7 @@ class ExpenseReportController extends Controller
                 return Excel::download(new ExpenseExport($expense), "data_pengeluaran_biaya_". Carbon::parse(now())->format('d-m-Y') .".xlsx");
                 break;
             case 'pdf':
-                return PDF::loadView('exports.report-expense', compact('expense'))->download("data_pengeluaran_biaya_". Carbon::parse(now())->format('d-m-Y') .".pdf");
+                return PDF::loadView('exports.report-expense', compact('expense'))->setPaper('a4', 'landscape')->download("data_pengeluaran_biaya_". Carbon::parse(now())->format('d-m-Y') .".pdf");
                 break;
         }
     }

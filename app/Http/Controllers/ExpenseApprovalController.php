@@ -70,6 +70,7 @@ class ExpenseApprovalController extends Controller
             switch ($request->action) {
                 case 'approve':
                     $expense_approval->approval_by = Auth::user()->id;
+                    $expense_approval->approval_at = now();
                     $expense_approval->status = Expense::STATUS_APPROVED;
                     break;
                 case 'reject':
@@ -79,6 +80,8 @@ class ExpenseApprovalController extends Controller
                     }
                         $expense_approval->status = Expense::STATUS_REJECTED;
                         $expense_approval->reject_reason  = $request->reject_reason;    
+                        $expense_approval->rejected_by =  Auth::user()->id;
+                        $expense_approval->rejected_at = now();
                     break;
             }
             $expense_approval->save();

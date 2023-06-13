@@ -286,6 +286,16 @@ class ExpenseController extends Controller
         $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
         $extensionType = ['img', 'png', 'jpg', 'gif', 'jpeg'];
         $fileExtension = pathinfo($expense->file_photo, PATHINFO_EXTENSION);
-        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'fileExtension', 'extensionType'));
+
+        if($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE){
+            $confirmation =  $expense->approved_by->name;
+        }
+        elseif($expense->status == Expense::STATUS_REJECTED){
+            $confirmation = $expense->reject_by->name;
+        }
+        else{
+            $confirmation = '-';
+        }
+        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'fileExtension', 'extensionType', 'confirmation'));
     }
 }

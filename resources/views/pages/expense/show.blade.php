@@ -33,6 +33,13 @@
                                     name="expense_date" id="expense-date-input" placeholder=""
                                     value="{{ $expense->expense_date }}" disabled>
                             </div>
+                            <div class="form-group">
+                                <label for="approval-date-input">Tanggal Konfirmasi<span
+                                        class="text-small text-danger">*</span></label>
+                                <input type="text" class="form-control @error('approval_date') is-invalid @enderror"
+                                    name="approval_date" id="approval-date-input" placeholder=""
+                                    value="{{ $expense->approval_at != null ? \Carbon\Carbon::createFromFormat('Y-m-d', $expense->approval_at)->format('d/m/Y') : \Carbon\Carbon::createFromFormat('Y-m-d', $expense->rejected_at)->format('d/m/Y') }}" disabled>
+                            </div>
                         </div>
                     </div>    
                 </div>
@@ -41,10 +48,43 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="note-input">Dibuat Oleh</label>
-                                <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
-                                    id="note-input" placeholder="" value="{{ $expense->requested_by->name }}" disabled>
+                                <label for="request_by-input">Peminta</label>
+                                <input type="text" class="form-control @error('request_by') is-invalid @enderror" name="request_by"
+                                    id="request_by-input" placeholder="" value="{{ $expense->requested_by->name }}" disabled>
                             </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="confirm_by-input">Konfirmasi</label>
+                                        <input type="text" class="form-control @error('confirm_by') is-invalid @enderror" name="confirm_by"
+                                            id="confirm_by-input" placeholder="" value="{{ $confirmation }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+
+                                    <div class="form-group">
+                                        <label for="status-input">Status</label>
+                                            <br>
+                                        @php
+                                            echo match ($expense->status) {
+                                                    'approved' => '<span class="badge badge-success">Disetujui</span>',
+                                                    'pending' => '<span class="badge badge-dark">Pending</span>',
+                                                    'rejected' => '<span class="badge badge-danger">Ditolak</span>',
+                                                    'done' => '<span class="badge badge-success">Selesai</span>',
+                                                    'outgoing' => '<span class="badge badge-info">Realisasi</span>',
+                                                    default => '-'
+                                                }
+                                        @endphp
+                                    </div>
+                                </div>
+                            </div>
+                            @if($expense->status == 'rejected')
+                            <div class="form-group">
+                                <label for="reject_reason-input">Alasan Penolakan</label>
+                                <input type="text" class="form-control @error('reject_reason') is-invalid @enderror" name="reject_reason"
+                                    id="reject_reason-input" placeholder="" value="{{ $expense->reject_reason }}" disabled>
+                            </div>
+                            @endif
                             <div class="form-group">
                                 <label for="note-input">Catatan</label>
                                 <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
