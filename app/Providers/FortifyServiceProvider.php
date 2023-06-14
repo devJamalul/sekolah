@@ -46,7 +46,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::loginView(function () {
-            return view('pages.login');
+            return view('pages.auth.login');
         });
 
         Fortify::authenticateUsing(function (Request $request) {
@@ -83,7 +83,15 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::confirmPasswordView(function () {
-            return view('pages.confirm-password');
+            return view('pages.auth.confirm-password');
+        });
+
+        Fortify::requestPasswordResetLinkView(function () {
+            return view('pages.auth.forgot-password');
+        });
+
+        Fortify::resetPasswordView(function (Request $request) {
+            return view('pages.auth.reset-password', ['request' => $request]);
         });
     }
 }
