@@ -63,13 +63,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="year-academy-input">Status Tahun Ajaran <span
+                            <label for="year-academy-input">Status Tahun Akademik <span
                                     class="text-small text-danger">*</span></label>
                             <select name="status_years" id=""
                                 class="form-control  @error('status_years') is-invalid @enderror">
                                 <option value="">-</option>
                                 @foreach ($academyYearStatus as $key => $status)
-                                    <option value="{{ $key }}">{{ $status }}</option>
+                                    <option value="{{ $key }}" @selected(old('status_years')==$key)>{{ $status }}</option>
                                 @endforeach
                             </select>
                             @error('status_years')
