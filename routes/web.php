@@ -3,12 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StaffController;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\User\UsersController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\TuitionController;
-use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
