@@ -20,7 +20,7 @@ class PublishTuitionController extends Controller
      */
     public function index()
     {
-        $title = 'Penerbitan Biaya Manual';
+        $title = 'Penerbitan Uang Sekolah Manual';
         $tuitions = Tuition::query()
             ->whereNotNull('approval_by')
             ->whereHas('tuition_type', function ($query) {
@@ -28,14 +28,6 @@ class PublishTuitionController extends Controller
             })
             ->get();
         return view('pages.publish-tuition.index', compact('title', 'tuitions'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -47,7 +39,7 @@ class PublishTuitionController extends Controller
 
         try {
             if (!$request->tuitions) {
-                throw new \Exception('Harus memilih biaya terlebih dahulu');
+                throw new \Exception('Harus memilih uang sekolah terlebih dahulu');
             }
             $tuitions = $request->tuitions;
             $jobs = [];
@@ -91,41 +83,9 @@ class PublishTuitionController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage());
-            return redirect()->route('publish-tuition.index')->withToastError('Error Terbitkan Biaya! ' . $th->getMessage());
+            return redirect()->route('publish-tuition.index')->withToastError('Error Terbitkan Uang Sekolah! ' . $th->getMessage());
         }
 
-        return redirect()->route('publish-tuition.index')->withToastSuccess('Berhasil Terbitkan Biaya!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('publish-tuition.index')->withToastSuccess('Berhasil Terbitkan Uang Sekolah!');
     }
 }

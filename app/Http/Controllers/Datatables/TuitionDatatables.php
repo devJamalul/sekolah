@@ -52,7 +52,7 @@ class TuitionDatatables extends Controller
                 return match ($row->status) {
                     Tuition::STATUS_PENDING => '-',
                     Tuition::STATUS_APPROVED => '<span class="badge badge-success">' . $row->approved_by->name . '</span>',
-                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger">'. $row->rejector->name.'</span>',
+                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger">' . $row->rejector->name . '</span>',
                 };
                 // return $row->approved_by ? $row->approved_by->name : '-';
             })
