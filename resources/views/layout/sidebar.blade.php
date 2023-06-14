@@ -83,7 +83,7 @@
                     @can('tuition-type.index')
                         <a href="{{ route('tuition-type.index') }}"
                             class="collapse-item {{ Request::is('tuition-type', 'tuition-type/*') ? 'active' : '' }}">
-                            Tipe Biaya
+                            Tipe Uang Sekolah
                         </a>
                     @endcan
                     @can('tuition.index')
@@ -149,18 +149,34 @@
             <div id="menuSekolah" class="collapse {{ $menuSekolah }}" aria-labelledby="menuSekolah"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    @can('grade.index')
-                        <a href="{{ route('grade.index') }}"
-                            class="collapse-item {{ Request::is('grade', 'grade/*') ? 'active' : '' }}">
-                            Tingkatan
-                        </a>
-                    @endcan
+                    
+                    @canany(['academy-year.index'])
+                        <h6 class="collapse-header">Data Master</h6>
+                    @endcanany
+
                     @can('academy-year.index')
                         <a href="{{ route('academy-year.index') }}"
                             class="collapse-item {{ Request::is('academy-year', 'academy-year/*') ? 'active' : '' }}">
                             Tahun Akademik
                         </a>
                     @endcan
+                    @can('grade.index')
+                        <a href="{{ route('grade.index') }}"
+                            class="collapse-item {{ Request::is('grade', 'grade/*') ? 'active' : '' }}">
+                            Tingkatan
+                        </a>
+                    @endcan  
+                    @can('classroom.index')
+                        <a href="{{ route('classroom.index') }}"
+                            class="collapse-item {{ Request::is('classroom', 'classroom/*') ? 'active' : '' }}">
+                            Ruang Kelas
+                        </a>
+                    @endcan
+
+                    @canany(['staff.index'])
+                        <h6 class="collapse-header">Personalia</h6>
+                    @endcanany
+
                     @can('staff.index')
                         <a href="{{ route('staff.index') }}"
                             class="collapse-item {{ Request::is('staff', 'staff/*') ? 'active' : '' }}">
@@ -173,23 +189,22 @@
                             Data Siswa
                         </a>
                     @endcan
-                    @can('classroom.index')
-                        <a href="{{ route('classroom.index') }}"
-                            class="collapse-item {{ Request::is('classroom', 'classroom/*') ? 'active' : '' }}">
-                            Ruang Kelas
-                        </a>
-                    @endcan
+
+                    @canany(['assign-classroom-student.index'])
+                        <h6 class="collapse-header">Data Kelas</h6>
+                    @endcanany
+                  
                     @can('assign-classroom-student.index')
                         <a href="{{ route('assign-classroom-student.index') }}"
                             class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">
-                            Rombongan Belajar
+                            Penetapan Kelas
                         </a>
                     @endcan
 
                     @can('assign-classroom-staff.index')
                         <a href="{{ route('assign-classroom-staff.index') }}"
                             class="collapse-item {{ Request::is('assign-classroom-staff', 'assign-classroom-staff/*') ? 'active' : '' }}">
-                            Rombongan Guru/Staff
+                            Pengetapan Wali Kelas
                         </a>
                     @endcan
                 </div>
