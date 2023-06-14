@@ -55,9 +55,7 @@ use App\Http\Controllers\Invoice\PublishInvoiceController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::permanentRedirect('/', 'home');
 
 Route::get('/home', function () {
     return view('pages.home');
