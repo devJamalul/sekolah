@@ -1,6 +1,6 @@
 @php
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*', 'school-profile') ? 'show' : '';
-    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'tuition-approval', 'tuition-approval/*', 'expense-approval', 'expense-approval/*', 'expense-outgoing', 'expense-outgoing/*') ? 'show' : '';
+    $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'tuition-approval', 'tuition-approval/*', 'expense-approval', 'expense-approval/*', 'expense-outgoing', 'expense-outgoing/*', 'publish-tuition') ? 'show' : '';
     $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
     $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
@@ -88,8 +88,8 @@
                     @endcan
                     @can('tuition.index')
                         <a href="{{ route('tuition.index') }}"
-                            class="collapse-item {{ Request::is('tuition', 'tuition/*') ? 'active' : '' }}">
-                            Biaya
+                            class="collapse-item {{ Request::is('tuition', 'tuition/*', 'publish-tuition') ? 'active' : '' }}">
+                            Uang Sekolah
                         </a>
                     @endcan
                     @can('wallet.index')
@@ -112,7 +112,7 @@
                     @can('tuition-approval.index')
                         <a href="{{ route('tuition-approval.index') }}"
                             class="collapse-item {{ Request::is('tuition-approval', 'tuition-approval/*') ? 'active' : '' }}">
-                            Biaya
+                            Uang Sekolah
                         </a>
                     @endcan
                     @can('expense-approval.index')
@@ -125,7 +125,7 @@
                     @canany(['expense-outgoing.index'])
                         <h6 class="collapse-header">Realisasi</h6>
                     @endcanany
-                    
+
                     @can('expense-outgoing.index')
                         <a href="{{ route('expense-outgoing.index') }}"
                             class="collapse-item {{ Request::is('expense-outgoing', 'expense-outgoing/*') ? 'active' : '' }}">
@@ -149,7 +149,7 @@
             <div id="menuSekolah" class="collapse {{ $menuSekolah }}" aria-labelledby="menuSekolah"
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    
+
                     @canany(['academy-year.index'])
                         <h6 class="collapse-header">Data Master</h6>
                     @endcanany
@@ -165,7 +165,7 @@
                             class="collapse-item {{ Request::is('grade', 'grade/*') ? 'active' : '' }}">
                             Tingkatan
                         </a>
-                    @endcan  
+                    @endcan
                     @can('classroom.index')
                         <a href="{{ route('classroom.index') }}"
                             class="collapse-item {{ Request::is('classroom', 'classroom/*') ? 'active' : '' }}">
@@ -193,7 +193,7 @@
                     @canany(['assign-classroom-student.index'])
                         <h6 class="collapse-header">Data Kelas</h6>
                     @endcanany
-                  
+
                     @can('assign-classroom-student.index')
                         <a href="{{ route('assign-classroom-student.index') }}"
                             class="collapse-item {{ Request::is('assign-classroom-student', 'assign-classroom-student/*') ? 'active' : '' }}">

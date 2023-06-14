@@ -21,7 +21,7 @@ class TuitionController extends Controller
     public function index()
     {
         //
-        $title = "Biaya";
+        $title = "Uang Sekolah";
         return view('pages.tuition.index', compact('title'));
     }
 
@@ -31,7 +31,7 @@ class TuitionController extends Controller
     public function create()
     {
         //
-        $title = "Tambah Biaya";
+        $title = "Tambah Uang Sekolah";
         $tuitionTypes = TuitionType::orderBy('name')->get();
         $academicYears = AcademicYear::orderByDesc('academic_year_name')->whereIn('status_years', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_REGISTRATION])->get();
         $grades = Grade::orderBy('grade_name')->get();
@@ -74,10 +74,10 @@ class TuitionController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage());
-            return redirect()->route('tuition.index')->withToastError('Eror Simpan Biaya!');
+            return redirect()->route('tuition.create')->withInput()->withToastError('Eror Simpan Uang Sekolah! ' . $th->getMessage());
         }
 
-        return redirect()->route('tuition.index')->withToastSuccess('Berhasil Simpan Biaya!');
+        return redirect()->route('tuition.index')->withToastSuccess('Berhasil Simpan Uang Sekolah!');
     }
 
     /**
@@ -95,11 +95,11 @@ class TuitionController extends Controller
     {
         if ($tuition->status != Tuition::STATUS_PENDING) {
             return response()->json([
-                'msg' => 'Biaya sudah tidak bisa diubah'
+                'msg' => 'Uang Sekolah sudah tidak bisa diubah'
             ]);
         }
 
-        $title = 'Ubah Biaya';
+        $title = 'Ubah Uang Sekolah';
         $tuitionTypes = TuitionType::orderBy('name')->get();
         $academicYears = AcademicYear::orderByDesc('academic_year_name')->get();
         $grades = Grade::orderBy('grade_name')->get();

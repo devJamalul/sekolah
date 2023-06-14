@@ -58,7 +58,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="grade-select">Tingkat<span class="text-small text-danger">*</span></label>
+                            <label for="grade-select">Tingkatan<span class="text-small text-danger">*</span></label>
                             <select class="form-control  @error('grade_id') is-invalid @enderror" name="grade_id"
                                 id="grade-select">
                                 <option value="">-</option>

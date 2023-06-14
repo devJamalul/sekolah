@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <x-datatable
                         :tableId="'tuition_approval'"
-                        :tableHeaders="['Nama Biaya', 'Tingkatan', 'Nominal', 'Status', 'Aksi']"
+                        :tableHeaders="['Uang Sekolah', 'Tingkatan', 'Nominal', 'Status', 'Aksi']"
                         :tableColumns="[
                             ['data' => 'tuition_name'],
                             ['data' => 'grade', 'name' => 'grade.grade_name'],
