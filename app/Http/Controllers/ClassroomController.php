@@ -121,7 +121,7 @@ class ClassroomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('classroom.index')->withToastError('Eror Simpan Kelas!');
+            return redirect()->route('classroom.edit', $classroom->getKey())->withToastError('Eror Simpan Kelas! ' . $th->getMessage());
         }
 
         return redirect()->route('classroom.index')->withToastSuccess('Berhasil Simpan Kelas!');
