@@ -37,9 +37,10 @@ class InvoiceReportController extends Controller
     public function store(Request $request)
     {
         self::parseDate($request->range);
+        $cacheName = str('invoice_report_data_' . $request->range . '-' . $request->payment_status)->slug();
 
-        if (Cache::has('invoice_report_data')) {
-            $invoices = Cache::get('invoice_report_data');
+        if (Cache::has($cacheName)) {
+            $invoices = Cache::get($cacheName);
         } else {
             $invoices = Invoice::query()
                 ->where('is_posted', '!=', Invoice::POSTED_DRAFT)
@@ -54,12 +55,13 @@ class InvoiceReportController extends Controller
                 ->orderBy('payment_status')
                 ->get();
 
-            Cache::put('invoice_report_data', $invoices, config('school.cache_time'));
+            Cache::put($cacheName, $invoices, config('school.cache_time'));
         }
 
         $filename = "invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " periode " . session('invoice_report_start')->format('d F Y') . " -  " . session('invoice_report_end')->format('d F Y');
 
         if (count($invoices) == 0) {
+            Cache::forget($cacheName);
             return redirect()->back()->withToastError("Ups! Tidak ada data invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " pada periode " . session('invoice_report_start')->format('d F Y') . " sampai " . session('invoice_report_end')->format('d F Y'));
         }
 

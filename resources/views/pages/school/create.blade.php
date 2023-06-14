@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <label for="name-input">Nama Sekolah <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control @error('school_name') is-invalid @enderror"
-                                    name="school_name" id="name-input" autocomplete="off">
+                                    name="school_name" id="name-input" autocomplete="off" value="{{old('school_name')}}">
                                 @error('school_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -54,7 +54,7 @@
                                 <div class="form-group col-5">
                                     <label>Provinsi <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('province') is-invalid @enderror"
-                                        name="province" autocomplete="off">
+                                        name="province" autocomplete="off" value="{{old('province')}}">
                                     @error('province')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -64,7 +64,7 @@
                                 <div class="form-group col-4">
                                     <label>Kota <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('city') is-invalid @enderror"
-                                        name="city" autocomplete="off">
+                                        name="city" autocomplete="off" value="{{old('city')}}">
                                     @error('city')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -74,7 +74,7 @@
                                 <div class="form-group col-3">
                                     <label>Kode Pos <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('postal_code') is-invalid @enderror"
-                                        name="postal_code" autocomplete="off">
+                                        name="postal_code" autocomplete="off" value="{{old('postal_code')}}">
                                     @error('postal_code')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -84,7 +84,7 @@
 
                                 <div class="form-group col-12">
                                     <label>Alamat <small class="text-danger">*</small></label>
-                                    <textarea name="address" id="" class="form-control @error('address') is-invalid @enderror" rows="2"></textarea>
+                                    <textarea name="address" id="" class="form-control @error('address') is-invalid @enderror" rows="2">{{old('address')}}</textarea>
                                     @error('address')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -97,7 +97,7 @@
                                         id="">
                                         <option value="" disabled selected></option>
                                         @foreach ($grade_school as $grade)
-                                            <option value="{{ $grade }}">{{ $grade }}</option>
+                                            <option value="{{ $grade }}" @selected(old('grade')==$grade)>{{ $grade }}</option>
                                         @endforeach
                                     </select>
                                     @error('grade')
@@ -109,7 +109,7 @@
                                 <div class="form-group col-12">
                                     <label>Email <small class="text-danger">*</small> </label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                        name="email" autocomplete="off">
+                                        name="email" autocomplete="off" value="{{old('email')}}">
                                     @error('email')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -119,7 +119,7 @@
                                 <div class="form-group col-12">
                                     <label>Phone <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                        name="phone" autocomplete="off">
+                                        name="phone" autocomplete="off" value="{{old('phone')}}">
                                     @error('phone')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -136,7 +136,7 @@
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text"
                                     class="form-control @error('foundation_head_name') is-invalid @enderror"
-                                    name="foundation_head_name" autocomplete="off">
+                                    name="foundation_head_name" autocomplete="off" value="{{old('foundation_head_name')}}">
                                 @error('foundation_head_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -147,7 +147,7 @@
                                 <label>Email <small class="text-danger">*</small> </label>
                                 <input type="email"
                                     class="form-control @error('foundation_head_email') is-invalid @enderror"
-                                    name="foundation_head_email" autocomplete="off">
+                                    name="foundation_head_email" autocomplete="off" value="{{old('foundation_head_email')}}">
                                 @error('foundation_head_email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -158,7 +158,7 @@
                                 <label>No Tlpn <small class="text-danger">*</small> </label>
                                 <input type="text"
                                     class="form-control @error('foundation_head_tlpn') is-invalid @enderror"
-                                    name="foundation_head_tlpn" autocomplete="off">
+                                    name="foundation_head_tlpn" autocomplete="off" value="{{old('foundation_head_tlpn')}}">
                                 @error('foundation_head_tlpn')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -170,7 +170,7 @@
                             <div class="form-group col-12">
                                 <label>Nama <small class="text-danger">*</small> </label>
                                 <input type="text" class="form-control @error('name_pic') is-invalid @enderror"
-                                    name="name_pic" autocomplete="off">
+                                    name="name_pic" autocomplete="off" value="{{old('name_pic')}}">
                                 @error('name_pic')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -180,7 +180,7 @@
                             <div class="form-group col-12">
                                 <label>Email <small class="text-danger">*</small> </label>
                                 <input type="email" class="form-control @error('email_pic') is-invalid @enderror"
-                                    name="email_pic" autocomplete="off">
+                                    name="email_pic" autocomplete="off" value="{{old('email_pic')}}">
                                 @error('email_pic')
                                     <div class="invalid-feedback">
                                         {{ $message }}

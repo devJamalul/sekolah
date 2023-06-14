@@ -25,7 +25,7 @@
                                 name="academic_year_id">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $item)
-                                    <option value="{{ $item->id }}">
+                                    <option value="{{ $item->id }}" @selected(old('academic_year_id')==$item->id)>
                                         {{ $item->academic_year_name }}
                                     </option>
                                 @endforeach
@@ -43,7 +43,7 @@
                                 id="grade-select">
                                 <option value="">-</option>
                                 @foreach ($grades as $grade)
-                                    <option value="{{ $grade->id }}">
+                                    <option value="{{ $grade->id }}" @selected(old('grade_id')==$grade->id)>
                                         {{ $grade->grade_name }}
                                     </option>
                                 @endforeach
@@ -58,7 +58,7 @@
                         <div class="form-group">
                             <label for="year-academy-input">Kelas<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                                id="year-academy-input" placeholder="">
+                                id="year-academy-input" value="{{old('name')}}">
                             @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
