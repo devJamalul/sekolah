@@ -47,18 +47,30 @@ class ClassroomController extends Controller
         DB::beginTransaction();
 
         try {
+            $classes = explode(",", $request->name);
 
-            $classroom                      = new Classroom();
-            $classroom->school_id           = session('school_id');
-            $classroom->academic_year_id    = $request->academic_year_id;
-            $classroom->grade_id            = $request->grade_id;
-            $classroom->name                = $request->name;
-            $classroom->save();
+            foreach ($classes as $item) {
+                $item = trim($item);
+                $cek = Classroom::firstWhere([
+                    'school_id' => session('school_id'),
+                    'grade_id' => $request->grade_id,
+                    'academic_year_id' => $request->academic_year_id,
+                    'name' => $item
+                ]);
+                if (!$item or $item == '' or is_null($item) or $cek) continue;
+
+                $classroom                      = new Classroom();
+                $classroom->school_id           = session('school_id');
+                $classroom->academic_year_id    = $request->academic_year_id;
+                $classroom->grade_id            = $request->grade_id;
+                $classroom->name                = $item;
+                $classroom->save();
+            }
 
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('classroom.index')->withToastError('Eror Simpan Kelas');
+            return redirect()->route('classroom.create')->withInput()->withToastError('Eror Simpan Kelas. ' . $th->getMessage());
         }
 
         return redirect()->route('classroom.index')->withToastSuccess('Berhasil Simpan Kelas');
@@ -96,6 +108,9 @@ class ClassroomController extends Controller
         DB::beginTransaction();
 
         try {
+            if (str_contains($request->name, ',')) {
+                throw new \Exception('Tidak boleh mengandung koma.');
+            }
 
             $classroom->school_id           = session('school_id');
             $classroom->academic_year_id    = $request->academic_year_id;

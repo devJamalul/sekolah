@@ -40,14 +40,23 @@ class GradeController extends Controller
         DB::beginTransaction();
 
         try {
+            $grades = explode(",", $request->grade_name);
 
-            $grade              = new Grade();
-            $grade->school_id   = session('school_id');
-            $grade->grade_name  = $request->grade_name;
-            $grade->save();
+            foreach ($grades as $item) {
+                $item = trim($item);
+                $cek = Grade::firstWhere([
+                    'school_id' => session('school_id'),
+                    'grade_name' => $item
+                ]);
+                if (!$item or $item == '' or is_null($item) or $cek) continue;
+
+                $grade              = new Grade();
+                $grade->school_id   = session('school_id');
+                $grade->grade_name  = $item;
+                $grade->save();
+            }
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('grade.index')->withToastError('Eror Simpan Tingkat!');
@@ -75,16 +84,18 @@ class GradeController extends Controller
         DB::beginTransaction();
 
         try {
+            if (str_contains($request->grade_name, ',')) {
+                throw new \Exception('Tidak boleh mengandung koma.');
+            }
 
             $grade->school_id   = session('school_id');
             $grade->grade_name  = $request->grade_name;
             $grade->save();
 
             DB::commit();
-
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('grade.index')->withToastError('Eror Simpan Tingkat!');
+            return redirect()->route('grade.index')->withToastError('Eror Simpan Tingkat! ' . $th->getMessage());
         }
 
         return redirect()->route('grade.index')->withToastSuccess('Berhasil Simpan Tingkat!');
@@ -104,7 +115,6 @@ class GradeController extends Controller
             return response()->json([
                 'msg' => 'Berhasil Hapus Tingkat!'
             ], 200);
-
         } catch (\Throwable $th) {
 
             DB::rollBack();
