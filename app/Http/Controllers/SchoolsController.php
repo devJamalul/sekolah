@@ -106,11 +106,11 @@ class SchoolsController extends Controller
             // PIC assign role
             $kepsek->assignRole(User::ROLE_KEPALA_SEKOLAH);
 
-            DB::commit();
-
             // notification
             $user->notify(new NewSchoolPICNotification($user, $password));
             $kepsek->notify(new NewSchoolPICNotification($kepsek, $password2));
+
+            DB::commit();
         } catch (Exception $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Tambah sekolah',
@@ -118,7 +118,7 @@ class SchoolsController extends Controller
                 'sekolah' => $school->name
             ]);
             DB::rollback();
-            return to_route('schools.create')->withToastError('Ups, terjadi kesalahan saat menambah data!');
+            return to_route('schools.create')->withInput()->withToastError('Ups, terjadi kesalahan saat menambah data! ' . $th->getMessage());
         }
 
         return to_route('schools.index')->withToastSuccess('Berhasil menambah data!');
