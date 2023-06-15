@@ -8,8 +8,6 @@ use App\Models\Staff;
 use App\Models\User;
 use App\Notifications\NewSchoolPICNotification;
 use Exception;
-use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -129,7 +127,6 @@ class SchoolsController extends Controller
      */
     public function edit(School $school)
     {
-
         $school->load('staf.user');
         $title = "Ubah Sekolah";
         $grade_school =  School::GRADE_SCHOOL;
@@ -152,8 +149,6 @@ class SchoolsController extends Controller
      */
     public function update(SchoolRequest $request, School $school)
     {
-        $role = $request->has('school_id') ? User::ROLE_ADMIN_SEKOLAH : $role = User::ROLE_ADMIN_YAYASAN;
-
         DB::beginTransaction();
         try {
             // school
@@ -176,7 +171,7 @@ class SchoolsController extends Controller
                 'school' => $school->name
             ]);
             DB::rollback();
-            return to_route('schools.index')->withToastError('Ups, terjadi kesalahan saat mengubah data!');
+            return to_route('schools.index')->withToastError('Ups, terjadi kesalahan saat mengubah data! ' . $th->getMessage());
         }
 
         return to_route('schools.index')->withToastSuccess('Berhasil mengubah data!');
@@ -202,7 +197,7 @@ class SchoolsController extends Controller
             ]);
             DB::rollback();
             return response()->json([
-                'msg' => 'Ups gagal menghapus data sekolah!'
+                'msg' => 'Ups gagal menghapus data sekolah! ' . $th->getMessage()
             ], 400);
         }
     }

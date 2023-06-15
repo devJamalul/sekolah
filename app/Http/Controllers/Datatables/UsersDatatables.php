@@ -22,11 +22,15 @@ class UsersDatatables extends Controller
                     'delete_url'   => route('users.destroy', ['user' => $row->id]),
                     'redirect_url' => route('users.index'),
                     'resource'     => 'users',
+                    'custom_links' => []
                 ];
+
+                array_push($data['custom_links'], ['label' => 'Ubah Password', 'url' => route('reset-user-password.edit', ['user' => $row->id]), 'name' => 'reset-user-password.edit']);
+
                 return view('components.datatable-action', $data);
             })
-            ->editColumn('name', function($row) {
-                return "<a href='".route('users.show', $row->getKey())."'>$row->name</a>";
+            ->editColumn('name', function ($row) {
+                return "<a href='" . route('users.show', $row->getKey()) . "' title='Detail' alt='Detail'>$row->name</a>";
             })
             ->addColumn('jabatan', function ($row) {
                 return str($row->getRoleNames()[0])->title();
