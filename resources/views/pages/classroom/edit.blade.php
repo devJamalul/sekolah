@@ -21,12 +21,12 @@
                     <form action="{{ route('classroom.update', ['classroom' => $classroom->id]) }}" method="post">
                         @method('PUT')
                         <div class="form-group">
-                            <label for="grade-select">Tahun Ajaran<span class="text-small text-danger">*</span></label>
+                            <label for="grade-select">Tahun Akademik<span class="text-small text-danger">*</span></label>
                             <select class="form-control @error('academic_year_id') is-invalid @enderror"
                                 name="academic_year_id">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $item)
-                                    <option value="{{ $item->id }}" @if ($item->id === $classroom->academic_year_id) selected @endif>
+                                    <option value="{{ $item->id }}" @selected($item->id == old('academic_year_id', $classroom->academic_year_id))>
                                         {{ $item->academic_year_name }}
                                     </option>
                                 @endforeach
@@ -45,7 +45,7 @@
                                 id="grade-select">
                                 <option value="">-</option>
                                 @foreach ($grades as $grade)
-                                    <option value="{{ $grade->id }}" @if ($classroom->grade_id === $grade->id) selected @endif>
+                                    <option value="{{ $grade->id }}" @selected(old('grade_id', $classroom->grade_id) == $grade->id)>
                                         {{ $grade->grade_name }}
                                     </option>
                                 @endforeach
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="classroom-input">Kelas<span class="text-small text-danger">*</span></label>
                             <input type="text" class="form-control  @error('name') is-invalid @enderror" name="name"
-                                value="{{ $classroom->name }}" id="classroom-input" placeholder="">
+                                value="{{ old('name', $classroom->name) }}" id="classroom-input" placeholder="">
                             @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}
