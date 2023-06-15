@@ -44,4 +44,11 @@ class UserRequest extends FormRequest
             'jabatan' => 'required|string|max:100',
         ];
     }
+
+    public function attributes()
+    {
+        return [
+            'name' => 'nama'
+        ];
+    }
 }

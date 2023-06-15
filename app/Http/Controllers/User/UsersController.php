@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
+use Throwable;
 
 class UsersController extends Controller
 {
@@ -92,14 +93,14 @@ class UsersController extends Controller
             DB::commit();
             // event(new Registered($user)); # aktifkan jika sudah menggunakan email verifikasi
             $user->notify(new NewSchoolPICNotification($user, $password));
-        } catch (Exception $th) {
+        } catch (Throwable $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Tambah pengguna',
                 'user' => auth()->user()->name,
                 'sekolah' => School::find(session('school_id'))->name
             ]);
             DB::rollBack();
-            return redirect()->route('users.index')->withToastError('Ups, terjadi kesalahan saat menambah data!');
+            return redirect()->route('users.create')->withInput()->withToastError('Ups, terjadi kesalahan saat menambah data! ' . $th->getMessage());
         }
 
         return redirect()->route('users.index')->withToastSuccess('Berhasil menambah data!');
@@ -121,7 +122,7 @@ class UsersController extends Controller
     public function edit(User $user)
     {
         if ($user->school_id != session('school_id')) {
-            abort(404);
+            abort(403);
         }
 
         $admin = User::find(auth()->id());
@@ -144,7 +145,7 @@ class UsersController extends Controller
     public function update(UserRequest $request, User $user)
     {
         if ($user->school_id != session('school_id')) {
-            abort(404);
+            abort(403);
         }
 
         $admin = User::find(auth()->id());
@@ -158,7 +159,7 @@ class UsersController extends Controller
         }
 
         // simpan role awalnya
-        $role = $user->getRoleNames()[0];
+        $role_sebelumnya = $user->getRoleNames()[0];
 
         // cek sudah ada kepala sekolah atau belum
         if ($request->jabatan == User::ROLE_KEPALA_SEKOLAH) {
@@ -191,7 +192,7 @@ class UsersController extends Controller
 
             // pengubahan info kepsek jika ada transisi posisi kepsek
             if (
-                $role != User::ROLE_KEPALA_SEKOLAH
+                $role_sebelumnya != User::ROLE_KEPALA_SEKOLAH
                 && $user->getRoleNames()[0] == User::ROLE_KEPALA_SEKOLAH
             ) {
                 $school = School::find($user->school_id);
@@ -203,7 +204,7 @@ class UsersController extends Controller
 
             // pengubahan info kepsek jika ada status quo pada posisi kepsek
             if (
-                $role == User::ROLE_KEPALA_SEKOLAH
+                $role_sebelumnya == User::ROLE_KEPALA_SEKOLAH
                 && $user->getRoleNames()[0] != User::ROLE_KEPALA_SEKOLAH
             ) {
                 $school = School::find($user->school_id);
@@ -213,14 +214,14 @@ class UsersController extends Controller
                 $school->save();
             }
 
-        } catch (Exception $th) {
+        } catch (Throwable $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Ubah pengguna',
                 'user' => auth()->user()->name,
                 'sekolah' => School::find(session('school_id'))->name
             ]);
             DB::rollBack();
-            return redirect()->route('users.index')->withToastError('Ups, terjadi kesalahan saat mengubah data!');
+            return redirect()->route('users.edit', $user->getKey())->withInput()->withToastError('Ups, terjadi kesalahan saat mengubah data!');
         }
 
         return redirect()->route('users.index')->withToastSuccess('Berhasil mengubah data!');
@@ -232,7 +233,7 @@ class UsersController extends Controller
     public function destroy(User $user)
     {
         if ($user->school_id != session('school_id')) {
-            abort(404);
+            abort(403);
         }
 
         DB::beginTransaction();

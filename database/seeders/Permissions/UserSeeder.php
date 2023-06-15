@@ -32,7 +32,9 @@ class UserSeeder extends Seeder
             'show' => 'users.show',
             'edit' => 'users.edit',
             'update' => 'users.update',
-            'destroy' => 'users.destroy'
+            'destroy' => 'users.destroy',
+            'reset-password' => 'reset-user-password.edit',
+            'set-password' => 'reset-user-password.update',
         ];
 
         // index
@@ -74,6 +76,18 @@ class UserSeeder extends Seeder
         // destroy
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah]);
+
+        // reset password
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['reset-password'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah]);
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['set-password'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah]);
