@@ -46,13 +46,13 @@ class ChangeUserPasswordController extends Controller
 
         DB::beginTransaction();
         try {
-            $user->password = bcrypt($request->pasword);
+            $user->password = bcrypt($request->password);
             $user->save();
             $user->notify(new PasswordResetNotification($user));
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->route('user-password.update', $user->getKey())->withToastError("Ops! Gagal reset password! " . $th->getMessage());
+            return redirect()->route('reset-user-password.edit', $user->getKey())->withToastError("Ops! Gagal reset password! " . $th->getMessage());
         }
 
         return redirect()->route('users.index')->withToastSuccess("Reset password Berhasil!");

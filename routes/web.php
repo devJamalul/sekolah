@@ -59,9 +59,9 @@ Route::permanentRedirect('/', 'home');
 
 Route::get('/home', function () {
     return view('pages.home');
-})->name('home')->middleware(['auth', 'password.changed']);
+})->name('home')->middleware(['auth']);
 
-Route::middleware(['auth', 'password.changed'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Academy Year
     Route::resource("academy-year", AcademyYearController::class)->except(['show']);
 
@@ -182,7 +182,7 @@ Route::middleware(['auth', 'password.changed'])->group(function () {
     Route::apiSingleton('edit-password', EditPasswordController::class)->withoutMiddleware([RequireChangePassword::class]);
 });
 
-Route::middleware(['auth', 'password.changed'])->prefix('reports')->group(function () {
+Route::middleware(['auth'])->prefix('reports')->group(function () {
 
     // Report Student
     Route::get('students', [StudentReport::class, 'index'])->name('reports.students');
@@ -192,11 +192,11 @@ Route::middleware(['auth', 'password.changed'])->prefix('reports')->group(functi
 });
 
 
-Route::group(['middleware' => ['auth', 'password.changed']], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::resource("master-configs", ConfigController::class)->except(['show']);
 });
 
-Route::group(['prefix' => 'config', 'as' => 'config.', 'middleware' => ['auth', 'password.changed']], function () {
+Route::group(['prefix' => 'config', 'as' => 'config.', 'middleware' => ['auth']], function () {
     Route::get('/', [ConfigSchoolController::class, 'index'])->name('index');
     Route::post('/save', [ConfigSchoolController::class, 'save'])->name('save');
 });
