@@ -15,10 +15,9 @@ class ClassroomController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $title = "Kelas";
+        $title = "Ruang Kelas";
         return view('pages.classroom.index', compact('title'));
     }
 
@@ -28,7 +27,7 @@ class ClassroomController extends Controller
     public function create()
     {
         //
-        $title = "Tambah Kelas";
+        $title = "Tambah Ruang Kelas";
         $schools = School::all();
         $academicYears = AcademicYear::whereIn('status_years', [
             AcademicYear::STATUS_STARTED,
@@ -70,10 +69,10 @@ class ClassroomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('classroom.create')->withInput()->withToastError('Eror Simpan Kelas. ' . $th->getMessage());
+            return redirect()->route('classroom.create')->withInput()->withToastError('Eror Simpan Ruang Kelas. ' . $th->getMessage());
         }
 
-        return redirect()->route('classroom.index')->withToastSuccess('Berhasil Simpan Kelas');
+        return redirect()->route('classroom.index')->withToastSuccess('Berhasil Simpan Ruang Kelas');
     }
 
     /**
@@ -95,7 +94,7 @@ class ClassroomController extends Controller
             AcademicYear::STATUS_STARTED,
             AcademicYear::STATUS_REGISTRATION
         ])->orderBy('status_years', 'desc')->get();
-        $title = "Ubah Kelas";
+        $title = "Ubah Ruang Kelas";
         return view('pages.classroom.edit', compact('schools', 'academicYears',  'grades', 'classroom', 'title'));
     }
 
@@ -121,10 +120,10 @@ class ClassroomController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('classroom.edit', $classroom->getKey())->withToastError('Eror Simpan Kelas! ' . $th->getMessage());
+            return redirect()->route('classroom.edit', $classroom->getKey())->withToastError('Eror Simpan Ruang Kelas! ' . $th->getMessage());
         }
 
-        return redirect()->route('classroom.index')->withToastSuccess('Berhasil Simpan Kelas!');
+        return redirect()->route('classroom.index')->withToastSuccess('Berhasil Simpan Ruang Kelas!');
     }
 
     /**
@@ -139,13 +138,13 @@ class ClassroomController extends Controller
             DB::commit();
 
             return response()->json([
-                'msg' => 'Berhasil Hapus Kelas!'
+                'msg' => 'Berhasil Hapus Ruang Kelas!'
             ], 200);
         } catch (\Throwable $th) {
 
             DB::rollBack();
             return response()->json([
-                'msg' => 'Eror Hapus Kelas!'
+                'msg' => 'Eror Hapus Ruang Kelas!'
             ]);
         }
     }

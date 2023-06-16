@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PasswordResetNotification extends Notification
+class NewUser extends Notification
 {
     use Queueable;
 
@@ -36,10 +36,11 @@ class PasswordResetNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Password Anda di ' . config('app.name') . ' telah berubah')
-            ->greeting('Halo, ' . $this->user->name . '!')
-            ->line('Password Anda telah berhasil diubah.')
-            ->line('Jika Anda tidak merasa meminta hal ini, segera lakukan proses Forgot Password manual.');
+            ->subject('Konfirmasi Akun ' . config('app.name') . ' Anda')
+            ->greeting('Halo, ' . $this->user->name . ' !')
+            ->line('Anda terdaftar untuk sekolah ' . $this->user->school->school_name . '. Sebelumnya Anda harus mengkonfirmasi akun ini dengan menekan tombol di bawah ini:')
+            ->action('Konfirmasi Akun', route('user-verification.index', [$this->user->email, $this->user->remember_token]))
+            ->line('Terima kasih telah menggunakan aplikasi kami');
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\School;
 
+use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\School;
 use Illuminate\Http\Request;

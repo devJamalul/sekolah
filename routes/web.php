@@ -6,7 +6,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\User\UsersController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ExpenseController;
-use App\Http\Controllers\SchoolsController;
+use App\Http\Controllers\School\SchoolsController;
 use App\Http\Controllers\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
@@ -20,7 +20,7 @@ use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\Wallet\WalletController;
 use App\Http\Controllers\PublishTuitionController;
-use App\Http\Controllers\SchoolSelectorController;
+use App\Http\Controllers\School\SchoolSelectorController;
 use App\Http\Controllers\ExpenseApprovalController;
 use App\Http\Controllers\ExpenseOutgoingController;
 use App\Http\Controllers\Invoice\InvoiceController;
@@ -43,6 +43,7 @@ use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\User\ChangeUserPasswordController;
+use App\Http\Controllers\User\UserVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,11 @@ Route::permanentRedirect('/', 'home');
 Route::get('/home', function () {
     return view('pages.home');
 })->name('home')->middleware(['auth']);
+
+Route::as('user-verification.')->controller(UserVerificationController::class)->group(function () {
+    Route::get('user/{email}/{token}/verify', 'index')->name('index');
+    Route::post('user/{email}/{token}/verify', 'store')->name('store');
+});
 
 Route::middleware(['auth'])->group(function () {
     // Academy Year

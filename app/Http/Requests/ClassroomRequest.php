@@ -69,7 +69,7 @@ class ClassroomRequest extends FormRequest
         return [
             'academic_year_id' => 'Tahun Akademik',
             'grade_id' => 'Tingkatan',
-            'name' => 'Nama',
+            'name' => 'Kelas',
         ];
     }
 }
