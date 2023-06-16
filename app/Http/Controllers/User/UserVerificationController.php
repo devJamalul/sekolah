@@ -87,7 +87,7 @@ class UserVerificationController extends Controller
                 'user' => $user ?? null
             ]);
 
-            return to_route('user-verification.index', [$email, $token])->withToastSuccess('Akun Anda telah siap!');
+            return to_route('user-verification.index', [$email, $token])->withToastError('Ops! ' . $th->getMessage());
         }
 
         return to_route('login')->withToastSuccess('Akun Anda telah siap!');
