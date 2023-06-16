@@ -28,8 +28,8 @@ class ExpenseReportSeeder extends Seeder
             'store' => 'expense-report.store',
         ];
 
-          // index
-          $permission = Permission::firstOrCreate([
+        // index
+        $permission = Permission::firstOrCreate([
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
