@@ -28,8 +28,8 @@ class ExpenseReportSeeder extends Seeder
             'store' => 'expense-report.store',
         ];
 
-          // index
-          $permission = Permission::firstOrCreate([
+        // index
+        $permission = Permission::firstOrCreate([
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
@@ -39,6 +39,6 @@ class ExpenseReportSeeder extends Seeder
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $admin_yayasan, $kepala_sekolah, $tata_usaha, $bendahara]);
     }
 }
