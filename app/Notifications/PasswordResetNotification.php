@@ -38,7 +38,7 @@ class PasswordResetNotification extends Notification
         return (new MailMessage)
             ->subject('Password Anda di ' . config('app.name') . ' telah berubah')
             ->greeting('Halo, ' . $this->user->name . '!')
-            ->line('Password Anda telah berhasil diubah. Silahkan hubungi Administrator Sekolah untuk informasi selanjutnya.')
+            ->line('Password Anda telah berhasil diubah.')
             ->line('Jika Anda tidak merasa meminta hal ini, segera lakukan proses Forgot Password manual.');
     }
 
