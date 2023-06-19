@@ -29,7 +29,8 @@ class ExpenseSeeder extends Seeder
             'store' => 'expense.store',
             'edit' => 'expense.edit',
             'update' => 'expense.update',
-            'destroy' => 'expense.destroy'
+            'destroy' => 'expense.destroy',
+            'publish' => 'expense.publish'
         ];
 
           // index
@@ -69,5 +70,13 @@ class ExpenseSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah]);
+
+        // publish
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['publish'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
+
     }
 }

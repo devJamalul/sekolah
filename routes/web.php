@@ -136,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Expense
     Route::resource('expense', ExpenseController::class);
+    Route::get('expense/{expense}/publish-expense', [ExpenseController::class, 'ExpensePublish'])->name('expense.publish');
     Route::get('expense/{expense}/show-detail', [ExpenseController::class, 'ShowDetail'])->name('expense.show-detail');
     // Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
     Route::controller(ExpenseDetailController::class)->prefix('expense')->name('expense-detail.')->group(function () {

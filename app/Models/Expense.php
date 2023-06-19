@@ -28,6 +28,8 @@ class Expense extends Model
 
     const STATUS_DONE   = "done";
 
+    const STATUS_DRAFT   = "draft";
+
     protected static function booted()
     {
         static::addGlobalScope(new ExpenseScope);
