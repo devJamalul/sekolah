@@ -61,15 +61,16 @@ class ExpenseDatatables extends Controller
                             'label' => "Publish",
                             'url' => route('expense.publish', ['expense' => $row->id]),
                             'name' => 'expense.publish' 
-                        ]
+                        ],
+                    
                     ]
                 ];
-                if($row->status != Expense::STATUS_DRAFT ){
+                if($row->status != Expense::STATUS_DRAFT){
                     $data['edit_url'] = null;
-                    $data['delete_url'] = null;
                 }
                 if($row->status == Expense::STATUS_PENDING){
                     $data['custom_links'] = null;
+                    $data['delete_url'] = route('expense.destroy', ['expense' => $row->id]);
                 }
 
                 return view('components.datatable-action', $data);

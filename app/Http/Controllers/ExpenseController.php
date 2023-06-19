@@ -96,9 +96,7 @@ class ExpenseController extends Controller
             $wallet         = Wallet::find($request->wallet_id);
             // $danaBOS        = Wallet::danaBos()->first();
 
-            $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
-                $q->where('status', Expense::STATUS_DRAFT);
-            })
+            $totalExpensePending    = ExpenseDetail::whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])
                 ->where('wallet_id', $request->wallet_id)
                 ->sum(DB::raw('price * quantity'));
 
@@ -310,7 +308,7 @@ class ExpenseController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            return redirect()->route('expense.index')->withToastError('Eror Mengubah Status Pengeluaran Biaya!');
+            return redirect()->route('expense.index')->withToastError('Eror Mengubah Status Pengeluaran Biaya!'. $th->getMessage());
         }
 
         return redirect()->route('expense.index')->withToastSuccess('Berhasil Mengubah Status Pengeluaran Biaya!');
