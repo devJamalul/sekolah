@@ -35,6 +35,7 @@ class ExpenseOutgoingDatatables extends Controller
                                 Expense::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>',
                                 Expense::STATUS_DONE => '<span class="badge badge-success">Selesai</span>',
                                 Expense::STATUS_OUTGOING => '<span class="badge badge-info">Realisasi</span>',
+                                Expense::STATUS_DRAFT => '<span class="badge badge-secondary">Draft</span>',
                             };
                         })
 

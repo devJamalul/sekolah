@@ -88,7 +88,7 @@ class ExpenseController extends Controller
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
-            $expense->status            = Expense::STATUS_PENDING;
+            $expense->status            = Expense::STATUS_DRAFT;
             $expense->note              = $request->note;
             $expense->request_by        = Auth::id();
             $expense->save();
@@ -97,7 +97,7 @@ class ExpenseController extends Controller
             // $danaBOS        = Wallet::danaBos()->first();
 
             $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
-                $q->where('status', Expense::STATUS_PENDING);
+                $q->where('status', Expense::STATUS_DRAFT);
             })
                 ->where('wallet_id', $request->wallet_id)
                 ->sum(DB::raw('price * quantity'));
@@ -289,7 +289,7 @@ class ExpenseController extends Controller
 
         if($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE){
             $confirmation =  $expense->approved_by->name;
-        }
+    }
         elseif($expense->status == Expense::STATUS_REJECTED){
             $confirmation = $expense->reject_by->name;
         }
@@ -297,5 +297,22 @@ class ExpenseController extends Controller
             $confirmation = '-';
         }
         return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'fileExtension', 'extensionType', 'confirmation'));
+    }
+
+    public function ExpensePublish(Expense $expense)
+    { 
+        DB::beginTransaction();
+
+        try {
+
+            $expense->status      = Expense::STATUS_PENDING;
+            $expense->save();
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            return redirect()->route('expense.index')->withToastError('Eror Mengubah Status Pengeluaran Biaya!');
+        }
+
+        return redirect()->route('expense.index')->withToastSuccess('Berhasil Mengubah Status Pengeluaran Biaya!');
     }
 }

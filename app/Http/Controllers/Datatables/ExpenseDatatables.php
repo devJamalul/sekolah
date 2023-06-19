@@ -12,7 +12,7 @@ class ExpenseDatatables extends Controller
     //
     public function index()
     {
-        $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->latest('created_at');
+        $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])->latest('created_at');
         return DataTables::of($expense)
             ->editColumn('expense_number', function ($row){
                 if($row->status != Expense::STATUS_PENDING){
@@ -42,6 +42,7 @@ class ExpenseDatatables extends Controller
                     Expense::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>',
                     Expense::STATUS_DONE => '<span class="badge badge-success">Selesai</span>',
                     Expense::STATUS_OUTGOING => '<span class="badge badge-info">Realisasi</span>',
+                    Expense::STATUS_DRAFT => '<span class="badge badge-secondary">Draft</span>',
                 };
             })
             ->addColumn('action', function (Expense $row) {
@@ -56,12 +57,21 @@ class ExpenseDatatables extends Controller
                             'url' => route('expense.show', ['expense' => $row->id]),
                             'name' => 'expense.show'
                         ],
+                        [
+                            'label' => "Publish",
+                            'url' => route('expense.publish', ['expense' => $row->id]),
+                            'name' => 'expense.publish' 
+                        ]
                     ]
                 ];
-                if($row->status != "pending"){
+                if($row->status != Expense::STATUS_DRAFT ){
                     $data['edit_url'] = null;
                     $data['delete_url'] = null;
                 }
+                if($row->status == Expense::STATUS_PENDING){
+                    $data['custom_links'] = null;
+                }
+
                 return view('components.datatable-action', $data);
 
             })
