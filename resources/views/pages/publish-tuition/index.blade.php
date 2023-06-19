@@ -23,7 +23,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Biaya</th>
+                                    <th>Uang Sekolah</th>
                                     <th>
                                         <button type="submit" class="btn btn-primary float-right btn-sm">Terbitkan</button>
                                     </th>

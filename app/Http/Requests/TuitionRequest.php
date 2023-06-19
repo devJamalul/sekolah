@@ -57,11 +57,10 @@ class TuitionRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'tuition_type_id' => 'ID tipe biaya',
-            'academic_year_id' => 'ID tahun akademik',
-            'grade_id' => 'ID tingkatan',
-            'price' => 'Harga',
-            'requested_by' => 'Di',
+            'tuition_type_id' => 'tipe uang sekolah',
+            'academic_year_id' => 'tahun akademik',
+            'grade_id' => 'tingkatan',
+            'price' => 'nominal',
         ];
     }
 }

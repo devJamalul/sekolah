@@ -8,6 +8,7 @@ use App\Notifications\TuitionRejectionNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TuitionApprovalController extends Controller
 {
@@ -17,7 +18,7 @@ class TuitionApprovalController extends Controller
     public function index()
     {
         $data = [
-            'title' => "Persetujuan Biaya"
+            'title' => "Persetujuan Uang Sekolah"
         ];
 
         return view('pages.tuition-approval.index', $data);
@@ -29,7 +30,7 @@ class TuitionApprovalController extends Controller
     public function show(Tuition $tuition_approval)
     {
         $data = [
-            'title' => "Persetujuan Biaya",
+            'title' => "Persetujuan Uang Sekolah",
             'tuition' => $tuition_approval,
         ];
         return view('pages.tuition-approval.detail', $data);
@@ -51,7 +52,7 @@ class TuitionApprovalController extends Controller
                 case 'reject':
 
                     if ($request->reject_reason == '') {
-                        return redirect()->back()->withToastError('Ops,Alasan Penolakan Wajib Diisi !');
+                        return redirect()->back()->withToastError('Ops, alasan penolakan wajib diisi!');
                     }
 
                     $tuition_approval->status = Tuition::STATUS_REJECTED;
@@ -74,10 +75,11 @@ class TuitionApprovalController extends Controller
                     break;
             }
 
-            return redirect()->route('tuition-approval.index')->withToastSuccess('Berhasil mengubah Status!');
+            return redirect()->route('tuition-approval.index')->withToastSuccess('Berhasil mengubah status!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
+            Log::error($th->getMessage());
+            return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status! ' . $th->getMessage());
         }
     }
 }

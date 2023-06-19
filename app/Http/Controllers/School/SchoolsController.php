@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\School;
 
+use App\Actions\User\NewUser;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolRequest;
 use App\Models\School;
 use App\Models\Staff;
 use App\Models\User;
 use App\Notifications\NewSchoolPICNotification;
 use Exception;
-use Illuminate\Contracts\Database\Query\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 
 class SchoolsController extends Controller
 {
@@ -62,7 +63,7 @@ class SchoolsController extends Controller
             $school->foundation_head_tlpn = $request->foundation_head_tlpn;
             $school->save();
 
-            // PIC
+            // Admin Sekolah
             $password = fake()->word();
             $user = new User();
             $user->school_id = $school->getKey();
@@ -71,18 +72,16 @@ class SchoolsController extends Controller
             $user->password = bcrypt($password);
             $user->new_password = true;
             $user->save();
-            // PIC staff
+            // integrasi tabel staff
             $staff = new Staff();
             $staff->school_id = $school->getKey();
             $staff->user_id = $user->id;
             $staff->name = $user->name;
             $staff->save();
-
-            // assign PIC
+            // assign Admin Sekolah
             $school->staff_id = $staff->getKey();
             $school->save();
-
-            // PIC assign role
+            // Admin Sekolah assign role
             $user->assignRole($role);
 
             // Kepala Sekolah
@@ -94,21 +93,19 @@ class SchoolsController extends Controller
             $kepsek->password = bcrypt($password2);
             $kepsek->new_password = true;
             $kepsek->save();
-
-            // Kepsek - staff
+            // integrasi tabel staff
             $staff = new Staff();
             $staff->school_id = $school->getKey();
             $staff->user_id = $kepsek->id;
             $staff->name = $kepsek->name;
             $staff->phone_number = $request->foundation_head_tlpn;
             $staff->save();
-
-            // PIC assign role
+            // Kepala Sekolah assign role
             $kepsek->assignRole(User::ROLE_KEPALA_SEKOLAH);
 
-            // notification
-            $user->notify(new NewSchoolPICNotification($user, $password));
-            $kepsek->notify(new NewSchoolPICNotification($kepsek, $password2));
+            // verification & notification
+            NewUser::createTokenFor($user);
+            NewUser::createTokenFor($kepsek);
 
             DB::commit();
         } catch (Exception $th) {
@@ -129,7 +126,6 @@ class SchoolsController extends Controller
      */
     public function edit(School $school)
     {
-
         $school->load('staf.user');
         $title = "Ubah Sekolah";
         $grade_school =  School::GRADE_SCHOOL;
@@ -152,8 +148,6 @@ class SchoolsController extends Controller
      */
     public function update(SchoolRequest $request, School $school)
     {
-        $role = $request->has('school_id') ? User::ROLE_ADMIN_SEKOLAH : $role = User::ROLE_ADMIN_YAYASAN;
-
         DB::beginTransaction();
         try {
             // school
@@ -176,7 +170,7 @@ class SchoolsController extends Controller
                 'school' => $school->name
             ]);
             DB::rollback();
-            return to_route('schools.index')->withToastError('Ups, terjadi kesalahan saat mengubah data!');
+            return to_route('schools.index')->withToastError('Ups, terjadi kesalahan saat mengubah data! ' . $th->getMessage());
         }
 
         return to_route('schools.index')->withToastSuccess('Berhasil mengubah data!');
@@ -202,7 +196,7 @@ class SchoolsController extends Controller
             ]);
             DB::rollback();
             return response()->json([
-                'msg' => 'Ups gagal menghapus data sekolah!'
+                'msg' => 'Ups gagal menghapus data sekolah! ' . $th->getMessage()
             ], 400);
         }
     }

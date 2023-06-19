@@ -39,7 +39,7 @@ class AcademyYearRequest extends FormRequest
                 Rule::unique('academic_years')->where(function ($q) {
                     $q->where([
                         'academic_year_name' => $this->academic_year_name,
-                        'school_id' => $this->school_id,
+                        'school_id' => session('school_id'),
                     ]);
                     $q->whereNull('deleted_at');
                 }),
@@ -60,7 +60,7 @@ class AcademyYearRequest extends FormRequest
                 Rule::unique('academic_years')->where(function ($q) {
                     $q->where([
                         'academic_year_name' => $this->academic_year_name,
-                        'school_id' => $this->school_id,
+                        'school_id' => session('school_id'),
                     ]);
                     $q->whereNull('deleted_at');
                 })->ignore($this->academy_year->id, 'id'),
@@ -93,11 +93,19 @@ class AcademyYearRequest extends FormRequest
         });
     }
 
+    public function attributes()
+    {
+        return [
+            'academic_year_name' => 'tahun akademik',
+            'status_years' => 'status tahun akademik'
+        ];
+    }
+
     public function messages()
     {
         return [
-            'academic_year_name.years_formatted' => 'The Invalid Academy years Formatted ',
-            'academic_year_name.valid_year' => 'The Invalid Academy years Formatted '
+            'academic_year_name.years_formatted' => 'format Tahun Akademik tidak sesuai',
+            'academic_year_name.valid_year' => 'Tahun Akademik awal dan akhir tidak bisa pada tahun yang sama'
         ];
     }
 }

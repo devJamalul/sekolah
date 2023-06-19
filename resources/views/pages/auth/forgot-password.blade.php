@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    @section('title', 'Login')
+    @section('title', 'Forgot Password')
 
     @include('layout.head-css')
 </head>
@@ -31,11 +31,14 @@
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Log in to {{ env('APP_NAME') }}</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Forgot Password</h1>
+                                        @if (session('status'))
+                                            <div class="mb-4 font-medium text-sm text-success font-weight-bold">
+                                                {{ session('status') }}
+                                            </div>
+                                        @endif
                                     </div>
-
-
-                                    <form action="{{ route('login') }}" class="user" method="POST">
+                                    <form action="{{url('forgot-password')}}" class="user" method="POST">
 
                                         @csrf
                                         <div class="form-group">
@@ -49,34 +52,13 @@
                                                 </div>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password"
-                                                class="form-control form-control-user  @error('password') is-invalid @enderror"
-                                                id="exampleInputPassword" placeholder="Password">
-                                            @error('password')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" name="remember"
-                                                    for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
-                                        </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
+                                            Reset Password
                                         </button>
-                                        {{-- <hr> --}}
-                                        {{-- <a href="index.html" class="btn btn-google btn-user btn-block">
-                                            <i class="fab fa-google fa-fw"></i> Login with Google
-                                        </a>
-                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                                        </a> --}}
+                                        <hr>
+                                        <div class="text-center">
+                                            <a class="small" href="{{ route('login') }}">I remember my password</a>
+                                        </div>
                                     </form>
                                     <hr>
                                     <div class="text-center">

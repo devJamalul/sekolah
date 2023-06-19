@@ -23,7 +23,7 @@ class StaffSeeder extends Seeder
         $tata_usaha = Role::whereName(User::ROLE_TATA_USAHA)->first();
         $kepala_sekolah = Role::whereName(User::ROLE_KEPALA_SEKOLAH)->first();
 
-        // students
+        // staff
         $roles = [
             'index' => 'staff.index',
             'create' => 'staff.create',
@@ -37,49 +37,49 @@ class StaffSeeder extends Seeder
             // 'report' => 'staff.report',
         ];
 
-        // index student
+        // index staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $admin_yayasan, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah]);
 
-        // create student
+        // create staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['create'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
-        // store student
+        // store staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
-        // show student
+        // show staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['show'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha, $kepala_sekolah, $bendahara]);
 
-        // edit student
+        // edit staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['edit'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
-        // update student
+        // update staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
 
-        // destroy student
+        // destroy staff
         $permission = Permission::firstOrCreate([
             'name' => $roles['destroy'],
             'guard_name' => 'web'

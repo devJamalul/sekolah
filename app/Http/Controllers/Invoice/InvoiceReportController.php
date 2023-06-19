@@ -9,6 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class InvoiceReportController extends Controller
@@ -36,43 +37,49 @@ class InvoiceReportController extends Controller
      */
     public function store(Request $request)
     {
-        self::parseDate($request->range);
-        $cacheName = str('invoice_report_data_' . $request->range . '-' . $request->payment_status)->slug();
+        try {
+            self::parseDate($request->range);
+            $cacheName = str('invoice_report_data_' . $request->range . '-' . $request->payment_status)->slug();
 
-        if (Cache::has($cacheName)) {
-            $invoices = Cache::get($cacheName);
-        } else {
-            $invoices = Invoice::query()
-                ->where('is_posted', '!=', Invoice::POSTED_DRAFT)
-                ->whereBetween('invoice_date', [
-                    session('invoice_report_start')->startOfDay()->format('Y-m-d H:i:s'),
-                    session('invoice_report_end')->endOfDay()->format('Y-m-d H:i:s'),
-                ])
-                ->when($request->payment_status != "*", function ($query) use ($request) {
-                    $query->where('payment_status', $request->payment_status);
-                })
-                ->orderBy('invoice_date')
-                ->orderBy('payment_status')
-                ->get();
+            if (Cache::has($cacheName)) {
+                $invoices = Cache::get($cacheName);
+            } else {
+                $invoices = Invoice::query()
+                    ->where('is_posted', '!=', Invoice::POSTED_DRAFT)
+                    ->whereBetween('invoice_date', [
+                        session('invoice_report_start')->startOfDay()->format('Y-m-d H:i:s'),
+                        session('invoice_report_end')->endOfDay()->format('Y-m-d H:i:s'),
+                    ])
+                    ->when($request->payment_status != "*", function ($query) use ($request) {
+                        $query->where('payment_status', $request->payment_status);
+                    })
+                    ->orderBy('invoice_date')
+                    ->orderBy('payment_status')
+                    ->get();
 
-            Cache::put($cacheName, $invoices, config('school.cache_time'));
-        }
+                Cache::put($cacheName, $invoices, config('school.cache_time'));
+            }
 
-        $filename = "invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " periode " . session('invoice_report_start')->format('d F Y') . " -  " . session('invoice_report_end')->format('d F Y');
+            $filename = "invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " periode " . session('invoice_report_start')->format('d F Y') . " -  " . session('invoice_report_end')->format('d F Y');
 
-        if (count($invoices) == 0) {
-            Cache::forget($cacheName);
-            return redirect()->back()->withToastError("Ups! Tidak ada data invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " pada periode " . session('invoice_report_start')->format('d F Y') . " sampai " . session('invoice_report_end')->format('d F Y'));
-        }
+            if (count($invoices) == 0) {
+                Cache::forget($cacheName);
+                return redirect()->back()->withToastError("Ups! Tidak ada data invoice dengan status " . str(($request->payment_status == '*') ? 'Semua' : $request->payment_status)->title . " pada periode " . session('invoice_report_start')->format('d F Y') . " sampai " . session('invoice_report_end')->format('d F Y'));
+            }
 
-        switch ($request->action) {
-            case 'excel':
-                return Excel::download(new InvoiceExport($invoices, $filename), "$filename.xlsx");
-                break;
-            case 'pdf':
-                $invoices = $invoices->toArray();
-                return Pdf::loadView('exports.report-invoice-pdf', compact('invoices', 'filename'))->download("$filename.pdf");
-                break;
+            switch ($request->action) {
+                case 'excel':
+                    return Excel::download(new InvoiceExport($invoices, $filename), "$filename.xlsx");
+                    break;
+                case 'pdf':
+                    $invoices = $invoices->toArray();
+                    return Pdf::loadView('exports.report-invoice-pdf', compact('invoices', 'filename'))->download("$filename.pdf");
+                    break;
+            }
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return to_route('invoices.report')->withToastError('Ups! ' . $th->getMessage());
         }
     }
 

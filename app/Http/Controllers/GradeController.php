@@ -95,7 +95,7 @@ class GradeController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('grade.index')->withToastError('Eror Simpan Tingkat! ' . $th->getMessage());
+            return redirect()->route('grade.edit', $grade->getKey())->withToastError('Eror Simpan Tingkat! ' . $th->getMessage());
         }
 
         return redirect()->route('grade.index')->withToastSuccess('Berhasil Simpan Tingkat!');

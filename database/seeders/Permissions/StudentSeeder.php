@@ -63,7 +63,7 @@ class StudentSeeder extends Seeder
             'name' => $roles['show'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $tata_usaha, $kepala_sekolah, $bendahara]);
 
         // edit student
         $permission = Permission::firstOrCreate([

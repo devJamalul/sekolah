@@ -58,7 +58,7 @@ class AcademyYearController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->route('academy-year.index')->withToastError("Ops Gagal Tambah {$this->title}!");
+            return redirect()->route('academy-year.create')->withInput()->withToastError("Ops Gagal Tambah {$this->title}! " . $th->getMessage());
         }
 
         return redirect()->route('academy-year.index')->withToastSuccess("Tambah {$this->title} Berhasil!");
@@ -96,7 +96,7 @@ class AcademyYearController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->route('academy-year.index')->withToastError("Ops Gagal ubah {$this->title}!");
+            return redirect()->route('academy-year.edit', $academyYear->getKey())->withInput()->withToastError("Ops Gagal ubah {$this->title}! " . $th->getMessage());
         }
 
         return redirect()->route('academy-year.index')->withToastSuccess("Ubah {$this->title} Berhasil!");
@@ -125,7 +125,7 @@ class AcademyYearController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
             return response()->json([
-                'msg' => "Ops Gagal Hapus {$this->title}!"
+                'msg' => "Ops Gagal Hapus {$this->title}! " . $th->getMessage()
             ], 400);
         }
     }

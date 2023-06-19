@@ -21,7 +21,7 @@
                         <table class="table col-12">
                             <tbody>
                                 <tr>
-                                    <td scope="row">Nama Biaya</td>
+                                    <td scope="row">Uang Sekolah</td>
                                     <td class="text-primary font-weight-bold">{{ $tuition->tuition_type->name }}</td>
                                 </tr>
                                 <tr>
@@ -43,10 +43,10 @@
                                     <td class="text-primary font-weight-bold">{{ $tuition->requested_by?->name ?? '-' }}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td scope="row">Disetujui oleh</td>
+                                {{-- <tr>
+                                    <td scope="row">Dikonfirmasi oleh</td>
                                     <td class="text-primary font-weight-bold">{{ $tuition->approved_by?->name ?? '-' }}</td>
-                                </tr>
+                                </tr> --}}
                                 <tr>
                                     <td scope="row">Status</td>
                                     <td class="text-primary font-weight-bold">
@@ -78,7 +78,7 @@
 
                                                         <div class="form-group col-12">
                                                             <textarea name="reject_reason" id="reject_reason" class="form-control @error('reject_reason') is-invalid @enderror"
-                                                                rows="5" placeholder="Alasan Penolakan "></textarea>
+                                                                rows="5" placeholder="Alasan penolakan "></textarea>
                                                             @error('reject_reason')
                                                                 <div class="invalid-feedback">
                                                                     {{ $message }}
