@@ -25,12 +25,6 @@ class ConfigSchoolController extends Controller
         DB::beginTransaction();
         try {
             foreach ($request->config as $key => $val) {
-                // check Token Sempoa
-                $config = Config::find($val);
-                if ($config->code == config('sempoa.check_token') && !is_null($request->value[$key])) {
-                    CheckToken::run($request->value[$key]);
-                }
-
                 $save = ConfigSchool::firstOrNew([
                     'school_id' => session('school_id'),
                     'config_id' => $val

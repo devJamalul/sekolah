@@ -42,6 +42,8 @@ use App\Http\Controllers\Invoice\InvoiceReportController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
+use App\Http\Controllers\Sempoa\SempoaConfigurationController;
+use App\Http\Controllers\Sempoa\SempoaWalletController;
 use App\Http\Controllers\User\ChangeUserPasswordController;
 use App\Http\Controllers\User\UserVerificationController;
 
@@ -175,17 +177,37 @@ Route::middleware(['auth'])->group(function () {
     Route::post('invoices/{invoice}/pay', [PayInvoiceController::class, 'store'])->name('invoices.payment')->middleware('password.confirm');
     Route::get('invoices/{invoice}/void', [VoidInvoiceController::class, 'index'])->name('invoices.void');
     Route::post('invoices/{invoice}/void', [VoidInvoiceController::class, 'store'])->name('invoices.voidment')->middleware('password.confirm');
-    Route::controller(InvoiceDetailController::class)->prefix('invoices')->name('invoice-details.')->group(function () {
-        Route::get('/{invoice}/detail', 'index')->name('index');
-        Route::post('/{invoice}/detail', 'store')->name('store');
-        Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
-    });
+    Route::controller(InvoiceDetailController::class)
+        ->prefix('invoices')
+        ->name('invoice-details.')
+        ->group(function () {
+            Route::get('/{invoice}/detail', 'index')->name('index');
+            Route::post('/{invoice}/detail', 'store')->name('store');
+            Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
+        });
     Route::get('reports/invoices', [InvoiceReportController::class, 'index'])->name('invoices.report');
     Route::post('reports/invoices', [InvoiceReportController::class, 'store'])->name('invoices.report-result');
 
     // Profile dan Password
     Route::apiSingleton('edit-profile', EditProfileController::class);
     Route::apiSingleton('edit-password', EditPasswordController::class)->withoutMiddleware([RequireChangePassword::class]);
+
+    // Sempoa Configuration
+    Route::as('sempoa-configuration.')
+        ->prefix('sempoa/configuration')
+        ->controller(SempoaConfigurationController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/store', 'store')->name('store');
+            Route::put('/update', 'update')->name('update');
+        });
+    Route::as('sempoa-wallet.')
+        ->prefix('sempoa/wallet')
+        ->controller(SempoaWalletController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/update', 'update')->name('update');
+        });
 });
 
 Route::middleware(['auth'])->prefix('reports')->group(function () {
