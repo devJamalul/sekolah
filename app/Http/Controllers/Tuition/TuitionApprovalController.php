@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tuition;
 
+use App\Http\Controllers\Controller;
 use App\Models\Tuition;
 use App\Notifications\TuitionApprovalNotification;
 use App\Notifications\TuitionRejectionNotification;

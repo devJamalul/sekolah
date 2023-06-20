@@ -7,24 +7,24 @@ use App\Http\Controllers\User\UsersController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\School\SchoolsController;
-use App\Http\Controllers\TuitionController;
+use App\Http\Controllers\Tuition\TuitionController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\TuitionTypeController;
+use App\Http\Controllers\Tuition\TuitionTypeController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\ExpenseDetailController;
 use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\Wallet\WalletController;
-use App\Http\Controllers\PublishTuitionController;
+use App\Http\Controllers\Tuition\PublishTuitionController;
 use App\Http\Controllers\School\SchoolSelectorController;
 use App\Http\Controllers\ExpenseApprovalController;
 use App\Http\Controllers\ExpenseOutgoingController;
 use App\Http\Controllers\Invoice\InvoiceController;
-use App\Http\Controllers\TuitionApprovalController;
+use App\Http\Controllers\Tuition\TuitionApprovalController;
 use App\Http\Controllers\Wallet\WalletLogController;
 use App\Http\Controllers\TransactionReportController;
 use App\Http\Middleware\School\RequireChangePassword;
@@ -138,6 +138,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Expense
     Route::resource('expense', ExpenseController::class);
+    Route::get('expense/{expense}/publish-expense', [ExpenseController::class, 'ExpensePublish'])->name('expense.publish');
     Route::get('expense/{expense}/show-detail', [ExpenseController::class, 'ShowDetail'])->name('expense.show-detail');
     // Route::resource('expense-detail', ExpenseDetailController::class)->except(['show']);
     Route::controller(ExpenseDetailController::class)->prefix('expense')->name('expense-detail.')->group(function () {
