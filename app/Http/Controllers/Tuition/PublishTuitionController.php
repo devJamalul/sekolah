@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tuition;
 
+use App\Http\Controllers\Controller;
 use App\Jobs\PublishMonthlyTuitions;
 use App\Models\Student;
 use App\Models\Tuition;
