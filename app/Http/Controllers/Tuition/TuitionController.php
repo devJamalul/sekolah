@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Tuition;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Grade;
 use App\Models\Tuition;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TuitionRequest;
 use App\Notifications\TuitionApprovalNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
 
 class TuitionController extends Controller
@@ -30,7 +32,6 @@ class TuitionController extends Controller
      */
     public function create()
     {
-        //
         $title = "Tambah Uang Sekolah";
         $tuitionTypes = TuitionType::orderBy('name')->get();
         $academicYears = AcademicYear::orderByDesc('academic_year_name')->whereIn('status_years', [AcademicYear::STATUS_STARTED, AcademicYear::STATUS_REGISTRATION])->get();
@@ -54,6 +55,15 @@ class TuitionController extends Controller
     {
         DB::beginTransaction();
         try {
+            $cek = Tuition::where([
+                'school_id' => session('school_id'),
+                'tuition_type_id' => $request->tuition_type_id,
+                'academic_year_id' => $request->academic_year_id,
+                'grade_id' => $request->grade_id,
+            ])->exists();
+            if ($cek) {
+                throw new \Exception('Uang Sekolah sudah ada!');
+            }
 
             $tuition                    = new Tuition();
             $tuition->school_id         = session('school_id');
@@ -64,17 +74,17 @@ class TuitionController extends Controller
             $tuition->status            = Tuition::STATUS_PENDING;
             $tuition->request_by        = Auth::id();
             $tuition->save();
+            DB::commit();
 
+            // sesuai arahan Pak Ivan. Data tetap disimpan meski ada masalah dalam mengirimkan notifikasi.
             $headmasters = User::where('school_id', session('school_id'))->role('kepala sekolah')->get();
             foreach ($headmasters as $headmaster) {
                 $headmaster->notify(new TuitionApprovalNotification($tuition));
             }
-
-            DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage());
-            return redirect()->route('tuition.create')->withInput()->withToastError('Eror Simpan Uang Sekolah! ' . $th->getMessage());
+            return redirect()->route('tuition.index')->withToastError('Peringatan! ' . $th->getMessage());
         }
 
         return redirect()->route('tuition.index')->withToastSuccess('Berhasil Simpan Uang Sekolah!');
@@ -93,25 +103,27 @@ class TuitionController extends Controller
      */
     public function edit(Tuition $tuition)
     {
-        if ($tuition->status != Tuition::STATUS_PENDING) {
-            return response()->json([
-                'msg' => 'Uang Sekolah sudah tidak bisa diubah'
-            ]);
+        try {
+            if ($tuition->status != Tuition::STATUS_PENDING) {
+                throw new \Exception('Uang Sekolah sudah tidak bisa diubah');
+            }
+            $title = 'Ubah Uang Sekolah';
+            $tuitionTypes = TuitionType::orderBy('name')->get();
+            $academicYears = AcademicYear::orderByDesc('academic_year_name')->get();
+            $grades = Grade::orderBy('grade_name')->get();
+            $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+                $q->whereIn('name', [
+                    User::ROLE_ADMIN_SEKOLAH,
+                    User::ROLE_ADMIN_YAYASAN,
+                    User::ROLE_TATA_USAHA,
+                    User::ROLE_BENDAHARA,
+                    User::ROLE_KEPALA_SEKOLAH,
+                ]);
+            })->get();
+        } catch (\Throwable $th) {
+            return redirect()->route('tuition.index')->withToastError('Peringatan! ' . $th->getMessage());
         }
 
-        $title = 'Ubah Uang Sekolah';
-        $tuitionTypes = TuitionType::orderBy('name')->get();
-        $academicYears = AcademicYear::orderByDesc('academic_year_name')->get();
-        $grades = Grade::orderBy('grade_name')->get();
-        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
-            $q->whereIn('name', [
-                User::ROLE_ADMIN_SEKOLAH,
-                User::ROLE_ADMIN_YAYASAN,
-                User::ROLE_TATA_USAHA,
-                User::ROLE_BENDAHARA,
-                User::ROLE_KEPALA_SEKOLAH,
-            ]);
-        })->get();
         return view('pages.tuition.edit', compact('tuitionTypes', 'tuition', 'academicYears', 'grades', 'title', 'users'));
     }
 
@@ -120,14 +132,25 @@ class TuitionController extends Controller
      */
     public function update(TuitionRequest $request, Tuition $tuition)
     {
-        if ($tuition->status != Tuition::STATUS_PENDING) {
-            return response()->json([
-                'msg' => 'Biaya sudah tidak bisa diubah'
-            ]);
-        }
-
         DB::beginTransaction();
         try {
+            if ($tuition->status != Tuition::STATUS_PENDING) {
+                throw new \Exception('Uang Sekolah sudah tidak bisa diubah');
+            }
+
+            $cek = Tuition::where([
+                'school_id' => session('school_id'),
+                'tuition_type_id' => $request->tuition_type_id,
+                'academic_year_id' => $request->academic_year_id,
+                'grade_id' => $request->grade_id,
+            ])
+                ->whereNot(function (Builder $query) use ($tuition) {
+                    $query->where('id', $tuition->getKey());
+                })
+                ->exists();
+            if ($cek) {
+                throw new \Exception('Uang Sekolah sudah ada!');
+            }
 
             $tuition->school_id             = session('school_id');
             $tuition->tuition_type_id       = $request->tuition_type_id;
@@ -141,7 +164,7 @@ class TuitionController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage());
-            return redirect()->route('tuition.index')->withToastError('Eror Simpan Biaya!');
+            return redirect()->route('tuition.index')->withToastError('Peringatan! ' . $th->getMessage());
         }
 
         return redirect()->route('tuition.index')->withToastSuccess('Berhasil Simpan Biaya!');
@@ -152,16 +175,13 @@ class TuitionController extends Controller
      */
     public function destroy(Tuition $tuition)
     {
-        if ($tuition->status != Tuition::STATUS_PENDING) {
-            return response()->json([
-                'msg' => 'Biaya sudah tidak bisa dihapus'
-            ]);
-        }
-
         DB::beginTransaction();
         try {
+            if ($tuition->status != Tuition::STATUS_PENDING) {
+                throw new \Exception('Biaya sudah tidak bisa dihapus');
+            }
 
-            $tuition->status = Tuition::STATUS_REJECTED;
+            $tuition->delete();
             DB::commit();
 
             return response()->json([
@@ -171,7 +191,7 @@ class TuitionController extends Controller
             DB::rollBack();
             Log::error($th->getMessage());
             return response()->json([
-                'msg' => 'Eror Hapus Biaya!'
+                'msg' => 'Peringatan! ' . $th->getMessage()
             ]);
         }
     }
