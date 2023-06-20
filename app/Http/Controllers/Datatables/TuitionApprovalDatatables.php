@@ -18,7 +18,7 @@ class TuitionApprovalDatatables extends Controller
         $tuitions = Tuition::where('school_id', session('school_id'))
             ->where('status', Tuition::STATUS_PENDING)
             ->with('tuition_type', 'grade')
-            ->withTrashed()
+            // ->withTrashed()
             ->get();
 
         return DataTables::of($tuitions)

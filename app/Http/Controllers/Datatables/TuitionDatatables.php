@@ -44,7 +44,7 @@ class TuitionDatatables extends Controller
                 return match ($row->status) {
                     Tuition::STATUS_PENDING => '<span class="badge badge-dark">Menunggu</span>',
                     Tuition::STATUS_APPROVED => '<span class="badge badge-success">Diterima</span>',
-                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>',
+                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger" data-toggle="tooltip" data-placement="top" title="' . $row->reject_reason . '">Ditolak</span>',
                 };
                 // return $row->requested_by->name;
             })
@@ -52,7 +52,7 @@ class TuitionDatatables extends Controller
                 return match ($row->status) {
                     Tuition::STATUS_PENDING => '-',
                     Tuition::STATUS_APPROVED => '<span class="badge badge-success">' . $row->approved_by->name . '</span>',
-                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger">' . $row->rejector->name . '</span>',
+                    Tuition::STATUS_REJECTED => '<span class="badge badge-danger" data-toggle="tooltip" data-placement="top" title="' . $row->reject_reason . '">' . $row->rejector->name . '</span>',
                 };
                 // return $row->approved_by ? $row->approved_by->name : '-';
             })
