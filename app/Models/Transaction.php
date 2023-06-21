@@ -21,7 +21,7 @@ class Transaction extends Model
 
     protected $table = 'transactions';
 
-    
+
     public function tuition(): BelongsTo
     {
         return $this->belongsTo(Tuition::class);
@@ -31,12 +31,12 @@ class Transaction extends Model
     {
         return $this->belongsTo(Student::class);
     }
-    
+
     public function payment_type(): BelongsTo
     {
         return $this->belongsTo(PaymentType::class);
     }
-    
+
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);

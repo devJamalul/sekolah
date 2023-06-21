@@ -6,7 +6,7 @@
     <div class="row">
 
         {{-- start table Expense --}}
-        <div class="col-lg-10">
+        <div class="col-lg-12">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h6 class="h3 mb-0 text-primary font-weight-bold">{{ $title }}</h6>
                 @can('expense.create')
@@ -21,7 +21,7 @@
                         ['data' => 'expense_date'],
                         ['data' => 'request_by'],
                         ['data' => 'confirmation'],
-                        ['data' => 'status'],
+                        ['data' => 'the_status'],
                         ['data' => 'action'],
                     ]" :getDataUrl="route('datatable.expense')" />
                 </div>

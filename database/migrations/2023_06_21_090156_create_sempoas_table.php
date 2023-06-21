@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('sempoas', function (Blueprint $table) {
             $table->id();
             $table->morphs('sempoable');
-            $table->nullableMorphs('sempoa');
+            $table->string('sempoa_type')->nullable();
+            $table->string('sempoa_id')->nullable();
             $table->timestamps();
         });
     }

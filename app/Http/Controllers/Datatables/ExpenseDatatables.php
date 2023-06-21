@@ -12,31 +12,29 @@ class ExpenseDatatables extends Controller
     //
     public function index()
     {
-        $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])->latest('created_at');
+        $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->latest('created_at');
         return DataTables::of($expense)
-            ->editColumn('expense_number', function ($row){
-                if($row->status != Expense::STATUS_PENDING){
-                    return "<a href='" . route('expense.show-detail', $row->id) . "'>{$row->expense_number}</a>";
+            ->editColumn('expense_number', function ($expense) {
+                if ($expense->status != Expense::STATUS_PENDING and $expense->status != Expense::STATUS_DRAFT) {
+                    return "<a href='" . route('expense.show-detail', $expense->id) . "'>{$expense->expense_number}</a>";
                 }
 
-                return "<a href='" . route('expense.edit', $row->id) . "'>{$row->expense_number}</a>";
+                return "<a href='" . route('expense.edit', $expense->id) . "'>{$expense->expense_number}</a>";
             })
-            ->editColumn('request_by', function ($row){
-                return $row->requested_by->name;
+            ->editColumn('request_by', function ($expense) {
+                return $expense->requested_by->name;
             })
-            ->editColumn('confirmation', function ($row){
-                if($row->status == Expense::STATUS_APPROVED || $row->status == Expense::STATUS_DONE){
-                    return $row->approved_by->name;
-                }
-                elseif($row->status == Expense::STATUS_REJECTED){
-                    return $row->reject_by->name;
-                }
-                else{
+            ->editColumn('confirmation', function ($expense) {
+                if ($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE) {
+                    return $expense->approved_by->name;
+                } elseif ($expense->status == Expense::STATUS_REJECTED) {
+                    return $expense->reject_by->name;
+                } else {
                     return '-';
                 }
             })
-            ->editColumn('status', function ($row){
-                return match ($row->status) {
+            ->editColumn('the_status', function ($expense) {
+                return match ($expense->status) {
                     Expense::STATUS_APPROVED => '<span class="badge badge-success">Disetujui</span>',
                     Expense::STATUS_PENDING => '<span class="badge badge-dark">Pending</span>',
                     Expense::STATUS_REJECTED => '<span class="badge badge-danger">Ditolak</span>',
@@ -45,38 +43,32 @@ class ExpenseDatatables extends Controller
                     Expense::STATUS_DRAFT => '<span class="badge badge-secondary">Draft</span>',
                 };
             })
-            ->addColumn('action', function (Expense $row) {
+            ->addColumn('action', function ($expense) {
                 $data = [
-                    'edit_url'     => route('expense.edit', ['expense' => $row->id]),
-                    'delete_url'   => route('expense.destroy', ['expense' => $row->id]),
+                    'edit_url'     => route('expense.edit', ['expense' => $expense->id]),
+                    'delete_url'   => route('expense.destroy', ['expense' => $expense->id]),
                     'redirect_url' => route('expense.index'),
                     'resource'     => 'expense',
-                    'custom_links' => [
-                        [
-                            'label' => 'Detail',
-                            'url' => route('expense.show', ['expense' => $row->id]),
-                            'name' => 'expense.show'
-                        ],
-                        [
-                            'label' => "Publish",
-                            'url' => route('expense.publish', ['expense' => $row->id]),
-                            'name' => 'expense.publish' 
-                        ],
-                    
-                    ]
+                    'custom_links' => [],
                 ];
-                if($row->status != Expense::STATUS_DRAFT){
+
+                if ($expense->status == Expense::STATUS_DRAFT) {
+                    array_push($data['custom_links'], ['label' => 'Publish', 'url' => route('expense.publish', ['expense' => $expense->id]), 'name' => 'expense.publish']);
+                }
+
+                if ($expense->status == Expense::STATUS_PENDING) {
                     $data['edit_url'] = null;
                 }
-                if($row->status == Expense::STATUS_PENDING){
-                    $data['custom_links'] = null;
-                    $data['delete_url'] = route('expense.destroy', ['expense' => $row->id]);
+                
+                if ($expense->status != Expense::STATUS_DRAFT and $expense->status != Expense::STATUS_PENDING) {
+                    $data['edit_url'] = null;
+                    $data['delete_url'] = null;
+                    array_push($data['custom_links'], ['label' => 'Detail', 'url' => route('expense.show-detail', $expense->id), 'name' => 'expense.show-detail']);
                 }
 
                 return view('components.datatable-action', $data);
-
             })
-            ->rawColumns(['status', 'action', 'expense_number'])
+            ->rawColumns(['the_status', 'action', 'expense_number'])
             ->toJson();
     }
 }

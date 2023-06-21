@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Expense;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Expense;
@@ -53,36 +54,34 @@ class ExpenseController extends Controller
                 'price' => formatAngka($request->price)
             ]);
         }
-
-        Validator::make(
-            $request->all(),
-            [
-                'expense_number'      => [
-                    'required',
-                    Rule::unique('expenses')->where(function ($q) use ($request) {
-                        $q->where('expense_number', $request->expense_number);
-                        $q->where('school_id',  session('school_id'));
-                        $q->whereNull('deleted_at');
-                    })
-                ],
-                'expense_date' => 'required|date',
-                'status'        => 'nullable',
-                'requested_by' => 'nullable|exists:users,id',
-                'approved_by' => 'nullable|exists:users,id',
-                'note' => 'required|string',
-                'item_name' => 'required|string',
-                'price' => 'required|string',
-                'wallet_id' => 'required|exists:wallets,id',
-                'quantity' => 'required|string'
-            ],
-            [
-                'wallet_id.required' => 'Harus diisi',
-            ]
-        )->validate();
-
         DB::beginTransaction();
 
         try {
+            Validator::make(
+                $request->all(),
+                [
+                    'expense_number'      => [
+                        'required',
+                        Rule::unique('expenses')->where(function ($q) use ($request) {
+                            $q->where('expense_number', $request->expense_number);
+                            $q->where('school_id',  session('school_id'));
+                            $q->whereNull('deleted_at');
+                        })
+                    ],
+                    'expense_date' => 'required|date',
+                    'status'        => 'nullable',
+                    'requested_by' => 'nullable|exists:users,id',
+                    'approved_by' => 'nullable|exists:users,id',
+                    'note' => 'required|string',
+                    'item_name' => 'required|string',
+                    'price' => 'required|string',
+                    'wallet_id' => 'required|exists:wallets,id',
+                    'quantity' => 'required|string'
+                ],
+                [
+                    'wallet_id.required' => 'Harus diisi',
+                ]
+            )->validate();
 
             $expense                    = new Expense();
             $expense->school_id         = session('school_id');
@@ -96,7 +95,10 @@ class ExpenseController extends Controller
             $wallet         = Wallet::find($request->wallet_id);
             // $danaBOS        = Wallet::danaBos()->first();
 
-            $totalExpensePending    = ExpenseDetail::whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])
+            $totalExpensePending    = ExpenseDetail::query()
+                ->whereHas('expense', function ($q) {
+                    $q->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING]);
+                })
                 ->where('wallet_id', $request->wallet_id)
                 ->sum(DB::raw('price * quantity'));
 
@@ -120,6 +122,7 @@ class ExpenseController extends Controller
             // }
             else {
                 DB::rollBack();
+                throw new \Exception();
                 return redirect()->route('expense.create')->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
 
@@ -133,7 +136,7 @@ class ExpenseController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('expense.create')->withToastError('Eror Simpan Pengeluaran Biaya!');
+            return redirect()->route('expense.create')->withToastError('Ups! ' . $th->getMessage());
         }
 
         return redirect()->route('expense.edit', $expense->id)->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
@@ -173,7 +176,7 @@ class ExpenseController extends Controller
         if ($expense->approval_by != Null)
             return to_route('expense.index')->withToastError('Ups! Pengeluaran Biaya tidak berhak untuk diubah.');
 
-        if($expense->status != Expense::STATUS_PENDING){
+        if ($expense->status != Expense::STATUS_PENDING) {
             return response()->json([
                 'msg' => 'Pengeluaran Biaya sudah tidak bisa diubah'
             ]);
@@ -247,7 +250,7 @@ class ExpenseController extends Controller
 
         try {
 
-            if($expense->status != Expense::STATUS_PENDING){
+            if ($expense->status != Expense::STATUS_PENDING) {
                 return response()->json([
                     'msg' => 'Pengeluaran Biaya sudah tidak bisa dihapus'
                 ]);
@@ -285,20 +288,18 @@ class ExpenseController extends Controller
         $extensionType = ['img', 'png', 'jpg', 'gif', 'jpeg'];
         $fileExtension = pathinfo($expense->file_photo, PATHINFO_EXTENSION);
 
-        if($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE){
+        if ($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE) {
             $confirmation =  $expense->approved_by->name;
-    }
-        elseif($expense->status == Expense::STATUS_REJECTED){
+        } elseif ($expense->status == Expense::STATUS_REJECTED) {
             $confirmation = $expense->reject_by->name;
-        }
-        else{
+        } else {
             $confirmation = '-';
         }
         return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'fileExtension', 'extensionType', 'confirmation'));
     }
 
     public function ExpensePublish(Expense $expense)
-    { 
+    {
         DB::beginTransaction();
 
         try {
@@ -308,7 +309,7 @@ class ExpenseController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            return redirect()->route('expense.index')->withToastError('Eror Mengubah Status Pengeluaran Biaya!'. $th->getMessage());
+            return redirect()->route('expense.index')->withToastError('Eror Mengubah Status Pengeluaran Biaya!' . $th->getMessage());
         }
 
         return redirect()->route('expense.index')->withToastSuccess('Berhasil Mengubah Status Pengeluaran Biaya!');

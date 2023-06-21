@@ -49,27 +49,32 @@ class InvoiceController extends Controller
 
         DB::beginTransaction();
         try {
-            Validator::make($request->all(), [
-                'invoice_number' => [
-                    'nullable',
-                    Rule::unique('invoices')->where(function ($q) use ($request) {
-                        $q->where('invoice_number', $request->invoice_number);
-                        $q->where('school_id', session('school_id'));
-                        $q->whereNull('deleted_at');
-                    })
+            Validator::make(
+                $request->all(),
+                [
+                    'invoice_number' => [
+                        'nullable',
+                        Rule::unique('invoices')->where(function ($q) use ($request) {
+                            $q->where('invoice_number', $request->invoice_number);
+                            $q->where('school_id', session('school_id'));
+                            $q->whereNull('deleted_at');
+                        })
+                    ],
+                    'note' => 'required|string',
+                    'invoice_date' => 'required|date',
+                    'due_date' => 'required|date|after:invoice_date',
+                    'item_name' => 'required|string',
+                    'price' => 'required|string',
                 ],
-                'note' => 'required|string',
-                'invoice_date' => 'required|date',
-                'due_date' => 'required|date|after:invoice_date',
-                'item_name' => 'required|string',
-                'price' => 'required|string',
-            ],
-            [],
-            [
-                'due_date' => 'tanggal jatuh tempo',
-                'invoice_date' => 'tanggal invoice',
-                'note' => ''
-            ])->validate();
+                [],
+                [
+                    'due_date' => 'tanggal jatuh tempo',
+                    'invoice_date' => 'tanggal invoice',
+                    'note' => 'deskripsi',
+                    'item_name' => 'nama barang',
+                    'price' => 'harga'
+                ]
+            )->validate();
             $invoice = new Invoice();
             $invoice->school_id = session('school_id');
             $invoice->invoice_number = $request->invoice_number ?? $createNewInvoiceNumber->generate();
@@ -87,11 +92,6 @@ class InvoiceController extends Controller
             $invoiceDetail->invoice->total_amount = $invoiceDetail->invoice->invoice_details()->sum('price');
             $invoiceDetail->push();
 
-            // morphs
-            $invoice->sempoas()->create();
-
-            $sempoa = $invoice->sempoas()->first()->getKey();
-            info($sempoa);
             DB::commit();
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
@@ -140,37 +140,48 @@ class InvoiceController extends Controller
             }
         }
 
-        Validator::make($request->all(), [
-            'invoice_number'      => [
-                'required',
-                Rule::unique('invoices')->where(function ($q) use ($request, $invoice) {
-                    $q->where('invoice_number', $request->invoice_number);
-                    $q->where('school_id', session('school_id'));
-                    $q->whereNull('deleted_at');
-                })->ignore($invoice->id, 'id')
-            ],
-            'note' => 'required|string',
-            'invoice_date' => 'required|date',
-            'due_date' => 'required|date|after:invoice_date',
-            'invoice_detail_id' => 'required|array',
-            'array_item_name' => 'required|array',
-            'array_item_name.*' => 'required|string',
-            'array_price' => 'required|array',
-            'array_price.*' => 'required|string',
-        ])->validate();
-
-        if ($invoice->school_id != session('school_id')) abort(404);
-
-        // cek status dan kembalikan jika statusnya sudah PUBLISHED
-        if ($invoice->is_original == false)
-            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak diubah.');
-
-        // cek status dan kembalikan jika statusnya bukan DRAFT
-        if ($invoice->is_posted != Invoice::POSTED_DRAFT)
-            return to_route('invoices.index')->withToastError('Ups! Invoice tidak berhak untuk diubah.');
-
         DB::beginTransaction();
         try {
+            Validator::make(
+                $request->all(),
+                [
+                    'invoice_number'      => [
+                        'required',
+                        Rule::unique('invoices')->where(function ($q) use ($request, $invoice) {
+                            $q->where('invoice_number', $request->invoice_number);
+                            $q->where('school_id', session('school_id'));
+                            $q->whereNull('deleted_at');
+                        })->ignore($invoice->id, 'id')
+                    ],
+                    'note' => 'required|string',
+                    'invoice_date' => 'required|date',
+                    'due_date' => 'required|date|after:invoice_date',
+                    'invoice_detail_id' => 'required|array',
+                    'array_item_name' => 'required|array',
+                    'array_item_name.*' => 'required|string',
+                    'array_price' => 'required|array',
+                    'array_price.*' => 'required|string',
+                ],
+                [],
+                [
+                    'due_date' => 'tanggal jatuh tempo',
+                    'invoice_date' => 'tanggal invoice',
+                    'note' => 'deskripsi',
+                    'array_item_name' => 'nama barang',
+                    'array_price' => 'harga'
+                ]
+            )->validate();
+
+            if ($invoice->school_id != session('school_id')) abort(404);
+
+            // cek status dan kembalikan jika statusnya sudah PUBLISHED
+            if ($invoice->is_original == false)
+                throw new \Exception('Invoice tidak berhak untuk diubah');
+
+            // cek status dan kembalikan jika statusnya bukan DRAFT
+            if ($invoice->is_posted != Invoice::POSTED_DRAFT)
+                throw new \Exception('Invoice tidak berhak untuk diubah');
+
             $invoice->invoice_number = $request->invoice_number;
             $invoice->note = $request->note;
             $invoice->invoice_date = $request->invoice_date;
@@ -201,7 +212,7 @@ class InvoiceController extends Controller
                 'data' => $request->all()
             ]);
             DB::rollBack();
-            return to_route('invoices.edit', $invoice->getKey())->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoices.edit', $invoice->getKey())->withInput()->withToastError('Ups! ' . $th->getMessage());
         }
         return redirect()->route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil mengubah invoice!');
     }

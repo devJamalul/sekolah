@@ -19,16 +19,19 @@ class Expense extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'sempoa_processed' => 'boolean',
+        'expense_date' => 'date',
+        'expense_outgoing_date' => 'date',
+        'approval_at' => 'date',
+        'rejected_at' => 'date',
+    ];
+
     const STATUS_APPROVED   = "approved";
-
     const STATUS_PENDING    = "pending";
-
     const STATUS_REJECTED   = "rejected";
-
     const STATUS_OUTGOING    = "outgoing";
-
     const STATUS_DONE   = "done";
-
     const STATUS_DRAFT   = "draft";
 
     protected static function booted()

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Expense;
 
+use App\Http\Controllers\Controller;
 use App\Models\Wallet;
 use App\Models\Expense;
 use Illuminate\Http\Request;
@@ -60,10 +61,10 @@ class ExpenseDetailController extends Controller
 
             if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
                 $expenseDetail->wallet_id   = $request->wallet_id;
-            } 
+            }
             // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
             //     $expenseDetail->wallet_id   = $danaBOS->id;
-            // } 
+            // }
             else {
                 return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
@@ -147,13 +148,13 @@ class ExpenseDetailController extends Controller
             $expenseDetail->delete();
             DB::commit();
 
-            
+
         return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Hapus Detail Pengeluaran!');
-      
+
     } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror Hapus Detail Pengeluaran!');
-        
+
         }
     }
 }
