@@ -12,7 +12,7 @@ class ExpenseDatatables extends Controller
     //
     public function index()
     {
-        $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])->latest('created_at');
+        $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->latest('created_at');
         return DataTables::of($expense)
             ->editColumn('expense_number', function ($row){
                 if($row->status != Expense::STATUS_PENDING){
@@ -21,10 +21,7 @@ class ExpenseDatatables extends Controller
 
                 return "<a href='" . route('expense.edit', $row->id) . "'>{$row->expense_number}</a>";
             })
-            ->editColumn('request_by', function ($row){
-                return $row->requested_by->name;
-            })
-            ->editColumn('confirmation', function ($row){
+            ->editColumn('approval_by', function ($row){
                 if($row->status == Expense::STATUS_APPROVED || $row->status == Expense::STATUS_DONE){
                     return $row->approved_by->name;
                 }
@@ -77,6 +74,31 @@ class ExpenseDatatables extends Controller
 
             })
             ->rawColumns(['status', 'action', 'expense_number'])
+            ->filterColumn('status', function($query, $keyword) {
+                switch (strtolower($keyword)){
+                    case 'disetujui': case 'setuju':
+                        $match = Expense::STATUS_APPROVED;
+                        break;
+                    case 'pending': case 'pen': case 'pend':
+                        $match = Expense::STATUS_PENDING;
+                        break;
+                    case 'ditolak': case 'tolak':
+                        $match = Expense::STATUS_REJECTED;
+                        break;
+                    case 'selesai': case 'sel':
+                        $match = Expense::STATUS_DONE;
+                        break;
+                    case 'realisasi': case 'real':
+                        $match = Expense::STATUS_OUTGOING;
+                        break;
+                    case 'draft': case 'draf':
+                        $match = Expense::STATUS_DRAFT;
+                        break;
+                    default:
+                        $match = null;
+                }
+                $query->where('status', $match);
+            })
             ->toJson();
     }
 }
