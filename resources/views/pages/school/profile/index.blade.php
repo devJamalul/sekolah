@@ -20,9 +20,10 @@
                             <hr style="border-top: 1px dashed #2e3a61">
                             <div class="form-group">
                                 <label for="name-input">Nama Sekolah <small class="text-danger">*</small> </label>
-                                <input type="text" class="form-control   @error('school_name') is-invalid @enderror"
+                                <input type="text" class="form-control @error('school_name') is-invalid @enderror"
                                     value="{{ old('school_name', $school->school_name) }}" name="school_name"
-                                    id="name-input" autocomplete="off">
+                                    id="name-input" autocomplete="off"
+                                    @cannot('schools.profile-update') readonly @endcannot>
                                 @error('school_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -34,7 +35,8 @@
                                 <div class="form-group col-5">
                                     <label>Provinsi <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('province') is-invalid @enderror"
-                                        name="province" autocomplete="off" value="{{ old('province', $school->province) }}">
+                                        name="province" autocomplete="off" value="{{ old('province', $school->province) }}"
+                                        @cannot('schools.profile-update') readonly @endcannot>
                                     @error('province')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -44,7 +46,8 @@
                                 <div class="form-group col-4">
                                     <label>Kota <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('city') is-invalid @enderror"
-                                        name="city" value="{{ old('city', $school->city) }}" autocomplete="off">
+                                        name="city" value="{{ old('city', $school->city) }}" autocomplete="off"
+                                        @cannot('schools.profile-update') readonly @endcannot>
                                     @error('city')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -55,7 +58,8 @@
                                     <label>Kode Pos <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('postal_code') is-invalid @enderror"
                                         name="postal_code" value="{{ old('postal_code', $school->postal_code) }}"
-                                        autocomplete="off">
+                                        autocomplete="off"
+                                        @cannot('schools.profile-update') readonly @endcannot>
                                     @error('postal_code')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -65,7 +69,8 @@
 
                                 <div class="form-group col-12">
                                     <label>Alamat <small class="text-danger">*</small></label>
-                                    <textarea name="address" id="" class="form-control @error('address') is-invalid @enderror" rows="2">{{ old('address', $school->address) }}</textarea>
+                                    <textarea name="address" id="" class="form-control @error('address') is-invalid @enderror" rows="2"
+                                    @cannot('schools.profile-update') readonly @endcannot>{{ old('address', $school->address) }}</textarea>
                                     @error('address')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -76,7 +81,8 @@
                                     <label>Tingkatan <small class="text-danger">*</small></label>
 
                                     <select name="grade" class="form-control select2 @error('grade') is-invalid @enderror"
-                                        id="">
+                                        id=""
+                                        @cannot('schools.profile-update') disabled @endcannot>
                                         <option value=""></option>
 
                                         @foreach ($grade_school as $grade)
@@ -93,7 +99,8 @@
                                 <div class="form-group col-12">
                                     <label>Email <small class="text-danger">*</small> </label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                        name="email" autocomplete="off" value="{{ old('email', $school->email) }}">
+                                        name="email" autocomplete="off" value="{{ old('email', $school->email) }}"
+                                        @cannot('schools.profile-update') readonly @endcannot>
                                     @error('email')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -103,7 +110,8 @@
                                 <div class="form-group col-12">
                                     <label>Nomor Telepon <small class="text-danger">*</small></label>
                                     <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                        name="phone" value="{{ old('phone', $school->phone) }}" autocomplete="off">
+                                        name="phone" value="{{ old('phone', $school->phone) }}" autocomplete="off"
+                                        @cannot('schools.profile-update') readonly @endcannot>
                                     @error('phone')
                                         <div class="invalid-feedback">
                                             {{ $message }}
