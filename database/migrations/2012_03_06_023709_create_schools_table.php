@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
-            $table->enum('grade', ["TK", "SD", "SMP", "SMA", "SMK"])->nullable();
+            $table->string('grade')->nullable();
             $table->text('address')->nullable();
             $table->string('city')->nullable();
             $table->string('province')->nullable();
