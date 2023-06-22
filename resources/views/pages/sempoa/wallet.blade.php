@@ -16,11 +16,15 @@
                         @csrf
                         @method('PUT')
                         @foreach ($wallets as $key => $wallet)
+                            @php
+                                $kode = App\Models\SempoaWallet::firstWhere('wallet_id', $wallet->getKey());
+                            @endphp
+                            <input type="hidden" name="wallet_id[]" value="{{ $wallet->getKey() }}">
                             <div class="form-group row">
                                 <label for="wallet" class="col-sm-4 col-form-label">{{ $wallet->name }}</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="wallet[]" name="wallet[]"
-                                        value="{{ old('wallet') }}" autocomplete="off"
+                                        value="{{ old('wallet.' . $key, $kode?->account) }}" autocomplete="off"
                                         placeholder="Kode Akun dompet {{ $wallet->name }}">
                                 </div>
                             </div>

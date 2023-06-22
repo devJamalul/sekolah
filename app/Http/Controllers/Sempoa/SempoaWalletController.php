@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Sempoa;
 
+use App\Actions\Sempoa\CheckAccount;
 use App\Http\Controllers\Controller;
 use App\Models\SempoaWallet;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SempoaWalletController extends Controller
 {
@@ -20,50 +22,41 @@ class SempoaWalletController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(SempoaWallet $sempoaWallet)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SempoaWallet $sempoaWallet)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SempoaWallet $sempoaWallet)
+    public function update(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            foreach ($request->wallet_id as $key => $id) {
+                SempoaWallet::updateOrCreate(
+                    [
+                        'school_id' => session('school_id'),
+                        'wallet_id' => $id
+                    ],
+                    [
+                        'account' => self::checkAccount($request->wallet[$key])
+                    ]
+                );
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return to_route('sempoa-wallet.index')->withInput()->withToastError("Ops! " . $th->getMessage());
+        }
+        return to_route('sempoa-wallet.index')->withInput()->withToastSuccess('Konfigurasi berhasil disimpan!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(SempoaWallet $sempoaWallet)
+    protected function checkAccount($account)
     {
-        //
+        if (is_null($account)) return null;
+
+        try {
+            $res = CheckAccount::run($account);
+        } catch (\Throwable $th) {
+            throw new \Exception($th->getMessage());
+        }
+
+        return $res;
     }
 }

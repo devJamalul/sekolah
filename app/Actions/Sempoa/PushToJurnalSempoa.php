@@ -14,7 +14,6 @@ class PushToJurnalSempoa
     public static function handle(Invoice|Expense|StudentTuition $data)
     {
         try {
-            //code...
             $data->sempoas()->create();
             $trx = $data->sempoas()->first();
             $config = SempoaConfiguration::first();
@@ -75,8 +74,6 @@ class PushToJurnalSempoa
             $trx->sempoa_id = $response['data']['id'];
             $trx->sempoa_type = 'App\Models\Transaction';
             $trx->save();
-
-
         } catch (\Throwable $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Push to Jurnal Sempoa',
@@ -84,10 +81,8 @@ class PushToJurnalSempoa
                 'data' => $data
             ]);
 
-            if ($data instanceof Invoice) {
-                $data->sempoa_processed = false;
-                $data->save();
-            }
+            $data->sempoa_processed = false;
+            $data->save();
         }
     }
 }
