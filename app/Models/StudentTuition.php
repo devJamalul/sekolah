@@ -25,7 +25,8 @@ class StudentTuition extends Model
 
     protected $casts = [
         'period' => 'datetime:Y-m-d',
-        'is_sent' => 'boolean'
+        'is_sent' => 'boolean',
+        'sempoa_processed' => 'boolean',
     ];
 
     protected static function booted()
