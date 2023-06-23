@@ -46,36 +46,36 @@ class UserSeeder extends Seeder
             $user->assignRole($role);
 
             // Sekolah
-            $sekolah = School::updateOrCreate([
-                'school_name' => 'Sekolah SD Karmel',
-            ]);
-            $roles = [
-                User::ROLE_ADMIN_SEKOLAH,
-                User::ROLE_TATA_USAHA,
-                User::ROLE_BENDAHARA,
-                User::ROLE_KEPALA_SEKOLAH,
-            ];
+            // $sekolah = School::updateOrCreate([
+            //     'school_name' => 'Sekolah SD Karmel',
+            // ]);
+            // $roles = [
+            //     User::ROLE_ADMIN_SEKOLAH,
+            //     User::ROLE_TATA_USAHA,
+            //     User::ROLE_BENDAHARA,
+            //     User::ROLE_KEPALA_SEKOLAH,
+            // ];
 
-            foreach ($roles as $role) {
-                $user = User::updateOrCreate(
-                    [
-                        'email' => str($role)->slug() . '@sekolah.com',
-                    ],
-                    [
-                        'name' => str($role)->title(),
-                        'password' => bcrypt('password'),
-                        'email_verified_at' => now(),
-                        'school_id' => $sekolah->getKey()
-                    ]
-                );
-                $user->assignRole($role);
-                $user->staff()->updateOrCreate([
-                    'school_id' => $sekolah->getKey(),
-                ]);
-            }
+            // foreach ($roles as $role) {
+            //     $user = User::updateOrCreate(
+            //         [
+            //             'email' => str($role)->slug() . '@sekolah.com',
+            //         ],
+            //         [
+            //             'name' => str($role)->title(),
+            //             'password' => bcrypt('password'),
+            //             'email_verified_at' => now(),
+            //             'school_id' => $sekolah->getKey()
+            //         ]
+            //     );
+            //     $user->assignRole($role);
+            //     $user->staff()->updateOrCreate([
+            //         'school_id' => $sekolah->getKey(),
+            //     ]);
+            // }
 
-            $sekolah->staff_id = 1;
-            $sekolah->save();
+            // $sekolah->staff_id = 1;
+            // $sekolah->save();
         }
     }
 }

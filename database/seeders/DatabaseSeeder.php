@@ -15,18 +15,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            AcademicYearsSeeder::class,
-            StudentsSeeder::class,
-            TuitionTypesSeeder::class,
+            // AcademicYearsSeeder::class,
+            // StudentsSeeder::class,
+            // TuitionTypesSeeder::class,
             // StudentTuitionsSeeder::class,
             PermissionsSeeder::class,
             ConfigSeeder::class,
+            TestSeeder::class,
         ]);
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }
