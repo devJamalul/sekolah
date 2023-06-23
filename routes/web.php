@@ -41,11 +41,19 @@ use App\Http\Controllers\Invoice\InvoiceDetailController;
 use App\Http\Controllers\Invoice\InvoiceReportController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
+use App\Http\Controllers\Home\AdminSekolahController;
+use App\Http\Controllers\Home\BendaharaController;
+use App\Http\Controllers\Home\HomeController;
+use App\Http\Controllers\Home\KepalaSekolahController;
+use App\Http\Controllers\Home\OpsAdminController;
+use App\Http\Controllers\Home\SuperAdminController;
+use App\Http\Controllers\Home\TataUsahaController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
 use App\Http\Controllers\Sempoa\SempoaConfigurationController;
 use App\Http\Controllers\Sempoa\SempoaWalletController;
 use App\Http\Controllers\User\ChangeUserPasswordController;
 use App\Http\Controllers\User\UserVerificationController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,16 +68,23 @@ use App\Http\Controllers\User\UserVerificationController;
 
 Route::permanentRedirect('/', 'home');
 
-Route::get('/home', function () {
-    return view('pages.home');
-})->name('home')->middleware(['auth']);
-
 Route::as('user-verification.')->controller(UserVerificationController::class)->group(function () {
     Route::get('user/{email}/{token}/verify', 'index')->name('index');
     Route::post('user/{email}/{token}/verify', 'store')->name('store');
 });
 
 Route::middleware(['auth'])->group(function () {
+    // Home
+    Route::prefix('/home')->group(function () {
+        Route::get('/', HomeController::class)->name('home');
+        Route::get('/super-admin', SuperAdminController::class)->name('home.super-admin')->role(User::ROLE_SUPER_ADMIN);
+        Route::get('/ops-admin', OpsAdminController::class)->name('home.ops-admin')->role(User::ROLE_OPS_ADMIN);
+        Route::get('/admin-sekolah', AdminSekolahController::class)->name('home.admin-sekolah')->role(User::ROLE_ADMIN_SEKOLAH);
+        Route::get('/kepala-sekolah', KepalaSekolahController::class)->name('home.kepala-sekolah')->role(User::ROLE_KEPALA_SEKOLAH);
+        Route::get('/tata-usaha', TataUsahaController::class)->name('home.tata-usaha')->role(User::ROLE_TATA_USAHA);
+        Route::get('/bendahara', BendaharaController::class)->name('home.bendahara')->role(User::ROLE_BENDAHARA);
+    });
+
     // Academy Year
     Route::resource("academy-year", AcademyYearController::class)->except(['show']);
 
