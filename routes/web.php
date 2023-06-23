@@ -81,6 +81,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'index')->name('profile-index');
         Route::put('/', 'update')->name('profile-update');
     });
+    Route::get('schools/import', [SchoolsController::class,'importSchool'])->name('schools.import-all');
+    Route::post('schools/import-excel', [SchoolsController::class, 'importAllByExcel'])->name('schools.importAllByExcel');
     Route::resource('schools', SchoolsController::class);
 
     // Classroom
