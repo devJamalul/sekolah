@@ -308,47 +308,50 @@
     </li>
     <!-- End Laporan Menu -->
 
-    <!-- Konfigurasi Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKonfigurasi"
-            aria-expanded="true" aria-controls="menuKonfigurasi">
-            <i class="fas fa-wrench"></i>
-            <span>Konfigurasi</span>
-        </a>
-        <div id="menuKonfigurasi" class="collapse {{ $menuKonfigurasi }}" aria-labelledby="menuKonfigurasi"
-            data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                @can('master-configs.index')
-                    <a href="{{ route('master-configs.index') }}"
-                        class="collapse-item {{ Request::is('master-configs', 'master-configs/*') ? 'active' : '' }}">
-                        Master Konfigurasi
-                    </a>
-                @endcan
-                @can('config.index')
-                    <a href="{{ route('config.index') }}"
-                        class="collapse-item {{ Request::is('config', 'config/*') ? 'active' : '' }}">
-                        Konfigurasi
-                    </a>
-                @endcan
-                @can(['sempoa-configuration.index', 'sempoa-configuration.update'])
-                    <h6 class="collapse-header">Sempoa</h6>
-                    @can('sempoa-configuration.index')
-                        <a href="{{ route('sempoa-configuration.index') }}"
-                            class="collapse-item {{ Request::is('sempoa/configuration') ? 'active' : '' }}">
-                            Konfigurasi Sempoa
+    @canany(['master-configs.index', 'config.index', 'sempoa-configuration.index', 'sempoa-configuration.update',
+        'sempoa-wallet.index'])
+        <!-- Konfigurasi Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#menuKonfigurasi"
+                aria-expanded="true" aria-controls="menuKonfigurasi">
+                <i class="fas fa-wrench"></i>
+                <span>Konfigurasi</span>
+            </a>
+            <div id="menuKonfigurasi" class="collapse {{ $menuKonfigurasi }}" aria-labelledby="menuKonfigurasi"
+                data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    @can('master-configs.index')
+                        <a href="{{ route('master-configs.index') }}"
+                            class="collapse-item {{ Request::is('master-configs', 'master-configs/*') ? 'active' : '' }}">
+                            Master Konfigurasi
                         </a>
                     @endcan
-                    @can('sempoa-wallet.index')
-                        <a href="{{ route('sempoa-wallet.index') }}"
-                            class="collapse-item {{ Request::is('sempoa/wallet') ? 'active' : '' }}">
-                            Konfigurasi Dompet
+                    @can('config.index')
+                        <a href="{{ route('config.index') }}"
+                            class="collapse-item {{ Request::is('config', 'config/*') ? 'active' : '' }}">
+                            Konfigurasi
                         </a>
                     @endcan
-                @endcan
+                    @can(['sempoa-configuration.index', 'sempoa-configuration.update'])
+                        <h6 class="collapse-header">Sempoa</h6>
+                        @can('sempoa-configuration.index')
+                            <a href="{{ route('sempoa-configuration.index') }}"
+                                class="collapse-item {{ Request::is('sempoa/configuration') ? 'active' : '' }}">
+                                Konfigurasi Sempoa
+                            </a>
+                        @endcan
+                        @can('sempoa-wallet.index')
+                            <a href="{{ route('sempoa-wallet.index') }}"
+                                class="collapse-item {{ Request::is('sempoa/wallet') ? 'active' : '' }}">
+                                Konfigurasi Dompet
+                            </a>
+                        @endcan
+                    @endcan
+                </div>
             </div>
-        </div>
-    </li>
-    <!-- End Konfigurasi Menu -->
+        </li>
+        <!-- End Konfigurasi Menu -->
+    @endcanany
 
     {{-- <!-- Divider -->
   <hr class="sidebar-divider">
