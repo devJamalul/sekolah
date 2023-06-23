@@ -43,14 +43,18 @@ class TuitionTypeImport implements ToCollection, WithHeadingRow, WithValidation,
                     'tuition_type_id' => $tuitionType->getKey(),
                     'academic_year_id' => session('import_academic_year_id'),
                     'price' => $item['nominal'],
-                    'grade_id' => session('grade_' . str($item['tingkat_kelas'])->slug())
+                    'grade_id' => session('grade_' . str($item['tingkat_kelas'])->slug()),
+                    'status' => Tuition::STATUS_APPROVED,
+                    'request_by' => session('import_admin_id'),
+                    'approval_by' => session('import_admin_id'),
+                    'approved_at' => now(),
                 ]);
                 $tuition->save();
             }
             DB::commit();
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             DB::rollBack();
-            session()->forget(['import_school_id', 'import_academic_year_id']);
+            session()->forget(['import_school_id', 'import_academic_year_id', 'import_admin_id']);
             $failures = $e->failures();
 
             if (count($failures) > 0) {
