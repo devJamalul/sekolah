@@ -21,10 +21,10 @@ class Expense extends Model
 
     protected $casts = [
         'sempoa_processed' => 'boolean',
-        'expense_date' => 'date',
-        'expense_outgoing_date' => 'date',
-        'approval_at' => 'date',
-        'rejected_at' => 'date',
+        'expense_date' => 'date:Y-m-d',
+        'expense_outgoing_date' => 'date:Y-m-d',
+        'approval_at' => 'date:Y-m-d',
+        'rejected_at' => 'date:Y-m-d',
     ];
 
     const STATUS_APPROVED   = "approved";

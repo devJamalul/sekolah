@@ -19,9 +19,9 @@
                     <x-datatable :tableId="'expense'" :tableHeaders="['No Pengeluaran', 'Tanggal Pengeluaran', 'Peminta', 'Konfirmasi', 'Status', 'Aksi']" :tableColumns="[
                         ['data' => 'expense_number'],
                         ['data' => 'expense_date'],
-                        ['data' => 'request_by'],
-                        ['data' => 'confirmation'],
-                        ['data' => 'the_status'],
+                        ['data' => 'requested_by.name'],
+                        ['data' => 'approval_by', 'name' => 'approved_by.name'],
+                        ['data' => 'status'],
                         ['data' => 'action'],
                     ]" :getDataUrl="route('datatable.expense')" />
                 </div>

@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\School;
 
-use App\Actions\User\NewUser;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\SchoolRequest;
-use App\Models\School;
-use App\Models\Staff;
-use App\Models\User;
-use App\Notifications\NewSchoolPICNotification;
 use Exception;
+use App\Models\User;
+use App\Models\Staff;
+use App\Models\School;
+use Illuminate\Http\Request;
+use App\Actions\User\NewUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\SchoolRequest;
+use App\Imports\AllImport;
 use Illuminate\Support\Facades\Password;
+use App\Notifications\NewSchoolPICNotification;
+use Excel;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Excel as ExcelExcel;
 
 class SchoolsController extends Controller
 {
@@ -198,6 +203,31 @@ class SchoolsController extends Controller
             return response()->json([
                 'msg' => 'Ups gagal menghapus data sekolah! ' . $th->getMessage()
             ], 400);
+        }
+    }
+
+    
+    public function importSchool()
+    {
+        $data = [
+            'title' => "Impor Data Semua",
+        ];
+
+        return view('pages.school.import', $data);
+    }
+
+    public function importAllByExcel(Request $request)
+    {
+        try {
+            Excel::import(new AllImport, $request->file('excel_file'));
+            return redirect()->route('schools.index')->withToastSuccess('Berhasil mengimpor data all!');
+        } catch (ValidationExceptiononException $ex) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withToastError($ex->errors());
+        } catch (Exception $ex) {
+            dd($ex);
+            DB::rollBack();
+            return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data!");
         }
     }
 }

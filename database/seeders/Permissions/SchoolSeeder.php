@@ -34,7 +34,8 @@ class SchoolSeeder extends Seeder
             'destroy' => 'schools.destroy',
             // profile
             'profile-index' => 'schools.profile-index',
-            'profile-update' => 'schools.profile-update'
+            'profile-update' => 'schools.profile-update',
+            'import-all' => 'schools.import-all',
         ];
 
         // index
@@ -86,5 +87,11 @@ class SchoolSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$admin_yayasan, $admin_sekolah, $kepala_sekolah, $tata_usaha]);
+        
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['import-all'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin]);
     }
 }

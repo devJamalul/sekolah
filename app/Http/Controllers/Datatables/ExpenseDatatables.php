@@ -21,19 +21,18 @@ class ExpenseDatatables extends Controller
 
                 return "<a href='" . route('expense.edit', $expense->id) . "'>{$expense->expense_number}</a>";
             })
-            ->editColumn('request_by', function ($expense) {
-                return $expense->requested_by->name;
-            })
-            ->editColumn('confirmation', function ($expense) {
-                if ($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE) {
-                    return $expense->approved_by->name;
-                } elseif ($expense->status == Expense::STATUS_REJECTED) {
-                    return $expense->reject_by->name;
-                } else {
+            ->editColumn('approval_by', function ($row){
+                if($row->status == Expense::STATUS_APPROVED || $row->status == Expense::STATUS_DONE){
+                    return $row->approved_by->name;
+                }
+                elseif($row->status == Expense::STATUS_REJECTED){
+                    return $row->reject_by->name;
+                }
+                else{
                     return '-';
                 }
             })
-            ->editColumn('the_status', function ($expense) {
+            ->editColumn('status', function ($expense) {
                 return match ($expense->status) {
                     Expense::STATUS_APPROVED => '<span class="badge badge-success">Disetujui</span>',
                     Expense::STATUS_PENDING => '<span class="badge badge-dark">Pending</span>',
@@ -68,7 +67,32 @@ class ExpenseDatatables extends Controller
 
                 return view('components.datatable-action', $data);
             })
-            ->rawColumns(['the_status', 'action', 'expense_number'])
+            ->rawColumns(['status', 'action', 'expense_number'])
+            ->filterColumn('status', function($query, $keyword) {
+                switch (strtolower($keyword)){
+                    case 'disetujui': case 'setuju':
+                        $match = Expense::STATUS_APPROVED;
+                        break;
+                    case 'pending': case 'pen': case 'pend':
+                        $match = Expense::STATUS_PENDING;
+                        break;
+                    case 'ditolak': case 'tolak':
+                        $match = Expense::STATUS_REJECTED;
+                        break;
+                    case 'selesai': case 'sel':
+                        $match = Expense::STATUS_DONE;
+                        break;
+                    case 'realisasi': case 'real':
+                        $match = Expense::STATUS_OUTGOING;
+                        break;
+                    case 'draft': case 'draf':
+                        $match = Expense::STATUS_DRAFT;
+                        break;
+                    default:
+                        $match = null;
+                }
+                $query->where('status', $match);
+            })
             ->toJson();
     }
 }
