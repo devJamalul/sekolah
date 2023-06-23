@@ -30,7 +30,8 @@ class ExpenseSeeder extends Seeder
             'edit' => 'expense.edit',
             'update' => 'expense.update',
             'destroy' => 'expense.destroy',
-            'publish' => 'expense.publish'
+            'publish' => 'expense.publish',
+            'show' => 'expense.show-detail',
         ];
 
           // index
@@ -70,6 +71,13 @@ class ExpenseSeeder extends Seeder
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah]);
+
+        // show
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['show'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara, $tata_usaha, $kepala_sekolah, $admin_yayasan]);
 
         // publish
         $permission = Permission::firstOrCreate([

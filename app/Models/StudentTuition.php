@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class StudentTuition extends Model
 {
@@ -24,8 +25,19 @@ class StudentTuition extends Model
 
     protected $casts = [
         'period' => 'datetime:Y-m-d',
-        'is_sent' => 'boolean'
+        'is_sent' => 'boolean',
+        'sempoa_processed' => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new StudentTuitionScope);
+    }
+
+    public function sempoas(): MorphMany
+    {
+        return $this->morphMany(Sempoa::class, 'sempoable');
+    }
 
     public function student(): BelongsTo
     {
@@ -55,10 +67,5 @@ class StudentTuition extends Model
     public function student_tuition_payment_histories(): HasMany
     {
         return $this->hasMany(StudentTuitionPaymentHistory::class);
-    }
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new StudentTuitionScope);
     }
 }

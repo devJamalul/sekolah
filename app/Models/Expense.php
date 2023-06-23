@@ -11,28 +11,37 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Expense extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
-    
+
+    protected $casts = [
+        'sempoa_processed' => 'boolean',
+        'expense_date' => 'date',
+        'expense_outgoing_date' => 'date',
+        'approval_at' => 'date',
+        'rejected_at' => 'date',
+    ];
+
     const STATUS_APPROVED   = "approved";
-
     const STATUS_PENDING    = "pending";
-
     const STATUS_REJECTED   = "rejected";
-
     const STATUS_OUTGOING    = "outgoing";
-
     const STATUS_DONE   = "done";
-
     const STATUS_DRAFT   = "draft";
 
     protected static function booted()
     {
         static::addGlobalScope(new ExpenseScope);
+    }
+
+    public function sempoas(): MorphMany
+    {
+        return $this->morphMany(Sempoa::class, 'sempoable');
     }
 
     public function expense_details(): HasMany
@@ -44,7 +53,7 @@ class Expense extends Model
     {
         return $this->belongsTo(School::class);
     }
-    
+
     public function requested_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'request_by');
@@ -54,7 +63,7 @@ class Expense extends Model
     {
         return $this->belongsTo(User::class, 'approval_by');
     }
-    
+
     public function reject_by(): BelongsTo
     {
         return $this->belongsTo(User::class, 'rejected_by');

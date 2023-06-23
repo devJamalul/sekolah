@@ -2,7 +2,7 @@
     $menuAdministrasi = Request::is('schools', 'schools/*', 'users', 'users/*', 'school-profile') ? 'show' : '';
     $menuKeuangan = Request::is('tuition-type', 'tuition-type/*', 'tuition', 'tuition/*', 'wallet', 'wallet/*', 'payment-type', 'payment-type/*', 'tuition-approval', 'tuition-approval/*', 'expense-approval', 'expense-approval/*', 'expense-outgoing', 'expense-outgoing/*', 'publish-tuition') ? 'show' : '';
     $menuSekolah = Request::is('grade', 'grade/*', 'academy-year', 'academy-year/*', 'students', 'students/*', 'staff', 'staff/*', 'classroom', 'classroom/*', 'assign-classroom-student', 'assign-classroom-student/*', 'assign-classroom-staff', 'assign-classroom-staff/*') ? 'show' : '';
-    $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*') ? 'show' : '';
+    $menuKonfigurasi = Request::is('config', 'config/*', 'master-configs', 'master-configs/*', 'sempoa/configuration', 'sempoa/wallet') ? 'show' : '';
     $menuTransaksi = Request::is('transactions', 'transactions/*', 'invoices', 'invoices/*', 'expense', 'expense/*') ? 'show' : '';
     $menuLaporan = Request::is('report-student-tuition', 'report-student-tuition/*', 'expense-report', 'expense-report/*', 'reports/students', 'reports/students/*', 'reports/invoices', 'reports/invoices/*', 'report-school-finances') ? 'show' : '';
 @endphp
@@ -323,6 +323,21 @@
                         class="collapse-item {{ Request::is('config', 'config/*') ? 'active' : '' }}">
                         Konfigurasi
                     </a>
+                @endcan
+                @can(['sempoa-configuration.index', 'sempoa-configuration.update'])
+                    <h6 class="collapse-header">Sempoa</h6>
+                    @can('sempoa-configuration.index')
+                        <a href="{{ route('sempoa-configuration.index') }}"
+                            class="collapse-item {{ Request::is('sempoa/configuration') ? 'active' : '' }}">
+                            Konfigurasi Sempoa
+                        </a>
+                    @endcan
+                    @can('sempoa-wallet.index')
+                        <a href="{{ route('sempoa-wallet.index') }}"
+                            class="collapse-item {{ Request::is('sempoa/wallet') ? 'active' : '' }}">
+                            Konfigurasi Dompet
+                        </a>
+                    @endcan
                 @endcan
             </div>
         </div>

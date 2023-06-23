@@ -27,6 +27,7 @@ return new class extends Migration
             $table->double('grand_total')->nullable();
             $table->string('status')->default('pending');
             $table->boolean('is_sent')->default(false);
+            $table->boolean('sempoa_processed')->nullable()->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

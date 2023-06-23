@@ -6,6 +6,7 @@ use App\Models\Scopes\InvoiceScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
@@ -39,6 +40,11 @@ class Invoice extends Model
     protected static function booted()
     {
         static::addGlobalScope(new InvoiceScope);
+    }
+
+    public function sempoas(): MorphMany
+    {
+        return $this->morphMany(Sempoa::class, 'sempoable');
     }
 
     public function invoice_details(): HasMany

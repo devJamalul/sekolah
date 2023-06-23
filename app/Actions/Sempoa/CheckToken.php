@@ -9,7 +9,7 @@ class CheckToken
     public static function run(string $token)
     {
         $response = Http::withToken($token)
-        ->post(config('sempoa.base_url') . 'check');
+            ->post(config('sempoa.base_url') . 'check');
 
         if (!$response->ok()) {
             throw new \Exception($response->body());

@@ -32,6 +32,8 @@ use Database\Seeders\Permissions\AssignClassroomStaffSeeder;
 use Database\Seeders\Permissions\ReportSchoolFinancesSeeder;
 use Database\Seeders\Permissions\StudentTuitionMasterSeeder;
 use Database\Seeders\Permissions\AssignClassroomStudentSeeder;
+use Database\Seeders\Permissions\SempoaConfigurationSeeder;
+use Database\Seeders\Permissions\SempoaWalletSeeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -83,7 +85,9 @@ class PermissionsSeeder extends Seeder
             ReportSchoolFinancesSeeder::class,
             StaffSeeder::class,
             ExpenseApprovalSeeder::class,
-            ExpenseOutgoingSeeder::class
+            ExpenseOutgoingSeeder::class,
+            SempoaConfigurationSeeder::class,
+            SempoaWalletSeeder::class,
         ]);
     }
 }

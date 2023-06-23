@@ -5,7 +5,7 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\User\UsersController;
 use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\Expense\ExpenseController;
 use App\Http\Controllers\School\SchoolsController;
 use App\Http\Controllers\Tuition\TuitionController;
 use App\Http\Controllers\StudentsController;
@@ -16,13 +16,13 @@ use App\Http\Controllers\Reports\StudentReport;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\Tuition\TuitionTypeController;
 use App\Http\Controllers\ConfigSchoolController;
-use App\Http\Controllers\ExpenseDetailController;
-use App\Http\Controllers\ExpenseReportController;
+use App\Http\Controllers\Expense\ExpenseDetailController;
+use App\Http\Controllers\Expense\ExpenseReportController;
 use App\Http\Controllers\Wallet\WalletController;
 use App\Http\Controllers\Tuition\PublishTuitionController;
 use App\Http\Controllers\School\SchoolSelectorController;
-use App\Http\Controllers\ExpenseApprovalController;
-use App\Http\Controllers\ExpenseOutgoingController;
+use App\Http\Controllers\Expense\ExpenseApprovalController;
+use App\Http\Controllers\Expense\ExpenseOutgoingController;
 use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Tuition\TuitionApprovalController;
 use App\Http\Controllers\Wallet\WalletLogController;
@@ -42,6 +42,8 @@ use App\Http\Controllers\Invoice\InvoiceReportController;
 use App\Http\Controllers\ReportStudentTuitionsController;
 use App\Http\Controllers\AssignClassroomStudentController;
 use App\Http\Controllers\Invoice\PublishInvoiceController;
+use App\Http\Controllers\Sempoa\SempoaConfigurationController;
+use App\Http\Controllers\Sempoa\SempoaWalletController;
 use App\Http\Controllers\User\ChangeUserPasswordController;
 use App\Http\Controllers\User\UserVerificationController;
 
@@ -178,17 +180,37 @@ Route::middleware(['auth'])->group(function () {
     Route::post('invoices/{invoice}/pay', [PayInvoiceController::class, 'store'])->name('invoices.payment')->middleware('password.confirm');
     Route::get('invoices/{invoice}/void', [VoidInvoiceController::class, 'index'])->name('invoices.void');
     Route::post('invoices/{invoice}/void', [VoidInvoiceController::class, 'store'])->name('invoices.voidment')->middleware('password.confirm');
-    Route::controller(InvoiceDetailController::class)->prefix('invoices')->name('invoice-details.')->group(function () {
-        Route::get('/{invoice}/detail', 'index')->name('index');
-        Route::post('/{invoice}/detail', 'store')->name('store');
-        Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
-    });
+    Route::controller(InvoiceDetailController::class)
+        ->prefix('invoices')
+        ->name('invoice-details.')
+        ->group(function () {
+            Route::get('/{invoice}/detail', 'index')->name('index');
+            Route::post('/{invoice}/detail', 'store')->name('store');
+            Route::delete('/{invoice}/detail/{invoice_detail}', 'destroy')->name('destroy');
+        });
     Route::get('reports/invoices', [InvoiceReportController::class, 'index'])->name('invoices.report');
     Route::post('reports/invoices', [InvoiceReportController::class, 'store'])->name('invoices.report-result');
 
     // Profile dan Password
     Route::apiSingleton('edit-profile', EditProfileController::class);
     Route::apiSingleton('edit-password', EditPasswordController::class)->withoutMiddleware([RequireChangePassword::class]);
+
+    // Sempoa Configuration
+    Route::as('sempoa-configuration.')
+        ->prefix('sempoa/configuration')
+        ->controller(SempoaConfigurationController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/store', 'store')->name('store');
+            Route::put('/update', 'update')->name('update');
+        });
+    Route::as('sempoa-wallet.')
+        ->prefix('sempoa/wallet')
+        ->controller(SempoaWalletController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::put('/update', 'update')->name('update');
+        });
 });
 
 Route::middleware(['auth'])->prefix('reports')->group(function () {

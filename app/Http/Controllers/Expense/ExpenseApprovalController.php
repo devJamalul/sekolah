@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Expense;
 
+use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -65,7 +66,7 @@ class ExpenseApprovalController extends Controller
     public function update(Request $request, Expense $expense_approval)
     {
         DB::beginTransaction();
-        
+
         try {
             switch ($request->action) {
                 case 'approve':
@@ -79,7 +80,7 @@ class ExpenseApprovalController extends Controller
                         return redirect()->back()->withToastError('Ops, Alasan Penolakan Wajib Diisi!');
                     }
                         $expense_approval->status = Expense::STATUS_REJECTED;
-                        $expense_approval->reject_reason  = $request->reject_reason;    
+                        $expense_approval->reject_reason  = $request->reject_reason;
                         $expense_approval->rejected_by =  Auth::user()->id;
                         $expense_approval->rejected_at = now();
                     break;

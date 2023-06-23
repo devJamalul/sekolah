@@ -45,20 +45,24 @@ class InvoiceDetailController extends Controller
             ]);
         }
 
-        Validator::make($request->all(), [
-            'item_name' => [
-                'required',
-                Rule::unique('invoice_details')->where(function ($q) use ($invoice, $request) {
-                    $q->where('invoice_id', $invoice->id);
-                    $q->where('item_name', $request->item_name);
-                    $q->whereNull('deleted_at');
-                })
-            ],
-            'price' => 'required|min:0',
-        ])->validate();
 
         DB::beginTransaction();
         try {
+            Validator::make($request->all(), [
+                'item_name' => [
+                    'required',
+                    Rule::unique('invoice_details')->where(function ($q) use ($invoice, $request) {
+                        $q->where('invoice_id', $invoice->id);
+                        $q->where('item_name', $request->item_name);
+                        $q->whereNull('deleted_at');
+                    })
+                ],
+                'price' => 'required|min:0',
+            ], [], [
+                'item_name' => 'nama barang',
+                'price' => 'harga'
+            ])->validate();
+
             $invoiceDetail = new InvoiceDetail();
             $invoiceDetail->invoice_id = $invoice->getKey();
             $invoiceDetail->item_name = $request->item_name;
@@ -70,7 +74,7 @@ class InvoiceDetailController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
+            return to_route('invoices.edit', $invoice->getKey())->withInput()->withToastError('Ups! ' . $th->getMessage());
         }
         return to_route('invoices.edit', $invoice->getKey())->withToastSuccess('Berhasil menambah baris invoice!');
     }
