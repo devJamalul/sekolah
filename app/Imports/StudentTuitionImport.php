@@ -96,14 +96,15 @@ class StudentTuitionImport implements ToCollection, WithHeadingRow, WithValidati
                     'school_id' => session('import_school_id'),
                     'tuition_type_id' => $tuition_type->getKey(),
                     'academic_year_id' => session('import_academic_year_id'),
-                    'grade_id' => $class->grade_id
+                    'grade_id' => $class->grade_id,
                 ])->first();
 
                 info($tuition);
 
                 $studentTuitionMaster = StudentTuitionMaster::firstOrNew([
                     'student_id' => $student->getKey(),
-                    'tuition_id' => $tuition->getKey()
+                    'tuition_id' => $tuition->getKey(),
+                    'price'      => $item['nominal']
                 ]);
                 $studentTuitionMaster->save();
             }

@@ -89,6 +89,8 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
                         'password'     => bcrypt('12345678')
                     ]
                 );
+
+
                 // integrasi tabel staff
                 $staff = new Staff();
                 $staff->school_id = $school->getKey();
@@ -102,6 +104,9 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
                 $admin->assignRole(User::ROLE_ADMIN_SEKOLAH);
                 // verification & notification
                 NewUser::createTokenFor($admin);
+
+                
+                session(['import_admin_id' => $admin->getKey()]);
             }
 
             // verification & notification
