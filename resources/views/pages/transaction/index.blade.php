@@ -17,7 +17,7 @@
                         <div class="form-group">
                             <label for="name">Nama Siswa / NIS</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-                                id="name" aria-describedby="name" value="{{ old('name') }}" autocomplete="off">
+                                id="name" aria-describedby="name" value="{{ old('name') }}" autocomplete="off" autofocus>
                             @error('name')
                                 <div class="invalid-feedback">
                                     {{ $message }}

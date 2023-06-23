@@ -33,7 +33,7 @@
                                     <tr>
                                         <td scope="row">Kelas</td>
                                         <td class="text-primary font-weight-bold">
-                                            {{ $student?->classrooms()->latest()->first()?->grade->grade_name .' ' .$student?->classrooms()->latest()->first()?->name }}
+                                            {{ $student?->classrooms()->latest()->first()?->grade->grade_name .' - ' .$student?->classrooms()->latest()->first()?->name }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -72,8 +72,12 @@
                                     <label for="student_tuition_id">Tagihan Biaya</label>
                                     <select class="form-control select2" name="student_tuition_id" id="student_tuition_id">
                                         @foreach ($student_tuitions as $student_tuition)
+                                            @php
+                                                $total_terbayar = $student_tuition->student_tuition_payment_histories()->sum('price');
+                                            @endphp
                                             <option value="{{ $student_tuition->getKey() }}" @selected(old('student_tuition_id') == $student_tuition->getKey())>
                                                 {{ $student_tuition->note }} {{ $student_tuition->period->format('F Y') }}
+                                                - Rp {{ number_format($student_tuition->grand_total - $total_terbayar, 0, ',', '.') }}
                                             </option>
                                         @endforeach
                                     </select>

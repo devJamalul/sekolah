@@ -81,6 +81,9 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Student $transaction, AddToInvoice $addToInvoice)
     {
+        $request->merge([
+            'nominal' => formatAngka($request->nominal)
+        ]);
         $request->validate(
             [
                 'student_tuition_id' => 'required|exists:student_tuitions,id',
