@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Imports\StaffImport;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use App\Imports\GeneralImport;
 
 class AllImport implements WithMultipleSheets
 {

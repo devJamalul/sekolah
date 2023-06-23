@@ -21,7 +21,7 @@ class TuitionTypeImport implements ToCollection, WithHeadingRow, WithValidation,
 {
 
     use SkipsFailures;
-    
+
     /**
     * @param Collection $collection
     */
@@ -30,20 +30,20 @@ class TuitionTypeImport implements ToCollection, WithHeadingRow, WithValidation,
         DB::beginTransaction();
         try {
             foreach ($collection as $key => $item) {
-                
-                $tuitionType = TuitionType::firstOrNew([
+
+                $tuitionType = TuitionType::withoutGlobalScopes()->firstOrNew([
+                    'school_id' => session('import_school_id'),
                     'name' => $item['nama'],
-                    'recurring' => $item['rutin'] == 'y' ? 1 : 0, 
+                    'recurring' => $item['rutin'] == 'y' ? 1 : 0,
                 ]);
                 $tuitionType->save();
-                
-                $grade = Grade::where('grade_name', $item['tingkat_kelas'])->first();
 
                 $tuition = Tuition::firstOrNew([
                     'school_id' => session('import_school_id'),
                     'tuition_type_id' => $tuitionType->getKey(),
                     'academic_year_id' => session('import_academic_year_id'),
-                    'price' => $item['nominal']
+                    'price' => $item['nominal'],
+                    'grade_id' => session('grade_' . str($item['tingkat_kelas'])->slug())
                 ]);
                 $tuition->save();
             }
@@ -58,7 +58,7 @@ class TuitionTypeImport implements ToCollection, WithHeadingRow, WithValidation,
                 $column = $failures[0]->attribute(); // either heading key (if using heading row concern) or column index
                 $error = $failures[0]->errors(); // Actual error messages from Laravel validator
                 // $value = $failures[0]->values(); // The values of the row that has failed.
-                
+
                 return redirect()->back()->withToastError("Terjadi kesalahan pada Baris $row, Kolom $column, dengan pesan $error[0]");
             }
         }

@@ -2,11 +2,13 @@
 
 namespace App\Imports;
 
+use App\Actions\User\NewUser;
 use Exception;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\School;
 use App\Models\AcademicYear;
+use App\Models\Staff;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -42,6 +44,11 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
                 ],
             );
 
+            $school->foundation_head_name = $dataGeneral[5];
+            $school->foundation_head_email = $dataGeneral[6];
+            $school->foundation_head_tlpn = $dataGeneral[7];
+            $school->save();
+
             session(['import_school_id' => $school->getKey()]);
 
             // dd(Carbon::now()->year($academicYear[0][1]));
@@ -63,6 +70,15 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
                 'school_id'    => $school->getKey(),
                 'password'     => bcrypt('12345678')
             ]);
+            // integrasi tabel staff
+            $staff = new Staff();
+            $staff->school_id = $school->getKey();
+            $staff->user_id = $kepsek->id;
+            $staff->name = $kepsek->name;
+            $staff->phone_number = $dataGeneral[7];
+            $staff->save();
+            // Kepala Sekolah assign role
+            $kepsek->assignRole(User::ROLE_KEPALA_SEKOLAH);
 
             if ($dataGeneral[5] != $dataGeneral[8]) {
                 $admin = User::firstOrCreate(
@@ -73,7 +89,23 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
                         'password'     => bcrypt('12345678')
                     ]
                 );
+                // integrasi tabel staff
+                $staff = new Staff();
+                $staff->school_id = $school->getKey();
+                $staff->user_id = $admin->id;
+                $staff->name = $admin->name;
+                $staff->save();
+                // assign Admin Sekolah
+                $school->staff_id = $staff->getKey();
+                $school->save();
+                // Admin Sekolah assign role
+                $admin->assignRole(User::ROLE_ADMIN_SEKOLAH);
+                // verification & notification
+                NewUser::createTokenFor($admin);
             }
+
+            // verification & notification
+            NewUser::createTokenFor($kepsek);
 
             DB::commit();
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
