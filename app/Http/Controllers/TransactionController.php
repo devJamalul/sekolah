@@ -144,6 +144,7 @@ class TransactionController extends Controller
 
             if ($total_payment >= $student_tuition->grand_total) {
                 $delay = now()->addSeconds(30);
+                dd($transaction->user);
                 $transaction->user->notify((new PaidTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
             } else {
                 $delay = now()->addSeconds(30);
