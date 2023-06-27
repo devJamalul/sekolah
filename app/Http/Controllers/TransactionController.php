@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Invoice\AddToInvoice;
+use App\Mail\PaidTuitionMail;
+use App\Mail\PartialTuitionMail;
 use App\Models\PaymentType;
 use App\Models\Student;
 use App\Models\StudentTuition;
@@ -14,6 +16,7 @@ use App\Notifications\PartialTuitionNotification;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use PHPUnit\Event\Code\Throwable;
 
 class TransactionController extends Controller
@@ -144,10 +147,32 @@ class TransactionController extends Controller
 
             if ($total_payment >= $student_tuition->grand_total) {
                 $delay = now()->addSeconds(30);
-                $transaction->user->notify((new PaidTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+                if (!is_null($transaction->email)) {
+                    $transaction->notify((new PaidTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+                }
+                if (!is_null($transaction->father_email)) {
+                    Mail::to($transaction->father_email)->later($delay, new PaidTuitionMail($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')));
+                }
+                if (!is_null($transaction->mother_email)) {
+                    Mail::to($transaction->mother_email)->later($delay, new PaidTuitionMail($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')));
+                }
+                if (!is_null($transaction->guardian_email)) {
+                    Mail::to($transaction->guardian_email)->later($delay, new PaidTuitionMail($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')));
+                }
             } else {
                 $delay = now()->addSeconds(30);
-                $transaction->user->notify((new PartialTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+                if (!is_null($transaction->email)) {
+                    $transaction->notify((new PartialTuitionNotification($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')))->delay($delay));
+                }
+                if (!is_null($transaction->father_email)) {
+                    Mail::to($transaction->father_email)->later($delay, new PartialTuitionMail($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')));
+                }
+                if (!is_null($transaction->mother_email)) {
+                    Mail::to($transaction->mother_email)->later($delay, new PartialTuitionMail($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')));
+                }
+                if (!is_null($transaction->guardian_email)) {
+                    Mail::to($transaction->guardian_email)->later($delay, new PartialTuitionMail($student_tuition, $student_tuition->student_tuition_payment_histories->sum('price')));
+                }
             }
 
             return redirect()->route('transactions.show', $transaction->getKey())->withToastSuccess('Berhasil menambahkan data transaksi!');
