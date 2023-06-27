@@ -23,10 +23,9 @@ class PublishTuitionController extends Controller
     {
         $title = 'Penerbitan Uang Sekolah Manual';
         $tuitions = Tuition::query()
+            ->with('tuition_type')
             ->whereNotNull('approval_by')
-            ->whereHas('tuition_type', function ($query) {
-                $query->where('recurring', false);
-            })
+            ->latest()
             ->get();
         return view('pages.publish-tuition.index', compact('title', 'tuitions'));
     }
