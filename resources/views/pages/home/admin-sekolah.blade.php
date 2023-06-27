@@ -1,4 +1,3 @@
-2
 @extends('layout.master-page')
 
 @section('title', 'Dashboard')
