@@ -1,5 +1,5 @@
 <title>
-    @yield('title', $title ?? 'undefined') | {{ env('APP_NAME') }}
+    @yield('title', $title ?? 'undefined') | {{ config('app.name') }}
 </title>
 <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
 <link
