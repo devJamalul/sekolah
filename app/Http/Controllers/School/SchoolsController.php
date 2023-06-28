@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\School;
 
+use Excel;
 use Exception;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\School;
+use App\Imports\AllImport;
 use Illuminate\Http\Request;
 use App\Actions\User\NewUser;
+use App\Jobs\ImportSekolahJob;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SchoolRequest;
-use App\Imports\AllImport;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Password;
-use App\Notifications\NewSchoolPICNotification;
-use Excel;
-use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Excel as ExcelExcel;
+use Illuminate\Validation\ValidationException;
+use App\Notifications\NewSchoolPICNotification;
 
 class SchoolsController extends Controller
 {
@@ -219,7 +221,15 @@ class SchoolsController extends Controller
     public function importAllByExcel(Request $request)
     {
         try {
-            Excel::import(new AllImport, $request->file('excel_file'));
+            // Excel::import(new AllImport, $request->file('excel_file'));
+            if($request->hasFile('excel_file')){
+                $file = $request->file('excel_file');
+                $filePath = Storage::putFileAs('school_import', $file, $file->hashName());
+                
+                ImportSekolahJob::dispatch($filePath)->delay(now()->addSeconds(5));
+            }
+                // Generate a URL for accessing the uploaded file      
+
             return redirect()->route('schools.index')->withToastSuccess('Berhasil mengimpor data all!');
         } catch (ValidationExceptiononException $ex) {
             DB::rollBack();

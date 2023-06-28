@@ -14,9 +14,6 @@
                         class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-capitalize">Tambah
                         {{ $title }}</a>
                 @endcan
-                <a href="{{ route('schools.import-all') }}"
-                class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-capitalize">Import
-                </a>
         
             </div>
             <div class="card">
