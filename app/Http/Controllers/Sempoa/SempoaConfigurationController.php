@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sempoa;
 
 use App\Actions\Sempoa\CheckAccount;
 use App\Actions\Sempoa\CheckToken;
+use App\Actions\Sempoa\GetAccount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SempoaConfigurationStoreRequest;
 use App\Http\Requests\SempoaConfigurationUpdateRequest;
@@ -17,6 +18,7 @@ class SempoaConfigurationController extends Controller
     {
         $data['title'] = 'Konfigurasi Sempoa';
         $data['config'] = SempoaConfiguration::first();
+        if ($data['config']) $data['accounts'] = GetAccount::run();
         return view('pages.sempoa.configuration', $data);
     }
 
@@ -25,11 +27,12 @@ class SempoaConfigurationController extends Controller
         DB::beginTransaction();
         try {
             CheckToken::run($request->token);
-            $save = SempoaConfiguration::firstOrNew([
+            $config = SempoaConfiguration::firstOrNew([
                 'school_id' => session('school_id'),
             ]);
-            $save->token = $request->token;
-            $save->save();
+            $config->status = SempoaConfiguration::STATUS_OPEN;
+            $config->token = $request->token;
+            $config->save();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -43,17 +46,18 @@ class SempoaConfigurationController extends Controller
         DB::beginTransaction();
         try {
             CheckToken::run($request->token);
-            $save = SempoaConfiguration::firstOrNew([
+            $config = SempoaConfiguration::firstOrNew([
                 'school_id' => session('school_id'),
             ]);
-            $save->token = $request->token;
-            $save->tuition_debit_account = self::checkAccount($request->tuition_debit_account);
-            $save->tuition_credit_account = self::checkAccount($request->tuition_credit_account);
-            $save->invoice_debit_account = self::checkAccount($request->invoice_debit_account);
-            $save->invoice_credit_account = self::checkAccount($request->invoice_credit_account);
-            $save->expense_debit_account = self::checkAccount($request->expense_debit_account);
-            $save->expense_credit_account = self::checkAccount($request->expense_credit_account);
-            $save->save();
+            $config->status = SempoaConfiguration::STATUS_LOCKED;
+            $config->token = $request->token;
+            $config->tuition_debit_account = self::checkAccount($request->tuition_debit_account);
+            $config->tuition_credit_account = self::checkAccount($request->tuition_credit_account);
+            $config->invoice_debit_account = self::checkAccount($request->invoice_debit_account);
+            $config->invoice_credit_account = self::checkAccount($request->invoice_credit_account);
+            $config->expense_debit_account = self::checkAccount($request->expense_debit_account);
+            $config->expense_credit_account = self::checkAccount($request->expense_credit_account);
+            $config->save();
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
