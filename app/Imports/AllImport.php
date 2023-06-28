@@ -3,11 +3,13 @@
 namespace App\Imports;
 
 use App\Imports\StaffImport;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use App\Imports\GeneralImport;
+use Illuminate\Support\Collection;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class AllImport implements WithMultipleSheets
+class AllImport implements WithMultipleSheets, WithChunkReading, ShouldQueue
 {
   public function sheets(): array
   {
@@ -25,4 +27,9 @@ class AllImport implements WithMultipleSheets
   // {
   //       info("Sheet {$sheetName} was not found");
   // }
+
+  public function chunkSize(): int
+  {
+      return 1000;
+  }
 }
