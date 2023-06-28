@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label for="tuition-type-select">Tipe Uang Sekolah<span
                                     class="text-small text-danger">*</span></label>
-                            <select class="form-control @error('tuition_type_id') is-invalid @enderror"
+                            <select class="form-control select2 @error('tuition_type_id') is-invalid @enderror"
                                 name="tuition_type_id" id="tuition-type-select">
                                 <option value="">-</option>
                                 @foreach ($tuitionTypes as $tuitionType)
@@ -39,7 +39,7 @@
                         <div class="form-group">
                             <label for="academic-year-select">Tahun Akademik<span
                                     class="text-small text-danger">*</span></label>
-                            <select class="form-control @error('academic_year_id') is-invalid @enderror"
+                            <select class="form-control select2 @error('academic_year_id') is-invalid @enderror"
                                 name="academic_year_id" id="academic-year-select">
                                 <option value="">-</option>
                                 @foreach ($academicYears as $academicYear)
@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-group">
                             <label for="grade-select">Tingkatan<span class="text-small text-danger">*</span></label>
-                            <select class="form-control @error('grade_id') is-invalid @enderror" name="grade_id"
+                            <select class="form-control select2 @error('grade_id') is-invalid @enderror" name="grade_id"
                                 id="grade-select">
                                 <option value="">-</option>
                                 @foreach ($grades as $grade)
