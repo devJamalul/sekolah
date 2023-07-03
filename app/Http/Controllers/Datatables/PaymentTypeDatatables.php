@@ -24,6 +24,9 @@ class PaymentTypeDatatables extends Controller
                     'resource' => 'payment-type'
                 ];
                 return view('components.datatable-action', $data);
+            })
+            ->editColumn('wallet', function($row){
+                return $row->wallet->name;
             })->toJson();
     }
 }

@@ -18,7 +18,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <x-datatable :tableId="'payment-type-table'" :tableHeaders="['Tipe Pembayaran', 'Wallet', 'Aksi']" :tableColumns="[['data' => 'name'], ['data' => 'wallet.name', 'name' => 'name'], ['data' => 'action']]" :getDataUrl="route('datatable.payment-type')" />
+                    <x-datatable :tableId="'payment-type-table'" :tableHeaders="['Tipe Pembayaran', 'Wallet', 'Aksi']" :tableColumns="[['data' => 'name'], ['data' => 'wallet', 'name' => 'wallet.name'], ['data' => 'action']]" :getDataUrl="route('datatable.payment-type')" />
                 </div>
             </div>
         </div>

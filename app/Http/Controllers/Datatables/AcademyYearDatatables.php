@@ -41,6 +41,22 @@ class AcademyYearDatatables extends Controller
                 return view('components.datatable-action', $data);
             })
             ->rawColumns(['status_years', 'action'])
+            ->filterColumn('status_years', function($query, $keyword) {
+                switch (strtolower($keyword)){
+                    case 'Aktif': case 'akt': case 'aktif':
+                        $match = AcademicYear::STATUS_STARTED;
+                        break;
+                    case 'Register': case 'register': case 'regis':
+                        $match = AcademicYear::STATUS_REGISTRATION;
+                        break;
+                    case 'Ditutup': case 'tutup':
+                        $match = AcademicYear::STATUS_CLOSED;
+                        break;
+                    default:
+                        $match = null;
+                }
+                $query->where('status_years', $match);
+            })
             ->toJson();
     }
 }

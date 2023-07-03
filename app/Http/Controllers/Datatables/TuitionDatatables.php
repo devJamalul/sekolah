@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Datatables;
 
+use App\Models\User;
 use App\Models\Tuition;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -66,6 +67,50 @@ class TuitionDatatables extends Controller
                 return view('components.datatable-action', $data);
             })
             ->rawColumns(['status', 'approval_by'])
+            ->filterColumn('status', function($query, $keyword) {
+                switch (strtolower($keyword)){
+                    case 'Diterima': case 'terima': case 'diterima':
+                        $match = Tuition::STATUS_APPROVED;
+                        break;
+                    case 'Menunggu': case 'nunggu': case 'men':
+                        $match = Tuition::STATUS_PENDING;
+                        break;
+                    case 'Ditolak': case 'tolak': case 'ditolak':
+                        $match = Tuition::STATUS_REJECTED;
+                        break;
+                    default:
+                        $match = null;
+                }
+                $query->where('status', $match);
+            })
+            ->filterColumn('approval_by', function($query, $keyword) {
+                switch (strtolower($keyword)){
+                    case 'super admin': case 'super': case 'admin':
+                        $match = User::ROLE_SUPER_ADMIN;
+                        break;
+                    case 'ops admin': case 'ops': case 'admin':
+                        $match = User::ROLE_OPS_ADMIN;
+                        break;
+                    case 'admin sekolah': case 'adm': case 'sekolah': case 'admin':
+                        $match = User::ROLE_ADMIN_SEKOLAH;
+                        break;
+                    case 'admin yayasan': case 'yayasan': case 'adm': case 'admin':
+                        $match = User::ROLE_ADMIN_YAYASAN;
+                        break;
+                    case 'tata usaha': case 'tata': case 'usaha':
+                        $match = User::ROLE_TATA_USAHA;
+                        break;
+                    case 'bendahara': case 'bend': case 'benda':
+                        $match = User::ROLE_BENDAHARA;
+                        break;
+                    case 'kepala sekolah': case 'kepala': case 'sekolah':
+                        $match = User::ROLE_KEPALA_SEKOLAH;
+                        break;
+                    default:
+                        $match = null;
+                }
+                $query->where('approval_by', $match);
+            })
             ->toJson();
     }
 }

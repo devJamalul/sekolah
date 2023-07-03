@@ -38,6 +38,19 @@ class StudentDatatables extends Controller
                             ];
                             return view('components.datatable-action', $data);
                         })->rawColumns(['name'])
+                        ->filterColumn('gender', function($query, $keyword) {
+                            switch (strtolower($keyword)){
+                                case 'laki': case 'Laki':
+                                    $match = Student::GENDER_LAKI;
+                                    break;
+                                case 'perempuan': case 'perem': case 'Perempuan':
+                                    $match = Student::GENDER_PEREMPUAN;
+                                    break;
+                                default:
+                                    $match = null;
+                            }
+                            $query->where('gender', $match);
+                        })
                         ->toJson();
     }
 }
