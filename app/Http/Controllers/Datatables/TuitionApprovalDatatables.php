@@ -28,7 +28,7 @@ class TuitionApprovalDatatables extends Controller
             ->addColumn('price', function ($row) {
                 return 'Rp. ' . number_format($row->price, 0, ',', '.');
             })
-            ->addColumn('grade', function ($row) {
+            ->editColumn('grade', function ($row) {
                 return $row->grade->grade_name;
             })
             ->addColumn('status', function ($row) {

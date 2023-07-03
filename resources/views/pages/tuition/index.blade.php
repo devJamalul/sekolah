@@ -36,9 +36,9 @@
                         ['data' => 'academic_year'],
                         ['data' => 'grade'],
                         ['data' => 'price'],
-                        ['data' => 'request_by'],
+                        ['data' => 'request_by', 'name' => 'requested_by.name'],
                         ['data' => 'status'],
-                        ['data' => 'approval_by'],
+                        ['data' => 'approval_by', 'name' => 'approved_by.name'],
                         ['data' => 'action'],
                     ]" :getDataUrl="route('datatable.tuition')" />
                 </div>
