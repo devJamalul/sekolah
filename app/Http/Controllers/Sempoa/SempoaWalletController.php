@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Sempoa;
 
 use App\Actions\Sempoa\CheckAccount;
+use App\Actions\Sempoa\GetAccount;
 use App\Http\Controllers\Controller;
+use App\Models\SempoaConfiguration;
 use App\Models\SempoaWallet;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
@@ -18,6 +20,9 @@ class SempoaWalletController extends Controller
     {
         $data['title'] = 'Konfigurasi Dompet';
         $data['wallets'] = Wallet::all();
+        $data['config'] = SempoaConfiguration::first();
+        $data['accounts'] = [];
+        if ($data['config']) $data['accounts'] = GetAccount::run();
         return view('pages.sempoa.wallet', $data);
     }
 

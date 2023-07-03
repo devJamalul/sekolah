@@ -18,6 +18,7 @@ class SempoaConfigurationController extends Controller
     {
         $data['title'] = 'Konfigurasi Sempoa';
         $data['config'] = SempoaConfiguration::first();
+        $data['accounts'] = [];
         if ($data['config']) $data['accounts'] = GetAccount::run();
         return view('pages.sempoa.configuration', $data);
     }
