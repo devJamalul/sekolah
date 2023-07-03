@@ -75,17 +75,18 @@ class ExpenseApprovalController extends Controller
                     $expense_approval->status = Expense::STATUS_APPROVED;
                     break;
                 case 'reject':
-                    if($request->reject_reason == null){
-                        DB::rollBack();
-                        return redirect()->back()->withToastError('Ops, Alasan Penolakan Wajib Diisi!');
+                    if ($request->reject_reason == null) {
+                        throw new \Exception('Alasan penolakan wajib diisi.');
                     }
-                        $expense_approval->status = Expense::STATUS_REJECTED;
-                        $expense_approval->reject_reason  = $request->reject_reason;
-                        $expense_approval->rejected_by =  Auth::user()->id;
-                        $expense_approval->rejected_at = now();
+                    $expense_approval->status = Expense::STATUS_REJECTED;
+                    $expense_approval->reject_reason  = $request->reject_reason;
+                    $expense_approval->rejected_by =  Auth::user()->id;
+                    $expense_approval->rejected_at = now();
                     break;
             }
             $expense_approval->save();
+
+            WalletTransaction::decrement($expense_approval->wallet, $expense_approval->price, 'Expense ' . $expense_approval->expense_number . ' - ' . $expense_approval->note);
 
             DB::commit();
 
@@ -96,7 +97,7 @@ class ExpenseApprovalController extends Controller
             return redirect()->route('expense-approval.index')->withToastSuccess('Berhasil mengubah Status!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->withToastError('Ops, ada kesalahan saat mengubah Status!');
+            return redirect()->back()->withToastError('Ups! ' . $th->getMessage());
         }
     }
 

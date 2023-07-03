@@ -23,12 +23,12 @@
                             </tr>
                             <tr>
                                 <td scope="row">Tanggal Pengeluaran Biaya</td>
-                                <td class="text-primary font-weight-bold">{{ $expense->expense_date }}</td>
+                                <td class="text-primary font-weight-bold">{{ $expense->expense_date->format('d F Y, H:i') }}</td>
                             </tr>
                             <tr>
                                 <td scope="row">Nominal</td>
                                 <td class="text-primary font-weight-bold">IDR
-                                    {{ number_format($expense->expense_details()->sum(DB::raw('price * quantity')), 0, ', ', '.') }}
+                                    {{ number_format($expense->price, 0, ', ', '.') }}
                                 </td>
                             </tr>
                             <tr>

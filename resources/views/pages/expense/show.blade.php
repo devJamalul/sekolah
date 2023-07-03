@@ -24,44 +24,51 @@
                                         class="text-small text-danger">*</span></label>
                                 <input type="text" class="form-control  @error('expense_number') is-invalid @enderror"
                                     name="expense_number" value="{{ $expense->expense_number }}" id="expense-number-input"
-                                    placeholder="" disabled>
+                                    disabled>
                             </div>
                             <div class="form-group">
                                 <label for="expense-date-input">Tanggal Pengeluaran Biaya<span
                                         class="text-small text-danger">*</span></label>
                                 <input type="date" class="form-control @error('expense_date') is-invalid @enderror"
-                                    name="expense_date" id="expense-date-input" placeholder=""
-                                    value="{{ $expense->expense_date }}" disabled>
+                                    name="expense_date" id="expense-date-input"
+                                    value="{{ $expense->expense_date->format('Y-m-d') }}" disabled>
                             </div>
                             <div class="form-group">
-                                <label for="approval-date-input">Tanggal Konfirmasi<span
-                                        class="text-small text-danger">*</span></label>
-                                <input type="text" class="form-control @error('approval_date') is-invalid @enderror"
-                                    name="approval_date" id="approval-date-input" placeholder=""
-                                    value="{{ $expense->approval_at != null ? \Carbon\Carbon::createFromFormat('Y-m-d', $expense->approval_at)->format('d/m/Y') : \Carbon\Carbon::createFromFormat('Y-m-d', $expense->rejected_at)->format('d/m/Y') }}" disabled>
+                                <label for="note-input">Deskripsi</label>
+                                <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
+                                    id="note-input" value="{{ $expense->note }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="wallet_id-input">Sumber Biaya</label>
+                                <input type="text" class="form-control @error('wallet_id') is-invalid @enderror" name="wallet_id"
+                                    id="wallet_id-input" value="{{ $expense->wallet->name }}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="price-input">Nominal</label>
+                                <input type="text" class="form-control harga @error('price') is-invalid @enderror" name="price"
+                                    id="price-input" value="{{ $expense->price }}" disabled>
                             </div>
                         </div>
-                    </div>    
+                    </div>
                 </div>
-    
+
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="request_by-input">Peminta</label>
                                 <input type="text" class="form-control @error('request_by') is-invalid @enderror" name="request_by"
-                                    id="request_by-input" placeholder="" value="{{ $expense->requested_by->name }}" disabled>
+                                    id="request_by-input" value="{{ $expense->requested_by->name }}" disabled>
                             </div>
                             <div class="row">
                                 <div class="col-8">
                                     <div class="form-group">
                                         <label for="confirm_by-input">Konfirmasi</label>
                                         <input type="text" class="form-control @error('confirm_by') is-invalid @enderror" name="confirm_by"
-                                            id="confirm_by-input" placeholder="" value="{{ $confirmation }}" disabled>
+                                            id="confirm_by-input" value="{{ $confirmation }}" disabled>
                                     </div>
                                 </div>
                                 <div class="col-4">
-
                                     <div class="form-group">
                                         <label for="status-input">Status</label>
                                             <br>
@@ -78,18 +85,23 @@
                                     </div>
                                 </div>
                             </div>
+                            @if ($expense->approval_at)
+                            <div class="form-group">
+                                <label for="approval-date-input">Tanggal Konfirmasi<span
+                                        class="text-small text-danger">*</span></label>
+                                <input type="date" class="form-control @error('approval_date') is-invalid @enderror"
+                                    name="approval_date" id="approval-date-input"
+                                    value="{{ $expense->approval_at != null ? $expense->approval_at->format('Y-m-d') : $expense->rejected_at->format('Y-m-d') }}" disabled>
+                            </div>
+                            @endif
                             @if($expense->status == 'rejected')
                             <div class="form-group">
                                 <label for="reject_reason-input">Alasan Penolakan</label>
                                 <input type="text" class="form-control @error('reject_reason') is-invalid @enderror" name="reject_reason"
-                                    id="reject_reason-input" placeholder="" value="{{ $expense->reject_reason }}" disabled>
+                                    id="reject_reason-input" value="{{ $expense->reject_reason }}" disabled>
                             </div>
                             @endif
-                            <div class="form-group">
-                                <label for="note-input">Catatan</label>
-                                <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
-                                    id="note-input" placeholder="" value="{{ $expense->note }}" disabled>
-                            </div>
+
                             @if ($expense->file_photo)
                                     <!-- Button trigger modal -->
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -100,59 +112,14 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="card mt-3">
-                <div class="card-header bg-primary text-light">
-                    Detail Barang
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nama Dompet</th>
-                                <th>Nama Barang</th>
-                                <th>Jumlah Barang</th>
-                                <th>Harga Barang</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $jumlahBarang = 0;
-                                $totalHarga = 0;
-                            @endphp
-                            @foreach ($expenseDetails as $expenseDetail)
-                                <tr>
-                                    <td>{{ $expenseDetail->wallet->name }}</td>
-                                    <td>{{ $expenseDetail->item_name }}</td>
-                                    <td>{{ number_format($expenseDetail->quantity, 0, ',', '.') }}</td>
-                                    <td>Rp. {{ number_format($expenseDetail->price, 0, ',', '.') }}</td>
-                                </tr>
-                                @php
-                                    $jumlahBarang += $expenseDetail->quantity;
-                                    $totalHarga += $expenseDetail->price * $expenseDetail->quantity;
-                                @endphp
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2" class="text-right text-primary font-weight-bold">Total</td>
-                                <td class="text-primary font-weight-bold">{{ number_format($jumlahBarang, 0, ',', '.') }}
-                                </td>
-                                <td class="text-primary font-weight-bold">Rp. {{ number_format($totalHarga, 0, ',', '.') }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
         </div>
 
         {{-- END table expense detail --}}
     </div>
     {{-- END ROW --}}
 
-  
-  
+
+
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
