@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('file_photo')->nullable();
             $table->text('reject_reason')->nullable();
             $table->date('expense_outgoing_date')->nullable();
+            $table->string('debit_account')->nullable();
             $table->foreignIdFor(Wallet::class)->nullable()->constrained();
             // sempoa
             $table->boolean('sempoa_processed')->nullable()->default(false);

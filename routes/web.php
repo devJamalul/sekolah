@@ -218,6 +218,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', 'index')->name('index');
             Route::put('/store', 'store')->name('store');
             Route::put('/update', 'update')->name('update');
+            Route::put('/destroy', 'destroy')->name('destroy');
         });
     Route::as('sempoa-wallet.')
         ->prefix('sempoa/wallet')
