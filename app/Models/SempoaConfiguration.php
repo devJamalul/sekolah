@@ -12,6 +12,9 @@ class SempoaConfiguration extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const STATUS_OPEN = 'open';
+    const STATUS_LOCKED = 'locked';
+
     protected $guarded = [];
 
     protected static function booted()

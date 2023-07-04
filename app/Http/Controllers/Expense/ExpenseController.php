@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Expense;
 
+use App\Actions\Sempoa\GetAccount;
+use App\Actions\Wallet\WalletTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
@@ -11,6 +13,8 @@ use App\Models\ExpenseDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ExpenseRequest;
+use App\Models\SempoaConfiguration;
+use App\Notifications\ExpenseNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -30,13 +34,13 @@ class ExpenseController extends Controller
      */
     public function create()
     {
-        $title = "Tambah Pengeluaran Biaya";
-        $expenseNumber = Expense::whereYear('created_at', date('Y'))->withTrashed()->count();
-        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+        $data['title'] = "Tambah Pengeluaran Biaya";
+        $data['expenseNumber'] = Expense::whereYear('created_at', date('Y'))->withTrashed()->count();
+        $data['users'] = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
             $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
         })->get();
-        $wallets = Wallet::where('school_id', session('school_id'))->get();
-        return view('pages.expense.create', compact('title', 'users', 'expenseNumber', 'wallets'));
+        $data['wallets'] = Wallet::where('school_id', session('school_id'))->get();
+        return view('pages.expense.create', $data);
     }
 
     /**
@@ -44,11 +48,6 @@ class ExpenseController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->has('quantity')) {
-            $request->merge([
-                'quantity' => formatAngka($request->quantity)
-            ]);
-        }
         if ($request->has('price')) {
             $request->merge([
                 'price' => formatAngka($request->price)
@@ -69,77 +68,52 @@ class ExpenseController extends Controller
                         })
                     ],
                     'expense_date' => 'required|date',
-                    'status'        => 'nullable',
-                    'requested_by' => 'nullable|exists:users,id',
-                    'approved_by' => 'nullable|exists:users,id',
                     'note' => 'required|string',
-                    'item_name' => 'required|string',
                     'price' => 'required|string',
                     'wallet_id' => 'required|exists:wallets,id',
-                    'quantity' => 'required|string'
                 ],
                 [
-                    'wallet_id.required' => 'Harus diisi',
+                    'note.required' => 'Deskripsi harus diisi',
+                    'wallet_id.required' => 'Sumber biaya harus diisi',
+                    'price.required' => 'Nominal harus diisi',
+                    'expense_date.required' => 'Tanggal pengeluaran biaya harus diisi',
+                    'expense_number.required' => 'Nomor pengeluaran biaya harus diisi',
+                    'expense_number.unique' => 'Nomor pengeluaran biaya sudah terpakai',
                 ]
             )->validate();
 
-            $expense                    = new Expense();
+            // instance
+            $expense = new Expense();
+
+            // cek saldo
+            $wallet = Wallet::find($request->wallet_id);
+            $totalExpensePending = Expense::query()
+                ->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])
+                ->where('wallet_id', $request->wallet_id)
+                ->sum('price');
+            $walletBalance = $wallet->balance - $totalExpensePending;
+            if (formatAngka($request->price) <= $walletBalance) {
+                $expense->wallet_id   = $request->wallet_id;
+            } else {
+                throw new \Exception('Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            }
+
+
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
             $expense->status            = Expense::STATUS_DRAFT;
             $expense->note              = $request->note;
             $expense->request_by        = Auth::id();
+            $expense->price             = formatAngka($request->price);
             $expense->save();
-
-            $wallet         = Wallet::find($request->wallet_id);
-            // $danaBOS        = Wallet::danaBos()->first();
-
-            $totalExpensePending    = ExpenseDetail::query()
-                ->whereHas('expense', function ($q) {
-                    $q->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING]);
-                })
-                ->where('wallet_id', $request->wallet_id)
-                ->sum(DB::raw('price * quantity'));
-
-            // $totalExpensePendingDanaBos    = ExpenseDetail::whereHas('expense', function ($q) {
-            //     $q->where('status', Expense::STATUS_PENDING);
-            // })
-            //     ->where('wallet_id', $danaBOS->id)
-            //     ->sum(DB::raw('price * quantity'));
-
-            $walletBalance  = $wallet->balance - $totalExpensePending;
-            // $walletBos      = $danaBOS->balance - $totalExpensePendingDanaBos;
-
-            $expenseDetail              = new ExpenseDetail();
-            $expenseDetail->expense_id  = $expense->getKey();
-
-            if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBalance) {
-                $expenseDetail->wallet_id   = $request->wallet_id;
-            }
-            // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
-            //     $expenseDetail->wallet_id   = $danaBOS->id;
-            // }
-            else {
-                DB::rollBack();
-                throw new \Exception();
-                return redirect()->route('expense.create')->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
-            }
-
-            $expenseDetail->item_name   = $request->item_name;
-            $expenseDetail->quantity    = formatAngka($request->quantity);
-            $expenseDetail->price       = formatAngka($request->price);
-            $expenseDetail->save();
-
-
-
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->route('expense.create')->withToastError('Ups! ' . $th->getMessage());
+            return redirect()->route('expense.create')->withInput()->withToastError('Ups! ' . $th->getMessage());
         }
 
-        return redirect()->route('expense.edit', $expense->id)->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
+        return redirect()->route('expense.index')->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
     }
 
     /**
@@ -158,85 +132,89 @@ class ExpenseController extends Controller
      */
     public function edit(Expense $expense)
     {
-        $title = 'Ubah Pengeluaran Biaya';
-        $users = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
-            $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
-        })->get();
-        $wallets = Wallet::where('school_id', session('school_id'))->get();
-        return view('pages.expense.edit', compact('expense', 'title', 'users', 'wallets'));
+        try {
+            if ($expense->status != Expense::STATUS_DRAFT) {
+                throw new \Exception('Pengeluaran Biaya sudah tidak bisa diubah.');
+            }
+
+            $data['expense'] = $expense;
+            $data['title'] = 'Ubah Pengeluaran Biaya';
+            $data['users'] = User::where('school_id', session('school_id'))->whereHas('roles', function ($q) {
+                $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
+            })->get();
+            $data['wallets'] = Wallet::where('school_id', session('school_id'))->get();
+            return view('pages.expense.edit', $data);
+        } catch (\Throwable $th) {
+            return redirect()->route('expense.index')->withInput()->withToastError('Ups! ' . $th->getMessage());
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ExpenseRequest $request, Expense $expense)
+    public function update(Request $request, Expense $expense)
     {
-
-        // cek status dan kembalikan jika statusnya bukan DRAFT
-        if ($expense->approval_by != Null)
-            return to_route('expense.index')->withToastError('Ups! Pengeluaran Biaya tidak berhak untuk diubah.');
-
-        if ($expense->status != Expense::STATUS_PENDING) {
-            return response()->json([
-                'msg' => 'Pengeluaran Biaya sudah tidak bisa diubah'
+        if ($request->has('price')) {
+            $request->merge([
+                'price' => formatAngka($request->price)
             ]);
         }
-
-
-        DB::beginTransaction();
-
         try {
-
-            $expense->school_id         = session('school_id');
-            $expense->expense_date      = $request->expense_date;
-            $expense->note              = $request->note;
-            $expense->request_by        = Auth::id();
-            $expense->save();
-
-
-            $arrayMax = $request->array_max;
-            foreach (range(0, $arrayMax) as $key => $item) {
-                $wallet         = Wallet::find($request->array_wallet_id[$key]);
-                // $danaBOS        = Wallet::danaBos()->first();
-
-                $totalExpensePending    = ExpenseDetail::whereHas('expense', function ($q) {
-                    $q->where('status', Expense::STATUS_PENDING);
-                })
-                    ->where('wallet_id', $request->array_wallet_id[$key])
-                    ->where('id', '<>', $request->expense_detail_id[$key])
-                    ->sum(DB::raw('price * quantity'));
-
-                $walletBalance  = $wallet->balance - $totalExpensePending;
-
-                $expenseDetail              = ExpenseDetail::find($request->expense_detail_id[$key]);
-                $expenseDetail->expense_id  = $expense->getKey();
-
-                if ((formatAngka($request->array_quantity[$key]) * formatAngka($request->array_price[$key])) <= $walletBalance) {
-                    $expenseDetail->wallet_id   = $request->array_wallet_id[$key];
-                }
-                // else if ((formatAngka($request->quantity) * formatAngka($request->price)) <= $walletBos) {
-                //     $expenseDetail->wallet_id   = $danaBOS->id;
-                // }
-                else {
-                    return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror! Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
-                }
-                $expenseDetail = ExpenseDetail::updateOrCreate(
-                    [
-                        'id' => $request->expense_detail_id[$key]
-                    ],
-                    [
-                        'wallet_id' => $request->array_wallet_id[$key],
-                        'item_name' => $request->array_item_name[$key],
-                        'quantity' => formatAngka($request->array_quantity[$key]),
-                        'price' => formatAngka($request->array_price[$key])
-                    ]
-                );
-                $expenseDetail->push();
+            DB::beginTransaction();
+            if ($expense->status != Expense::STATUS_DRAFT) {
+                throw new \Exception('Pengeluaran Biaya sudah tidak bisa diubah.');
             }
 
+            Validator::make(
+                $request->all(),
+                [
+                    'expense_number'      => [
+                        'required',
+                        Rule::unique('expenses')->where(function ($q) use ($request) {
+                            $q->where('expense_number', $request->expense_number);
+                            $q->where('school_id',  session('school_id'));
+                            $q->whereNull('deleted_at');
+                        })->ignore($expense->id, 'id')
+                    ],
+                    'expense_date' => 'required|date',
+                    'note' => 'required|string',
+                    'price' => 'required|string',
+                    'wallet_id' => 'required|exists:wallets,id',
+                ],
+                [
+                    'note.required' => 'Deskripsi harus diisi',
+                    'wallet_id.required' => 'Sumber biaya harus diisi',
+                    'price.required' => 'Nominal harus diisi',
+                    'expense_date.required' => 'Tanggal pengeluaran biaya harus diisi',
+                    'expense_number.required' => 'Nomor pengeluaran biaya harus diisi',
+                    'expense_number.unique' => 'Nomor pengeluaran biaya sudah terpakai',
+                ]
+            )->validate();
+
+            // cek saldo
+            $wallet = Wallet::find($request->wallet_id);
+            $totalExpensePending = Expense::query()
+                ->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])
+                ->where('wallet_id', $request->wallet_id)
+                ->where('id', '<>', $expense->id)
+                ->sum('price');
+            $walletBalance = $wallet->balance - $totalExpensePending;
+            if (formatAngka($request->price) <= $walletBalance) {
+                $expense->wallet_id   = $request->wallet_id;
+            } else {
+                throw new \Exception('Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
+            }
+
+            $expense->expense_number    = $request->expense_number;
+            $expense->expense_date      = $request->expense_date;
+            $expense->note              = $request->note;
+            $expense->price             = $request->price;
+            $expense->request_by        = Auth::id();
+            $expense->save();
             DB::commit();
         } catch (\Throwable $th) {
-            return redirect()->route('expense.edit', $expense->getKey())->withToastError('Eror Simpan Pengeluaran Biaya!');
+            DB::rollBack();
+            return redirect()->route('expense.edit', $expense->getKey())->withInput()->withToastError('Ups! ' . $th->getMessage());
         }
 
         return redirect()->route('expense.edit', $expense->getKey())->withToastSuccess('Berhasil Simpan Pengeluaran Biaya!');
@@ -247,71 +225,72 @@ class ExpenseController extends Controller
      */
     public function destroy(Expense $expense)
     {
-
         try {
-
-            if ($expense->status != Expense::STATUS_PENDING) {
-                return response()->json([
-                    'msg' => 'Pengeluaran Biaya sudah tidak bisa dihapus'
-                ]);
+            if ($expense->status != Expense::STATUS_DRAFT) {
+                throw new \Exception('Pengeluaran Biaya sudah tidak bisa dihapus');
             }
-
-            if ($expense->expense_details) {
-                $expenseDetails = ExpenseDetail::where('expense_id', $expense->id)->get();
-                foreach ($expenseDetails as $key => $expenseDetail) {
-                    $expenseDetail->delete();
-                }
-            }
-
             $expense->delete();
-
-
             DB::commit();
-
-            return response()->json([
-                'msg' => 'Berhasil Hapus Pengeluaran Biaya!'
-            ], 200);
         } catch (\Throwable $th) {
             DB::rollback();
-
             return response()->json([
-                'msg' => 'Eror Hapus Pengeluaran Biaya'
+                'msg' => 'Ups! ' . $th->getMessage()
             ]);
         }
+
+        return response()->json([
+            'msg' => 'Berhasil Hapus Pengeluaran Biaya!'
+        ], 200);
     }
 
     public function ShowDetail(Expense $expense)
     {
-        $title = "Detail Pengeluaran Biaya";
-        $wallets = Wallet::where('school_id', session('school_id'))->get();
-        $expenseDetails = $expense->expense_details()->orderBy('wallet_id')->get();
-        $extensionType = ['img', 'png', 'jpg', 'gif', 'jpeg'];
-        $fileExtension = pathinfo($expense->file_photo, PATHINFO_EXTENSION);
+        try {
+            if ($expense->status == Expense::STATUS_DRAFT) {
+                throw new \Exception('Anda tidak memiliki akses untuk melakukan ini');
+            }
 
-        if ($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE) {
-            $confirmation =  $expense->approved_by->name;
-        } elseif ($expense->status == Expense::STATUS_REJECTED) {
-            $confirmation = $expense->reject_by->name;
-        } else {
-            $confirmation = '-';
+            $data['expense'] = $expense;
+            $data['title'] = "Detail Pengeluaran Biaya";
+            $data['wallets'] = Wallet::where('school_id', session('school_id'))->get();
+            $data['extensionType'] = ['img', 'png', 'jpg', 'gif', 'jpeg'];
+            $data['fileExtension'] = pathinfo($expense->file_photo, PATHINFO_EXTENSION);
+
+            if ($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE) {
+                $data['confirmation'] =  $expense->approved_by->name;
+            } elseif ($expense->status == Expense::STATUS_REJECTED) {
+                $data['confirmation'] = $expense->reject_by->name;
+            } else {
+                $data['confirmation'] = '-';
+            }
+            return view('pages.expense.show', $data);
+        } catch (\Throwable $th) {
+            return redirect()->route('expense.index')->withToastError('Ups! ' . $th->getMessage());
         }
-        return view('pages.expense.show', compact('title', 'wallets', 'expenseDetails', 'expense', 'fileExtension', 'extensionType', 'confirmation'));
     }
 
     public function ExpensePublish(Expense $expense)
     {
         DB::beginTransaction();
-
         try {
-
-            $expense->status      = Expense::STATUS_PENDING;
+            $expense->status = Expense::STATUS_PENDING;
             $expense->save();
-
             DB::commit();
+
+            $users = User::where('school_id', session('school_id'))->get();
+            foreach ($users as $user) {
+                if ($user->hasAnyRole([User::ROLE_ADMIN_SEKOLAH, User::ROLE_KEPALA_SEKOLAH])) {
+                    $user->notify(new ExpenseNotification($expense));
+                } else {
+                    info("gak ada");
+                }
+            }
+            info('tes');
         } catch (\Throwable $th) {
-            return redirect()->route('expense.index')->withToastError('Eror Mengubah Status Pengeluaran Biaya!' . $th->getMessage());
+            DB::rollBack();
+            return redirect()->route('expense.index')->withToastError('Ups! ' . $th->getMessage());
         }
 
-        return redirect()->route('expense.index')->withToastSuccess('Berhasil Mengubah Status Pengeluaran Biaya!');
+        return redirect()->route('expense.index')->withToastSuccess('Berhasil Publish Pengeluaran Biaya!');
     }
 }

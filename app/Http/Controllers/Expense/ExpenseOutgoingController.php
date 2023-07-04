@@ -70,13 +70,6 @@ class ExpenseOutgoingController extends Controller
             }
             $expense_outgoing->save();
 
-            // pengurangan saldo jika diterima
-            if ($request->action == 'approve') {
-                foreach ($expense_outgoing->expense_details as $detail) {
-                    WalletTransaction::decrement($detail->wallet_id, $detail->quantity * $detail->price, 'Pengeluaran ' . $expense_outgoing->expense_number . ' untuk ' . $detail->item_name);
-                }
-            }
-
             DB::commit();
 
             PushToJurnalSempoa::handle($expense_outgoing);
@@ -84,9 +77,9 @@ class ExpenseOutgoingController extends Controller
             $expense_outgoing->requested_by->notify(new ExpenseOutgoingNotification($expense_outgoing));
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->withToastError('Ops! ' . $th->getMessage());
+            return to_route('expense-outgoing.index')->withToastError('Ops! ' . $th->getMessage());
         }
 
-        return redirect()->route('expense-outgoing.index')->withToastSuccess('Berhasil mengubah Status!');
+        return to_route('expense-outgoing.index')->withToastSuccess('Berhasil mengubah Status!');
     }
 }
