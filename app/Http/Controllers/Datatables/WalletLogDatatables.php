@@ -29,6 +29,22 @@ class WalletLogDatatables extends Controller
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d F Y H:i');
+            }) 
+            ->filterColumn('cashflow_type', function($query, $keyword) {
+                switch (strtolower($keyword)){
+                    case 'Pemasukan': case 'masuk': case 'pemasukan':
+                        $match = WalletLog::CASHFLOW_TYPE_IN;
+                        break;
+                    case 'Pengeluaran': case 'keluar': case 'pengeluaran':
+                        $match = WalletLog::CASHFLOW_TYPE_OUT;
+                        break;
+                    case 'Saldo': case 'Awal': case 'saldo': case 'awal': case 'saldo awal': case 'sal':
+                        $match = WalletLog::CASHFLOW_TYPE_INIT;
+                        break;
+                    default:
+                        $match = null;
+                }
+                $query->where('cashflow_type', $match);
             })
             ->toJson();
     }
