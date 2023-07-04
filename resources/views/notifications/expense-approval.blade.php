@@ -5,7 +5,9 @@ No Pengeluaran Biaya : **{{ $expense->expense_number }}** <br>
 
 Tanggal Pengeluaran Biaya : **{{ $expense->expense_date }}** <br>
 
-Nominal : **IDR {{ number_format($expense->expense_details()->sum(DB::raw('price * quantity')), 0, ', ', '.') }}** <br>
+Deskripsi : **{{ $expense->note }}** <br>
+
+Nominal : **IDR {{ number_format($expense->price, 0, ', ', '.') }}** <br>
 
 Diajukan oleh : **{{ $expense->requested_by->name }}** <br>
 

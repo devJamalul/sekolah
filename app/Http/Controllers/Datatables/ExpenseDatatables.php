@@ -15,18 +15,18 @@ class ExpenseDatatables extends Controller
         $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->latest('created_at');
         return DataTables::of($expense)
             ->editColumn('expense_number', function ($expense) {
-                if ($expense->status != Expense::STATUS_PENDING and $expense->status != Expense::STATUS_DRAFT) {
+                if ($expense->status != Expense::STATUS_DRAFT) {
                     return "<a href='" . route('expense.show-detail', $expense->id) . "'>{$expense->expense_number}</a>";
                 }
 
                 return "<a href='" . route('expense.edit', $expense->id) . "'>{$expense->expense_number}</a>";
             })
-            ->editColumn('approval_by', function ($row){
-                if($row->status == Expense::STATUS_APPROVED || $row->status == Expense::STATUS_DONE){
-                    return $row->approved_by->name;
+            ->editColumn('approval_by', function ($expense){
+                if($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE){
+                    return $expense->approved_by->name;
                 }
-                elseif($row->status == Expense::STATUS_REJECTED){
-                    return $row->reject_by->name;
+                elseif($expense->status == Expense::STATUS_REJECTED){
+                    return $expense->reject_by->name;
                 }
                 else{
                     return '-';
@@ -58,7 +58,7 @@ class ExpenseDatatables extends Controller
                 if ($expense->status == Expense::STATUS_PENDING) {
                     $data['edit_url'] = null;
                 }
-                
+
                 if ($expense->status != Expense::STATUS_DRAFT and $expense->status != Expense::STATUS_PENDING) {
                     $data['edit_url'] = null;
                     $data['delete_url'] = null;

@@ -20,6 +20,10 @@ class PushToJurnalSempoa
             $data->sempoa_processed = true;
             $data->save();
 
+            if (!$config) {
+                throw new \Exception('Belum terhubung dengan Sempoa');
+            }
+
             if ($data instanceof Invoice) {
                 $items = [
                     [

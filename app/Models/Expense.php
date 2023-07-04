@@ -17,8 +17,15 @@ class Expense extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = [];
+    const STATUS_APPROVED   = "approved";
+    const STATUS_PENDING    = "pending";
+    const STATUS_REJECTED   = "rejected";
+    const STATUS_OUTGOING    = "outgoing";
+    const STATUS_DONE   = "done";
+    const STATUS_DRAFT   = "draft";
 
+    protected $guarded = [];
+    protected $with = ['wallet'];
     protected $casts = [
         'sempoa_processed' => 'boolean',
         'expense_date' => 'date:Y-m-d',
@@ -26,13 +33,6 @@ class Expense extends Model
         'approval_at' => 'date:Y-m-d',
         'rejected_at' => 'date:Y-m-d',
     ];
-
-    const STATUS_APPROVED   = "approved";
-    const STATUS_PENDING    = "pending";
-    const STATUS_REJECTED   = "rejected";
-    const STATUS_OUTGOING    = "outgoing";
-    const STATUS_DONE   = "done";
-    const STATUS_DRAFT   = "draft";
 
     protected static function booted()
     {
@@ -47,6 +47,11 @@ class Expense extends Model
     public function expense_details(): HasMany
     {
         return $this->hasMany(ExpenseDetail::class);
+    }
+
+    public function wallet(): BelongsTo
+    {
+        return $this->belongsTo(Wallet::class);
     }
 
     public function school(): BelongsTo

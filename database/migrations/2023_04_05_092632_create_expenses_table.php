@@ -2,6 +2,7 @@
 
 use App\Models\School;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,7 +25,10 @@ return new class extends Migration
             $table->string('file_photo')->nullable();
             $table->text('reject_reason')->nullable();
             $table->date('expense_outgoing_date')->nullable();
-            $table->boolean('is_sempoa_processed')->nullable()->default(false);
+            $table->foreignIdFor(Wallet::class)->nullable()->constrained();
+            // sempoa
+            $table->boolean('sempoa_processed')->nullable()->default(false);
+            // pertanggalan
             $table->foreignIdFor(User::class, 'request_by')->nullable();
             $table->foreignIdFor(User::class, 'approval_by')->nullable();
             $table->date('approval_at')->nullable();

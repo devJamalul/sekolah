@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\School;
+use App\Models\SempoaConfiguration;
 use App\Models\Wallet;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,6 +17,7 @@ return new class extends Migration
         Schema::create('sempoa_configurations', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(School::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->string('status')->nullable();
             $table->string('token')->nullable();
             $table->string('tuition_debit_account')->nullable();
             $table->string('tuition_credit_account')->nullable();
