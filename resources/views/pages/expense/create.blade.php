@@ -33,15 +33,28 @@
                                         name="expense_number" id="expense_number" autocomplete="off" tabindex="2"
                                         value="Exp/{{ date('Y') }}/{{ str_pad($expenseNumber == 0 ? ($expenseNumber += 1) : ($expenseNumber += 1), 4, '0', STR_PAD_LEFT) }}">
                                 </div>
+                                @if ($config)
+                                <div class="form-group">
+                                    <label for="debit_account">Akun Pengeluaran Biaya<span class="text-small text-danger">*</span></label>
+                                    <select class="form-control select2" name="debit_account" id="debit_account" tabindex="3">
+                                        <option value="">-</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account['kode'] }}" @selected(old('debit_account') == $account['kode'])>
+                                                {{ $account['kode'] }} - {{ $account['akun'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endif
                                 <div class="form-group">
                                     <label for="note">Deskripsi<span class="text-small text-danger">*</span></label>
                                     <input type="text" class="form-control @error('note') is-invalid @enderror"
                                         name="note" id="note" aria-describedby="note" value="{{ old('note') }}"
-                                        autocomplete="off" tabindex="3">
+                                        autocomplete="off" tabindex="4">
                                 </div>
                                 <div class="form-group">
                                     <label for="wallet_id">Sumber Biaya<span class="text-small text-danger">*</span></label>
-                                    <select class="form-control" name="wallet_id" id="wallet_id" tabindex="4">
+                                    <select class="form-control" name="wallet_id" id="wallet_id" tabindex="5">
                                         <option value="">-</option>
                                         @foreach ($wallets as $wallet)
                                             <option value="{{ $wallet->id }}" @selected(old('wallet_id') == $wallet->id)>
@@ -53,7 +66,7 @@
                                 <div class="form-group">
                                     <label for="price">Nominal<span class="text-small text-danger">*</span></label>
                                     <input type="text" class="form-control harga @error('price') is-invalid @enderror"
-                                        name="price" id="price" value="{{ old('price') }}" tabindex="5">
+                                        name="price" id="price" value="{{ old('price') }}" tabindex="6">
                                 </div>
                             </div>
                         </div>

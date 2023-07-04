@@ -47,16 +47,34 @@ class PushToJurnalSempoa
             }
 
             if ($data instanceof Expense) {
+                // debit
+                if (is_null($config->expense_debit_account) and is_null($data->debit_account)) {
+                    throw new \Exception('Akun debit Invoice belum terkonfigurasi');
+                }
+                $debit_account = $config->expense_debit_account;
+                if (!is_null($data->debit_account)) {
+                    $debit_account = $data->debit_account;
+                }
+                // credit
+                if (is_null($config->expense_credit_account) and is_null($data->wallet->sempoa_wallet)) {
+                    throw new \Exception('Akun kredit Invoice belum terkonfigurasi');
+                }
+                $credit_account = $config->expense_credit_account;
+                if ($data->wallet->sempoa_wallet) {
+                    $credit_account = $data->wallet->sempoa_wallet->account;
+                }
+
+                // arrange
                 $items = [
                     [
                         // debit
-                        'akun' => $config->expense_debit_account,
+                        'akun' => $debit_account,
                         'debit' => $data->price,
                         'kredit' => 0
                     ],
                     [
                         // credit
-                        'akun' => $config->expense_credit_account,
+                        'akun' => $credit_account,
                         'debit' => 0,
                         'kredit' => $data->price
                     ],
@@ -84,7 +102,7 @@ class PushToJurnalSempoa
                 'user' => auth()->user()->name,
                 'data' => $data
             ]);
-
+            $data->sempoas()->delete();
             $data->sempoa_processed = false;
             $data->save();
         }

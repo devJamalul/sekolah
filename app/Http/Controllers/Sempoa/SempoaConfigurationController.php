@@ -64,7 +64,31 @@ class SempoaConfigurationController extends Controller
             DB::rollBack();
             return to_route('sempoa-configuration.index')->withInput()->withToastError("Ops! " . $th->getMessage());
         }
+
         return to_route('sempoa-configuration.index')->withInput()->withToastSuccess('Konfigurasi berhasil disimpan!');
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'status' => 'required|string|in:' . SempoaConfiguration::STATUS_OPEN . ',' . SempoaConfiguration::STATUS_LOCKED
+            ]);
+
+            $config = SempoaConfiguration::firstOrNew([
+                'school_id' => session('school_id'),
+            ]);
+            $config->status = $request->status;
+            $config->save();
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return to_route('sempoa-configuration.index')->withInput()->withToastError("Ops! " . $th->getMessage());
+        }
+
+        return to_route('sempoa-configuration.index')->withInput()->withToastSuccess('Konfigurasi hak akses berhasil disimpan!');
     }
 
     protected function checkAccount($account)
