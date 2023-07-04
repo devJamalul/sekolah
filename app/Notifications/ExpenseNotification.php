@@ -4,11 +4,11 @@ namespace App\Notifications;
 
 use App\Models\Expense;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
-class ExpenseApprovalNotification extends Notification
+class ExpenseNotification extends Notification
 {
     use Queueable;
 
@@ -36,8 +36,8 @@ class ExpenseApprovalNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Notifikasi Persetujuan Pengeluaran Biaya')
-            ->markdown('notifications.expense-approval', [
+            ->subject('Persetujuan Pengeluaran Biaya')
+            ->markdown('notifications.expense', [
                 'expense' => $this->expense
             ]);
     }

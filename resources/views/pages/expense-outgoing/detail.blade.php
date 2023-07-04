@@ -23,7 +23,13 @@
                             </tr>
                             <tr>
                                 <td scope="row">Tanggal Pengeluaran Biaya</td>
-                                <td class="text-primary font-weight-bold">{{ $expense->expense_date->format('d F Y, H:i') }}</td>
+                                <td class="text-primary font-weight-bold">{{ $expense->expense_date->format('d F Y') }}</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">Deskripsi</td>
+                                <td class="text-primary font-weight-bold">
+                                    {{ $expense->note }}
+                                </td>
                             </tr>
                             <tr>
                                 <td scope="row">Nominal</td>

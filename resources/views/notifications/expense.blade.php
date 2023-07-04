@@ -1,5 +1,5 @@
 <x-mail::message>
-# Notifikasi Realisasi Pengeluaran Biaya
+# Notifikasi Persetujuan PengeluaranBiaya
 
 No Pengeluaran Biaya : **{{ $expense->expense_number }}** <br>
 
@@ -11,11 +11,11 @@ Nominal : **IDR {{ number_format($expense->price, 0, ', ', '.') }}** <br>
 
 Diajukan oleh : **{{ $expense->requested_by->name }}** <br>
 
-Disetujui oleh : **{{ $expense->approved_by?->name ?? '-' }}** <br>
+Status : **Menunggu Persetujuan**
 
-Status : **{{ $expense->status == 'done' ? "Sudah Direalisasi" : "Belum Direalisasi" }}**
-
-<a href="{{$expense->file_photo}}">Lihat Bukti</a>
+<x-mail::button :url="route('expense-approval.index')">
+    Beri Persetujuan
+</x-mail::button>
 
 Terima kasih,<br>
 {{ config('app.name') }}

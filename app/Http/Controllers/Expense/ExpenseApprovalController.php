@@ -73,6 +73,7 @@ class ExpenseApprovalController extends Controller
                     $expense_approval->approval_by = Auth::user()->id;
                     $expense_approval->approval_at = now();
                     $expense_approval->status = Expense::STATUS_APPROVED;
+                    WalletTransaction::decrement($expense_approval->wallet, $expense_approval->price, 'Expense ' . $expense_approval->expense_number . ' - ' . $expense_approval->note);
                     break;
                 case 'reject':
                     if ($request->reject_reason == null) {
@@ -85,8 +86,6 @@ class ExpenseApprovalController extends Controller
                     break;
             }
             $expense_approval->save();
-
-            WalletTransaction::decrement($expense_approval->wallet, $expense_approval->price, 'Expense ' . $expense_approval->expense_number . ' - ' . $expense_approval->note);
 
             DB::commit();
 

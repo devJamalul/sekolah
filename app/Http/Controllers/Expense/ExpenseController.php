@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Expense;
 
 use App\Actions\Sempoa\GetAccount;
+use App\Actions\Wallet\WalletTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ExpenseRequest;
 use App\Models\SempoaConfiguration;
+use App\Notifications\ExpenseNotification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -274,11 +276,21 @@ class ExpenseController extends Controller
             $expense->status = Expense::STATUS_PENDING;
             $expense->save();
             DB::commit();
+
+            $users = User::where('school_id', session('school_id'))->get();
+            foreach ($users as $user) {
+                if ($user->hasAnyRole([User::ROLE_ADMIN_SEKOLAH, User::ROLE_KEPALA_SEKOLAH])) {
+                    $user->notify(new ExpenseNotification($expense));
+                } else {
+                    info("gak ada");
+                }
+            }
+            info('tes');
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('expense.index')->withToastError('Ups! ' . $th->getMessage());
         }
 
-        return redirect()->route('expense.index')->withToastSuccess('Berhasil Mengubah Status Pengeluaran Biaya!');
+        return redirect()->route('expense.index')->withToastSuccess('Berhasil Publish Pengeluaran Biaya!');
     }
 }
