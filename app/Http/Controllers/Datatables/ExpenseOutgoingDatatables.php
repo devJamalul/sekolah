@@ -15,7 +15,6 @@ class ExpenseOutgoingDatatables extends Controller
     {
         $expense = Expense::where('school_id', session('school_id'))
             ->where('status', Expense::STATUS_APPROVED)
-            ->with('expense_details')
             ->orderByDesc('created_at')
             ->get();
 
