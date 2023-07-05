@@ -43,7 +43,7 @@
                             <button type="submit" class="btn btn-primary offset-sm-4">Simpan</button>
                         </form>
                     @else
-                        <p>Belum terhubung dengan Sempoa.</p>
+                        <p class="text-danger font-weight-bolder">Belum terhubung dengan Sempoa.</p>
                     @endif
                 </div>
             </div>

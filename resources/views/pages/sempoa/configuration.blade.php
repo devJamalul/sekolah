@@ -195,18 +195,27 @@
                                     @csrf @method('PUT')
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="status" id="status1"
-                                            value="{{ App\Models\SempoaConfiguration::STATUS_OPEN }}" @checked($config->status == App\Models\SempoaConfiguration::STATUS_OPEN)>
+                                            value="{{ App\Models\SempoaConfiguration::STATUS_OPEN }}" @checked($config?->status == App\Models\SempoaConfiguration::STATUS_OPEN)>
                                         <label class="form-check-label" for="status1">
-                                            Open @if ($config->status == App\Models\SempoaConfiguration::STATUS_OPEN) <em>(Current status)</em> @endif
+                                            Open @if ($config?->status == App\Models\SempoaConfiguration::STATUS_OPEN) <em>(Current status)</em> @endif
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="status" id="status2"
-                                            value="{{ App\Models\SempoaConfiguration::STATUS_LOCKED }}" @checked($config->status == App\Models\SempoaConfiguration::STATUS_LOCKED)>
+                                            value="{{ App\Models\SempoaConfiguration::STATUS_LOCKED }}" @checked($config?->status == App\Models\SempoaConfiguration::STATUS_LOCKED)>
                                         <label class="form-check-label" for="status2">
-                                            Lock @if ($config->status == App\Models\SempoaConfiguration::STATUS_LOCKED) <em>(Current status)</em> @endif
+                                            Lock @if ($config?->status == App\Models\SempoaConfiguration::STATUS_LOCKED) <em>(Current status)</em> @endif
                                         </label>
                                     </div>
+                                    @if ($config)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="status" id="status3"
+                                            value="{{ App\Models\SempoaConfiguration::STATUS_RESET }}">
+                                        <label class="form-check-label" for="status3">
+                                            <span class="text-danger font-weight-bolder">Reset</span>
+                                        </label>
+                                    </div>
+                                    @endif
                                     <button type="submit" class="btn btn-primary mt-2">Save</button>
                                 </form>
                             </div>

@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Expense;
 
 use App\Actions\Sempoa\GetAccount;
-use App\Actions\Wallet\WalletTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Expense;
 use Illuminate\Http\Request;
-use App\Models\ExpenseDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ExpenseRequest;
 use App\Models\SempoaConfiguration;
 use App\Notifications\ExpenseNotification;
 use Illuminate\Support\Facades\Validator;
@@ -110,7 +107,6 @@ class ExpenseController extends Controller
                 throw new \Exception('Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
 
-
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
@@ -159,6 +155,7 @@ class ExpenseController extends Controller
             $data['config'] = SempoaConfiguration::first();
             $data['accounts'] = [];
             if ($data['config']) $data['accounts'] = GetAccount::run();
+
             return view('pages.expense.edit', $data);
         } catch (\Throwable $th) {
             return redirect()->route('expense.index')->withInput()->withToastError('Ups! ' . $th->getMessage());

@@ -43,7 +43,6 @@ class PublishInvoiceController extends Controller
             if ($is_sent) $invoice->is_posted = Invoice::POSTED_SENT;
             $invoice->save();
             DB::commit();
-            PushToJurnalSempoa::handle($invoice);
             if ($is_sent) {
                 // todo: kirim email di App\Http\Controllers\Invoice\PublishInvoiceController
             }

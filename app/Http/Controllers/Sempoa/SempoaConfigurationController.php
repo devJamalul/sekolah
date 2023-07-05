@@ -73,7 +73,7 @@ class SempoaConfigurationController extends Controller
         try {
             DB::beginTransaction();
             $request->validate([
-                'status' => 'required|string|in:' . SempoaConfiguration::STATUS_OPEN . ',' . SempoaConfiguration::STATUS_LOCKED
+                'status' => 'required|string|in:' . SempoaConfiguration:: STATUS_OPEN . ',' . SempoaConfiguration::STATUS_LOCKED . ',' . SempoaConfiguration::STATUS_RESET,
             ]);
 
             $config = SempoaConfiguration::firstOrNew([
@@ -81,6 +81,10 @@ class SempoaConfigurationController extends Controller
             ]);
             $config->status = $request->status;
             $config->save();
+
+            if ($request->status == SempoaConfiguration::STATUS_RESET) {
+                $config->forceDelete();
+            }
 
             DB::commit();
         } catch (\Throwable $th) {
