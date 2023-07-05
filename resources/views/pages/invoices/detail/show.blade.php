@@ -38,6 +38,13 @@
                   value="{{ old('due_date', Laraindo\TanggalFormat::DateIndo($invoice->due_date)) }}" readonly>
               </div>
             </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="credit_account">Akun Kredit Invoice</label>
+                <input type="text" class="form-control" id="credit_account" aria-describedby="credit_account"
+                  value="{{ old('credit_account', $invoice->credit_account) }}" readonly>
+              </div>
+            </div>
           </div>
         </div>
       </div>

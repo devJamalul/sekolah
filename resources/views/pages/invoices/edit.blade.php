@@ -47,6 +47,21 @@
                                         </div>
                                     @enderror
                                 </div>
+                                @if ($config)
+                                    <div class="form-group">
+                                        <label for="credit_account">Akun Kredit Invoice<span
+                                                class="text-small text-danger">*</span></label>
+                                        <select class="form-control select2" name="credit_account" id="credit_account"
+                                            tabindex="3">
+                                            <option value="">-</option>
+                                            @foreach ($accounts as $account)
+                                                <option value="{{ $account['kode'] }}" @selected(old('credit_account', $invoice->credit_account) == $account['kode'])>
+                                                    {{ $account['kode'] }} - {{ $account['akun'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">

@@ -34,6 +34,13 @@
                                     value="{{ $expense->expense_date->format('Y-m-d') }}" disabled>
                             </div>
                             <div class="form-group">
+                                <label for="debit_account-input">Akun Pengeluaran Biaya<span
+                                        class="text-small text-danger">*</span></label>
+                                <input type="text" class="form-control @error('debit_account') is-invalid @enderror"
+                                    name="debit_account" id="debit_account-input"
+                                    value="{{ $expense->debit_account }}" disabled>
+                            </div>
+                            <div class="form-group">
                                 <label for="note-input">Deskripsi</label>
                                 <input type="text" class="form-control @error('note') is-invalid @enderror" name="note"
                                     id="note-input" value="{{ $expense->note }}" disabled>
