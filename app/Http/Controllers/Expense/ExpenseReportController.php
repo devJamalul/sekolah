@@ -53,8 +53,7 @@ class ExpenseReportController extends Controller
         if (Cache::has($cacheName)) {
             $expense = Cache::get($cacheName);
         } else {
-            $expense = Expense::with('expense_details')
-            ->where('school_id', session('school_id'))
+            $expense = Expense::where('school_id', session('school_id'))
                 ->whereBetween('expense_date', [
                     session('expense_report_start')->startOfDay()->format('Y-m-d H:i:s'),
                     session('expense_report_end')->endOfDay()->format('Y-m-d H:i:s'),
