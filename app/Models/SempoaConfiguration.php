@@ -14,6 +14,7 @@ class SempoaConfiguration extends Model
 
     const STATUS_OPEN = 'open';
     const STATUS_LOCKED = 'locked';
+    const STATUS_RESET = 'reset';
 
     protected $guarded = [];
 
