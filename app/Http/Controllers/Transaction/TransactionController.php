@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaction;
 
 use App\Actions\Invoice\AddToInvoice;
+use App\Actions\Sempoa\PushToJurnalSempoa;
 use App\Http\Controllers\Controller;
 use App\Mail\PaidTuitionMail;
 use App\Mail\PartialTuitionMail;
@@ -127,6 +128,8 @@ class TransactionController extends Controller
             } else if ($total_payment == $student_tuition->grand_total) {
                 $student_tuition->status = StudentTuition::STATUS_PAID;
             } else {
+                // sementara tidak boleh parsial/cicilan
+                throw new \ErrorException('Nominal pembayaran belum mencukupi.');
                 $student_tuition->status = StudentTuition::STATUS_PARTIAL;
             }
 
@@ -145,6 +148,9 @@ class TransactionController extends Controller
             $student_tuition->refresh();
             // input invoice
             $addToInvoice->handle($student_tuition, formatAngka($request->nominal));
+
+            // Push to Sempoa
+            PushToJurnalSempoa::handle($student_tuition);
 
             if ($total_payment >= $student_tuition->grand_total) {
                 $delay = now()->addSeconds(30);
@@ -179,7 +185,7 @@ class TransactionController extends Controller
             return redirect()->route('transactions.show', $transaction->getKey())->withToastSuccess('Berhasil menambahkan data transaksi!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->withInput()->withToastError('Ops! ' . $th->getMessage());
+            return redirect()->back()->withInput()->withToastError('Ups! ' . $th->getMessage());
         }
     }
 

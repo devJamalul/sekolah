@@ -3,7 +3,6 @@
 namespace App\Actions\Sempoa\Integrations;
 
 use App\Models\Expense;
-use App\Models\Invoice;
 use App\Models\SempoaConfiguration;
 
 class ExpenseIntegration
@@ -15,7 +14,7 @@ class ExpenseIntegration
             $debit_account = $expense->debit_account;
         }
         if (is_null($debit_account)) {
-            throw new \Exception('Akun debit Invoice belum terkonfigurasi');
+            throw new \Exception('Akun debit Pengeluaran Biaya belum terkonfigurasi');
         }
         // credit
         $credit_account = $config->expense_credit_account;
@@ -23,7 +22,7 @@ class ExpenseIntegration
             $credit_account = $expense->wallet?->sempoa_wallet?->account;
         }
         if (is_null($credit_account)) {
-            throw new \Exception('Akun kredit Invoice belum terkonfigurasi');
+            throw new \Exception('Akun kredit Pengeluaran Biaya belum terkonfigurasi');
         }
 
         // arrange
