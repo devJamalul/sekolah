@@ -73,7 +73,7 @@ class SempoaConfigurationController extends Controller
         try {
             DB::beginTransaction();
             $request->validate([
-                'status' => 'required|string|in:' . SempoaConfiguration:: STATUS_OPEN . ',' . SempoaConfiguration::STATUS_LOCKED . ',' . SempoaConfiguration::STATUS_RESET,
+                'status' => 'required|string|in:' . SempoaConfiguration::STATUS_OPEN . ',' . SempoaConfiguration::STATUS_LOCKED . ',' . SempoaConfiguration::STATUS_RESET,
             ]);
 
             $config = SempoaConfiguration::firstOrNew([
