@@ -31,8 +31,8 @@ class InvoiceIntegration
         $debit_account = $config->invoice_debit_account;
         // cek satu per satu invoice_detail
         foreach ($invoice->invoice_details as $detail) {
-            if (!is_null($detail->wallet->sempoa_wallet->account)) {
-                $debit_account = $detail->wallet->sempoa_wallet->account;
+            if (!is_null($detail->wallet?->sempoa_wallet?->account)) {
+                $debit_account = $detail->wallet?->sempoa_wallet?->account;
             }
 
             if (is_null($debit_account)) {

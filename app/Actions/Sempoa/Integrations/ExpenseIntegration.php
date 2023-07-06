@@ -19,8 +19,8 @@ class ExpenseIntegration
         }
         // credit
         $credit_account = $config->expense_credit_account;
-        if ($expense->wallet->sempoa_wallet->account) {
-            $credit_account = $expense->wallet->sempoa_wallet->account;
+        if ($expense->wallet?->sempoa_wallet?->account) {
+            $credit_account = $expense->wallet?->sempoa_wallet?->account;
         }
         if (is_null($credit_account)) {
             throw new \Exception('Akun kredit Invoice belum terkonfigurasi');
