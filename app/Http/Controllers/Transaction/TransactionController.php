@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Transaction;
 
 use App\Actions\Invoice\AddToInvoice;
+use App\Http\Controllers\Controller;
 use App\Mail\PaidTuitionMail;
 use App\Mail\PartialTuitionMail;
 use App\Models\PaymentType;
