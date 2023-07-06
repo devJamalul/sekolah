@@ -52,7 +52,6 @@ class GradeClassImport implements ToCollection, WithHeadingRow, WithValidation, 
                     $classroom->grade_id            = $grade->getKey();
                     $classroom->name                = $value;
                     $classroom->save();
-                    info($classroom);
                 }
             }
             DB::commit();

@@ -41,7 +41,6 @@ class ExpenseIntegration
                 'kredit' => $expense->price
             ],
         ];
-        info($items);
 
         $result['deskripsi'] = 'Pengeluaran Biaya Sekolah #' . $expense->getKey();
         $result['referensi'] = $expense->expense_number;
