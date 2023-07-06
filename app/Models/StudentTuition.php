@@ -64,6 +64,11 @@ class StudentTuition extends Model
         return $this->hasMany(StudentTuitionDetail::class);
     }
 
+    public function student_tuition_payment_history(): HasOne
+    {
+        return $this->hasOne(StudentTuitionPaymentHistory::class);
+    }
+
     public function student_tuition_payment_histories(): HasMany
     {
         return $this->hasMany(StudentTuitionPaymentHistory::class);

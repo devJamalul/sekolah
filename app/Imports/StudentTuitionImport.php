@@ -69,15 +69,11 @@ class StudentTuitionImport implements ToCollection, WithHeadingRow, WithValidati
                 // End Save Student
 
                 // assign student to classroom
-                info('kelas ' . $item['kelas']);
-                info('school_id ' . session('import_school_id'));
-                info('academic_year_id ' . session('import_academic_year_id'));
                 $class = Classroom::withoutGlobalScopes()->where([
                     'name' => $item['kelas'],
                     'school_id' => session('import_school_id'),
                     'academic_year_id' => session('import_academic_year_id')
                 ])->first();
-                info('grade_id ' . $class->grade_id);
 
                 $classroomStudent = ClassroomStudent::firstOrNew([
                     'classroom_id' => $class->getKey(),
@@ -99,8 +95,6 @@ class StudentTuitionImport implements ToCollection, WithHeadingRow, WithValidati
                     'grade_id' => $class->grade_id,
                 ])->first();
 
-                info($tuition);
-
                 $studentTuitionMaster = StudentTuitionMaster::firstOrNew([
                     'student_id' => $student->getKey(),
                     'tuition_id' => $tuition->getKey(),
@@ -114,7 +108,6 @@ class StudentTuitionImport implements ToCollection, WithHeadingRow, WithValidati
             DB::rollBack();
             session()->forget(['import_school_id', 'import_academic_year_id', 'import_grade_id']);
             $failures = $e->failures();
-            info($e->failures());
 
             if (count($failures) > 0) {
                 $row = $failures[0]->row(); // row that went wrong

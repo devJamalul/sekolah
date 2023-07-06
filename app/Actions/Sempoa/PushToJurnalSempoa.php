@@ -4,6 +4,7 @@ namespace App\Actions\Sempoa;
 
 use App\Actions\Sempoa\Integrations\ExpenseIntegration;
 use App\Actions\Sempoa\Integrations\InvoiceIntegration;
+use App\Actions\Sempoa\Integrations\StudentTuitionIntegration;
 use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\SempoaConfiguration;
@@ -16,14 +17,19 @@ class PushToJurnalSempoa
     public static function handle(Invoice|Expense|StudentTuition $data)
     {
         try {
-            $data->sempoas()->create();
-            $trx = $data->sempoas()->first();
             $config = SempoaConfiguration::first();
             $data->sempoa_processed = true;
             $data->save();
 
             if (!$config) {
                 throw new \Exception('Belum terhubung dengan Sempoa');
+            }
+
+            if ($data instanceof StudentTuition) {
+                $journal_items = StudentTuitionIntegration::handle(
+                    invoice: $data,
+                    config: $config
+                );
             }
 
             if ($data instanceof Invoice) {
@@ -41,13 +47,18 @@ class PushToJurnalSempoa
             }
 
             $response = Http::withToken($config->token)
-                // ->post(config('sempoa.base_url') . 'jurnal', compact('deskripsi', 'referensi', 'tanggal', 'transaksi'));
-                ->post(config('sempoa.base_url') . 'jurnal', $journal_items);
+                ->post(
+                    config('sempoa.base_url') . 'jurnal',
+                    $journal_items
+                );
 
             if (!$response->ok()) {
                 throw new \Exception($response->body());
             }
 
+
+            $data->sempoas()->create();
+            $trx = $data->sempoas()->first();
             $trx->sempoa_id = $response['data']['id'];
             $trx->sempoa_type = 'App\Models\Transaction';
             $trx->save();
