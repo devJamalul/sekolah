@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Models\Grade;
 
 class KepalaSekolahController extends Controller
 {
@@ -11,6 +12,9 @@ class KepalaSekolahController extends Controller
      */
     public function __invoke()
     {
-        return view('pages.home.kepala-sekolah');
+        $data['grades'] = Grade::query()
+            ->with(['classrooms.students'])
+            ->get();
+        return view('pages.home.kepala-sekolah', $data);
     }
 }
