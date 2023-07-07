@@ -16,7 +16,6 @@ class ExpenseApprovalDatatables extends Controller
         $expense = Expense::where('school_id', session('school_id'))
             ->where('price', '>', '0')
             ->where('status', '=', 'pending')
-            ->with('expense_details')
             ->orderByDesc('created_at')
             ->get();
 

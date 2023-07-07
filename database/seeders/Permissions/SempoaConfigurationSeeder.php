@@ -17,6 +17,8 @@ class SempoaConfigurationSeeder extends Seeder
     {
         $super_admin = Role::whereName(User::ROLE_SUPER_ADMIN)->first();
         $ops_admin = Role::whereName(User::ROLE_OPS_ADMIN)->first();
+        $admin_sekolah = Role::whereName(User::ROLE_ADMIN_SEKOLAH)->first();
+        $bendahara = Role::whereName(User::ROLE_BENDAHARA)->first();
 
         $route = 'sempoa-configuration';
 
@@ -24,6 +26,7 @@ class SempoaConfigurationSeeder extends Seeder
             'index' => $route . '.index',
             'store' => $route . '.store',
             'update' => $route . '.update',
+            'destroy' => $route . '.destroy',
         ];
 
         // index
@@ -31,18 +34,25 @@ class SempoaConfigurationSeeder extends Seeder
             'name' => $roles['index'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // store
         $permission = Permission::firstOrCreate([
             'name' => $roles['store'],
             'guard_name' => 'web'
         ]);
-        $permission->syncRoles([$super_admin, $ops_admin]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
 
         // update
         $permission = Permission::firstOrCreate([
             'name' => $roles['update'],
+            'guard_name' => 'web'
+        ]);
+        $permission->syncRoles([$super_admin, $ops_admin, $admin_sekolah, $bendahara]);
+
+        // destroy
+        $permission = Permission::firstOrCreate([
+            'name' => $roles['destroy'],
             'guard_name' => 'web'
         ]);
         $permission->syncRoles([$super_admin, $ops_admin]);

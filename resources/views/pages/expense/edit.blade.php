@@ -41,6 +41,17 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
+                                    <label for="debit_account">Akun Pengeluaran Biaya<span class="text-small text-danger">*</span></label>
+                                    <select class="form-control" name="debit_account" id="debit_account" tabindex="4">
+                                        <option value="">-</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account['kode'] }}" @selected(old('debit_account', $expense->debit_account) == $account['kode'])>
+                                                {{ $account['kode'] }} - {{ $account['akun'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="note">Deskripsi<span class="text-small text-danger">*</span></label>
                                     <input type="text" class="form-control @error('note') is-invalid @enderror"
                                         name="note" id="note" aria-describedby="note"

@@ -12,26 +12,39 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('sempoa-wallet.update') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        @foreach ($wallets as $key => $wallet)
-                            @php
-                                $kode = App\Models\SempoaWallet::firstWhere('wallet_id', $wallet->getKey());
-                            @endphp
-                            <input type="hidden" name="wallet_id[]" value="{{ $wallet->getKey() }}">
-                            <div class="form-group row">
-                                <label for="wallet" class="col-sm-4 col-form-label">{{ $wallet->name }}</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="wallet[]" name="wallet[]"
-                                        value="{{ old('wallet.' . $key, $kode?->account) }}" autocomplete="off"
-                                        placeholder="Kode Akun dompet {{ $wallet->name }}">
+                    @if ($accounts)
+                        <form action="{{ route('sempoa-wallet.update') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            @foreach ($wallets as $key => $wallet)
+                                @php
+                                    $kode = App\Models\SempoaWallet::firstWhere('wallet_id', $wallet->getKey());
+                                @endphp
+                                <input type="hidden" name="wallet_id[]" value="{{ $wallet->getKey() }}">
+                                <div class="form-group row">
+                                    <label for="wallet" class="col-sm-4 col-form-label">
+                                        Akun {{ $wallet->name }}
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control select2" name="wallet[]" id="wallet[]">
+                                            <option value="">Pilih...</option>
+                                            @foreach ($accounts as $account)
+                                                <option value="{{ $account['kode'] }}" @selected($account['kode'] == $kode?->account)>
+                                                    {{ $account['kode'] . ' - ' . $account['akun'] }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('wallet.' . $key)
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
 
-                        <button type="submit" class="btn btn-primary offset-sm-4">Simpan</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary offset-sm-4">Simpan</button>
+                        </form>
+                    @else
+                        <p class="text-danger font-weight-bolder">Belum terhubung dengan Sempoa.</p>
+                    @endif
                 </div>
             </div>
         </div>

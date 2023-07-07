@@ -71,7 +71,9 @@ class ExpenseOutgoingController extends Controller
             $expense_outgoing->save();
 
             DB::commit();
-
+            // kurangi saldo
+            WalletTransaction::decrement($expense_outgoing->wallet, $expense_outgoing->price, 'Expense ' . $expense_outgoing->expense_number . ' - ' . $expense_outgoing->note);
+            // sempoa
             PushToJurnalSempoa::handle($expense_outgoing);
             // Notification
             $expense_outgoing->requested_by->notify(new ExpenseOutgoingNotification($expense_outgoing));

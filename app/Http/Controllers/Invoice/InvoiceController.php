@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Invoice;
 
 use App\Actions\Invoice\CreateNewInvoiceNumber;
+use App\Actions\Sempoa\GetAccount;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InvoiceRequest;
 use App\Models\Invoice;
 use App\Models\InvoiceDetail;
+use App\Models\SempoaConfiguration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,6 +34,9 @@ class InvoiceController extends Controller
     public function create()
     {
         $data['title'] = "Tambah " . $this->title;
+        $data['config'] = SempoaConfiguration::first();
+        $data['accounts'] = [];
+        if ($data['config']) $data['accounts'] = GetAccount::run();
         return view('pages.invoices.create', $data);
     }
 
@@ -45,7 +50,6 @@ class InvoiceController extends Controller
                 'price' => formatAngka($request->price)
             ]);
         }
-
 
         DB::beginTransaction();
         try {
@@ -65,6 +69,7 @@ class InvoiceController extends Controller
                     'due_date' => 'required|date|after:invoice_date',
                     'item_name' => 'required|string',
                     'price' => 'required|string',
+                    'credit_account' => 'sometimes|required|string'
                 ],
                 [],
                 [
@@ -72,15 +77,24 @@ class InvoiceController extends Controller
                     'invoice_date' => 'tanggal invoice',
                     'note' => 'deskripsi',
                     'item_name' => 'nama barang',
-                    'price' => 'harga'
+                    'price' => 'harga',
+                    'credit_account' => 'akun kredit invoice'
                 ]
             )->validate();
+
+            if ($request->missing('credit_account')) {
+                $request->merge([
+                    'credit_account' => null
+                ]);
+            }
+
             $invoice = new Invoice();
             $invoice->school_id = session('school_id');
             $invoice->invoice_number = $request->invoice_number ?? $createNewInvoiceNumber->generate();
             $invoice->note = $request->note;
             $invoice->invoice_date = $request->invoice_date;
             $invoice->due_date = $request->due_date;
+            $invoice->credit_account = $request->credit_account;
             $invoice->save();
 
             $invoiceDetail = new InvoiceDetail();
@@ -124,6 +138,9 @@ class InvoiceController extends Controller
 
         $data['title'] = "Ubah " . $this->title;
         $data['invoice'] = $invoice;
+        $data['config'] = SempoaConfiguration::first();
+        $data['accounts'] = [];
+        if ($data['config']) $data['accounts'] = GetAccount::run();
         return view('pages.invoices.edit', $data);
     }
 
@@ -161,6 +178,7 @@ class InvoiceController extends Controller
                     'array_item_name.*' => 'required|string',
                     'array_price' => 'required|array',
                     'array_price.*' => 'required|string',
+                    'credit_account' => 'sometimes|required|string'
                 ],
                 [],
                 [
@@ -168,11 +186,18 @@ class InvoiceController extends Controller
                     'invoice_date' => 'tanggal invoice',
                     'note' => 'deskripsi',
                     'array_item_name' => 'nama barang',
-                    'array_price' => 'harga'
+                    'array_price' => 'harga',
+                    'credit_account' => 'akun kredit invoice'
                 ]
             )->validate();
 
             if ($invoice->school_id != session('school_id')) abort(404);
+
+            if ($request->missing('credit_account')) {
+                $request->merge([
+                    'credit_account' => null
+                ]);
+            }
 
             // cek status dan kembalikan jika statusnya sudah PUBLISHED
             if ($invoice->is_original == false)
@@ -186,6 +211,7 @@ class InvoiceController extends Controller
             $invoice->note = $request->note;
             $invoice->invoice_date = $request->invoice_date;
             $invoice->due_date = $request->due_date;
+            $invoice->credit_account = $request->credit_account;
             $invoice->save();
 
             // update invoice_details

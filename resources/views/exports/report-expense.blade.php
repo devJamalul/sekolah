@@ -16,10 +16,10 @@
                 <th>{{ $index+1 }}</th>
                 <td>{{ $row['expense_number'] }}</td>
                 <td>{{ $row['expense_date'] }}</td>
-                <td>Rp. {{ number_format($row->expense_details()->sum(DB::raw('price * quantity')), 0, ', ', '.') }}</td>
+                <td>Rp. {{ number_format($row->price, 0, ', ', '.') }}</td>
                 @if ($row['status'] == 'rejected')
                 <td>Ditolak</td>
-                <td>-</td> 
+                <td>-</td>
                 <td>-</td>
                 @else
                 <td>Disetujui</td>

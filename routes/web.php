@@ -13,7 +13,7 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AcademyYearController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\Reports\StudentReport;
-use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Transaction\TransactionController;
 use App\Http\Controllers\Tuition\TuitionTypeController;
 use App\Http\Controllers\ConfigSchoolController;
 use App\Http\Controllers\Expense\ExpenseDetailController;
@@ -26,7 +26,7 @@ use App\Http\Controllers\Expense\ExpenseOutgoingController;
 use App\Http\Controllers\Invoice\InvoiceController;
 use App\Http\Controllers\Tuition\TuitionApprovalController;
 use App\Http\Controllers\Wallet\WalletLogController;
-use App\Http\Controllers\TransactionReportController;
+use App\Http\Controllers\Transaction\TransactionReportController;
 use App\Http\Middleware\School\RequireChangePassword;
 use App\Http\Controllers\Invoice\PayInvoiceController;
 use App\Http\Controllers\Wallet\TopUpWalletController;
@@ -218,6 +218,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', 'index')->name('index');
             Route::put('/store', 'store')->name('store');
             Route::put('/update', 'update')->name('update');
+            Route::put('/destroy', 'destroy')->name('destroy');
         });
     Route::as('sempoa-wallet.')
         ->prefix('sempoa/wallet')

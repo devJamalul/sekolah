@@ -14,6 +14,7 @@ class ExpenseDatatables extends Controller
     {
         $expense = Expense::with('requested_by', 'approved_by', 'reject_by')->latest('created_at');
         return DataTables::of($expense)
+            ->editColumn('price', fn ($expense) => number_format($expense->price, 0, ',', '.'))
             ->editColumn('expense_number', function ($expense) {
                 if ($expense->status != Expense::STATUS_DRAFT) {
                     return "<a href='" . route('expense.show-detail', $expense->id) . "'>{$expense->expense_number}</a>";
@@ -21,14 +22,12 @@ class ExpenseDatatables extends Controller
 
                 return "<a href='" . route('expense.edit', $expense->id) . "'>{$expense->expense_number}</a>";
             })
-            ->editColumn('approval_by', function ($expense){
-                if($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE){
+            ->editColumn('approval_by', function ($expense) {
+                if ($expense->status == Expense::STATUS_APPROVED || $expense->status == Expense::STATUS_DONE) {
                     return $expense->approved_by->name;
-                }
-                elseif($expense->status == Expense::STATUS_REJECTED){
+                } elseif ($expense->status == Expense::STATUS_REJECTED) {
                     return $expense->reject_by->name;
-                }
-                else{
+                } else {
                     return '-';
                 }
             })
@@ -68,24 +67,31 @@ class ExpenseDatatables extends Controller
                 return view('components.datatable-action', $data);
             })
             ->rawColumns(['status', 'action', 'expense_number'])
-            ->filterColumn('status', function($query, $keyword) {
-                switch (strtolower($keyword)){
-                    case 'disetujui': case 'setuju':
+            ->filterColumn('status', function ($query, $keyword) {
+                switch (strtolower($keyword)) {
+                    case 'disetujui':
+                    case 'setuju':
                         $match = Expense::STATUS_APPROVED;
                         break;
-                    case 'pending': case 'pen': case 'pend':
+                    case 'pending':
+                    case 'pen':
+                    case 'pend':
                         $match = Expense::STATUS_PENDING;
                         break;
-                    case 'ditolak': case 'tolak':
+                    case 'ditolak':
+                    case 'tolak':
                         $match = Expense::STATUS_REJECTED;
                         break;
-                    case 'selesai': case 'sel':
+                    case 'selesai':
+                    case 'sel':
                         $match = Expense::STATUS_DONE;
                         break;
-                    case 'realisasi': case 'real':
+                    case 'realisasi':
+                    case 'real':
                         $match = Expense::STATUS_OUTGOING;
                         break;
-                    case 'draft': case 'draf':
+                    case 'draft':
+                    case 'draf':
                         $match = Expense::STATUS_DRAFT;
                         break;
                     default:

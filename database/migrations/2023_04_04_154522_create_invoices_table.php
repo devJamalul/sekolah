@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('is_posted')->default(Invoice::POSTED_DRAFT)->nullable();
             $table->boolean('is_original')->default(true);
             $table->decimal('total_amount', 15, 2)->default(0);
+            $table->string('credit_account')->nullable();
             $table->boolean('sempoa_processed')->nullable()->default(false);
             $table->timestamps();
             $table->softDeletes();

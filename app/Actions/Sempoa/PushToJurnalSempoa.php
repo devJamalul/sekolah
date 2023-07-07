@@ -2,6 +2,9 @@
 
 namespace App\Actions\Sempoa;
 
+use App\Actions\Sempoa\Integrations\ExpenseIntegration;
+use App\Actions\Sempoa\Integrations\InvoiceIntegration;
+use App\Actions\Sempoa\Integrations\StudentTuitionIntegration;
 use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\SempoaConfiguration;
@@ -14,8 +17,6 @@ class PushToJurnalSempoa
     public static function handle(Invoice|Expense|StudentTuition $data)
     {
         try {
-            $data->sempoas()->create();
-            $trx = $data->sempoas()->first();
             $config = SempoaConfiguration::first();
             $data->sempoa_processed = true;
             $data->save();
@@ -24,57 +25,40 @@ class PushToJurnalSempoa
                 throw new \Exception('Belum terhubung dengan Sempoa');
             }
 
-            if ($data instanceof Invoice) {
-                $items = [
-                    [
-                        // debit
-                        'akun' => $config->invoice_debit_account,
-                        'debit' => $data->total_amount,
-                        'kredit' => 0
-                    ],
-                    [
-                        // credit
-                        'akun' => $config->invoice_credit_account,
-                        'debit' => 0,
-                        'kredit' => $data->total_amount
-                    ],
-                ];
+            if ($data instanceof StudentTuition) {
+                $journal_items = StudentTuitionIntegration::handle(
+                    invoice: $data,
+                    config: $config
+                );
+            }
 
-                $deskripsi = 'Invoice Sekolah #' . $data->getKey();
-                $referensi = $data->invoice_number;
-                $tanggal = $data->invoice_date;
-                $transaksi = $items;
+            if ($data instanceof Invoice) {
+                $journal_items = InvoiceIntegration::handle(
+                    invoice: $data,
+                    config: $config
+                );
             }
 
             if ($data instanceof Expense) {
-                $items = [
-                    [
-                        // debit
-                        'akun' => $config->expense_debit_account,
-                        'debit' => $data->price,
-                        'kredit' => 0
-                    ],
-                    [
-                        // credit
-                        'akun' => $config->expense_credit_account,
-                        'debit' => 0,
-                        'kredit' => $data->price
-                    ],
-                ];
-
-                $deskripsi = 'Pengeluaran Biaya Sekolah #' . $data->getKey();
-                $referensi = $data->expense_number;
-                $tanggal = $data->expense_date;
-                $transaksi = $items;
+                $journal_items = ExpenseIntegration::handle(
+                    expense: $data,
+                    config: $config
+                );
             }
 
             $response = Http::withToken($config->token)
-                ->post(config('sempoa.base_url') . 'jurnal', compact('deskripsi', 'referensi', 'tanggal', 'transaksi'));
+                ->post(
+                    config('sempoa.base_url') . 'jurnal',
+                    $journal_items
+                );
 
             if (!$response->ok()) {
                 throw new \Exception($response->body());
             }
 
+
+            $data->sempoas()->create();
+            $trx = $data->sempoas()->first();
             $trx->sempoa_id = $response['data']['id'];
             $trx->sempoa_type = 'App\Models\Transaction';
             $trx->save();
@@ -84,7 +68,7 @@ class PushToJurnalSempoa
                 'user' => auth()->user()->name,
                 'data' => $data
             ]);
-
+            $data->sempoas()->delete();
             $data->sempoa_processed = false;
             $data->save();
         }

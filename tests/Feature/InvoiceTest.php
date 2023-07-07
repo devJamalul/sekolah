@@ -541,7 +541,6 @@ test('can not void a voided invoice', function () {
 
     // assert error
     $this->assertTrue(session()->has('alert'));
-    info(session('alert'));
     // $this->assertEquals('error', session('alert')['type']);
 })->todo();
 

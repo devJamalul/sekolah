@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Expense;
 
 use App\Actions\Sempoa\GetAccount;
-use App\Actions\Wallet\WalletTransaction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Expense;
 use Illuminate\Http\Request;
-use App\Models\ExpenseDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ExpenseRequest;
 use App\Models\SempoaConfiguration;
 use App\Notifications\ExpenseNotification;
 use Illuminate\Support\Facades\Validator;
@@ -40,6 +37,9 @@ class ExpenseController extends Controller
             $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
         })->get();
         $data['wallets'] = Wallet::where('school_id', session('school_id'))->get();
+        $data['config'] = SempoaConfiguration::first();
+        $data['accounts'] = [];
+        if ($data['config']) $data['accounts'] = GetAccount::run();
         return view('pages.expense.create', $data);
     }
 
@@ -53,6 +53,7 @@ class ExpenseController extends Controller
                 'price' => formatAngka($request->price)
             ]);
         }
+
         DB::beginTransaction();
 
         try {
@@ -70,6 +71,7 @@ class ExpenseController extends Controller
                     'expense_date' => 'required|date',
                     'note' => 'required|string',
                     'price' => 'required|string',
+                    'debit_account' => 'sometimes|required|string',
                     'wallet_id' => 'required|exists:wallets,id',
                 ],
                 [
@@ -77,10 +79,17 @@ class ExpenseController extends Controller
                     'wallet_id.required' => 'Sumber biaya harus diisi',
                     'price.required' => 'Nominal harus diisi',
                     'expense_date.required' => 'Tanggal pengeluaran biaya harus diisi',
+                    'debit_account.required' => 'Akun pengeluaran biaya harus diisi',
                     'expense_number.required' => 'Nomor pengeluaran biaya harus diisi',
                     'expense_number.unique' => 'Nomor pengeluaran biaya sudah terpakai',
                 ]
             )->validate();
+
+            if ($request->missing('debit_account')) {
+                $request->merge([
+                    'debit_account' => null
+                ]);
+            }
 
             // instance
             $expense = new Expense();
@@ -88,7 +97,7 @@ class ExpenseController extends Controller
             // cek saldo
             $wallet = Wallet::find($request->wallet_id);
             $totalExpensePending = Expense::query()
-                ->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])
+                ->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING, Expense::STATUS_APPROVED])
                 ->where('wallet_id', $request->wallet_id)
                 ->sum('price');
             $walletBalance = $wallet->balance - $totalExpensePending;
@@ -98,12 +107,12 @@ class ExpenseController extends Controller
                 throw new \Exception('Saldo dompet ' . $wallet->name . ' tidak mencukupi untuk melakukan pengeluaran ini!');
             }
 
-
             $expense->school_id         = session('school_id');
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
             $expense->status            = Expense::STATUS_DRAFT;
             $expense->note              = $request->note;
+            $expense->debit_account     = $request->debit_account;
             $expense->request_by        = Auth::id();
             $expense->price             = formatAngka($request->price);
             $expense->save();
@@ -143,6 +152,10 @@ class ExpenseController extends Controller
                 $q->whereIn('name', ['admin sekolah', 'admin yayasan', 'tata usaha', 'bendahara', 'kepala sekolah']);
             })->get();
             $data['wallets'] = Wallet::where('school_id', session('school_id'))->get();
+            $data['config'] = SempoaConfiguration::first();
+            $data['accounts'] = [];
+            if ($data['config']) $data['accounts'] = GetAccount::run();
+
             return view('pages.expense.edit', $data);
         } catch (\Throwable $th) {
             return redirect()->route('expense.index')->withInput()->withToastError('Ups! ' . $th->getMessage());
@@ -179,6 +192,7 @@ class ExpenseController extends Controller
                     'expense_date' => 'required|date',
                     'note' => 'required|string',
                     'price' => 'required|string',
+                    'debit_account' => 'sometimes|required|string',
                     'wallet_id' => 'required|exists:wallets,id',
                 ],
                 [
@@ -186,15 +200,22 @@ class ExpenseController extends Controller
                     'wallet_id.required' => 'Sumber biaya harus diisi',
                     'price.required' => 'Nominal harus diisi',
                     'expense_date.required' => 'Tanggal pengeluaran biaya harus diisi',
+                    'debit_account.required' => 'Akun pengeluaran biaya harus diisi',
                     'expense_number.required' => 'Nomor pengeluaran biaya harus diisi',
                     'expense_number.unique' => 'Nomor pengeluaran biaya sudah terpakai',
                 ]
             )->validate();
 
+            if ($request->missing('debit_account')) {
+                $request->merge([
+                    'debit_account' => null
+                ]);
+            }
+
             // cek saldo
             $wallet = Wallet::find($request->wallet_id);
             $totalExpensePending = Expense::query()
-                ->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING])
+                ->whereIn('status', [Expense::STATUS_DRAFT, Expense::STATUS_PENDING, Expense::STATUS_APPROVED])
                 ->where('wallet_id', $request->wallet_id)
                 ->where('id', '<>', $expense->id)
                 ->sum('price');
@@ -207,6 +228,7 @@ class ExpenseController extends Controller
 
             $expense->expense_number    = $request->expense_number;
             $expense->expense_date      = $request->expense_date;
+            $expense->debit_account     = $request->debit_account;
             $expense->note              = $request->note;
             $expense->price             = $request->price;
             $expense->request_by        = Auth::id();
@@ -273,6 +295,15 @@ class ExpenseController extends Controller
     {
         DB::beginTransaction();
         try {
+            if ($expense->status != Expense::STATUS_DRAFT) {
+                throw new \Exception('Anda tidak memiliki akses untuk melakukan ini');
+            }
+
+            $config = SempoaConfiguration::first();
+            if ($config and is_null($expense->debit_account)) {
+                throw new \Exception('Akun pengeluaran biaya harus diisi');
+            }
+
             $expense->status = Expense::STATUS_PENDING;
             $expense->save();
             DB::commit();
@@ -281,11 +312,8 @@ class ExpenseController extends Controller
             foreach ($users as $user) {
                 if ($user->hasAnyRole([User::ROLE_ADMIN_SEKOLAH, User::ROLE_KEPALA_SEKOLAH])) {
                     $user->notify(new ExpenseNotification($expense));
-                } else {
-                    info("gak ada");
                 }
             }
-            info('tes');
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('expense.index')->withToastError('Ups! ' . $th->getMessage());
