@@ -32,12 +32,6 @@ class UserVerificationController extends Controller
                 throw new Exception('Token tidak ditemukan.');
             }
 
-            $user->email_verified_at = now();
-            $user->save();
-
-            $verify->status = UserEmailVerification::STATUS_VERIFIED;
-            $verify->save();
-
             $data['email'] = $email;
             $data['token'] = $token;
 
@@ -75,9 +69,14 @@ class UserVerificationController extends Controller
                 throw new Exception('Token tidak ditemukan.');
             }
 
+            $user->email_verified_at = now();
             $user->remember_token = null;
             $user->password = bcrypt($request->password);
+            $user->new_password = false;
             $user->save();
+
+            $verify->status = UserEmailVerification::STATUS_VERIFIED;
+            $verify->save();
 
             DB::commit();
         } catch (\Throwable $th) {
