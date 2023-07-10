@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
+use App\Models\School;
 
 class OpsAdminController extends Controller
 {
@@ -11,6 +12,9 @@ class OpsAdminController extends Controller
      */
     public function __invoke()
     {
-        return view('pages.home.ops-admin');
+        $data['title'] = 'Sempoa Dashboard';
+        $data['schools'] = School::with(['academic_years', 'classrooms', 'grades', 'payment_types', 'staff', 'students', 'tuitions', 'tuition_types', 'users', 'wallets'])->get();
+
+        return view('pages.home.ops-admin', $data);
     }
 }
