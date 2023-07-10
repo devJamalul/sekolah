@@ -11,7 +11,8 @@ Nominal : **IDR {{ number_format($expense->price, 0, ', ', '.') }}** <br>
 
 Diajukan oleh : **{{ $expense->requested_by->name }}** <br>
 
-Disetujui oleh : **{{ $expense->approved_by?->name ?? '-' }}** <br>
+Disetujui oleh : **{{ $expense->approved_by?->name ?? '-' }}**
+
 @php
     $status = "";
     if ($expense->deleted_at) {
@@ -26,6 +27,10 @@ Disetujui oleh : **{{ $expense->approved_by?->name ?? '-' }}** <br>
 @endphp
 
 Status : **{{ $status }}**
+
+<x-mail::button :url="route('expense-approval.index')">
+Masuk ke Persetujuan Uang Sekolah
+</x-mail::button>
 
 Terima kasih,<br>
 {{ config('app.name') }}

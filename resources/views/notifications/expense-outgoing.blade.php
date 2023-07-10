@@ -17,6 +17,10 @@ Status : **{{ $expense->status == 'done' ? "Sudah Direalisasi" : "Belum Direalis
 
 <a href="{{$expense->file_photo}}">Lihat Bukti</a>
 
+<x-mail::button :url="route('expense-outgoing.index')">
+Masuk ke Realisasi Uang Sekolah
+</x-mail::button>
+
 Terima kasih,<br>
 {{ config('app.name') }}
 </x-mail::message>
