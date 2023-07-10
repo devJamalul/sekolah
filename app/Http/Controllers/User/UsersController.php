@@ -79,7 +79,6 @@ class UsersController extends Controller
             $user->email = $request->email;
             $user->password = fake()->word();
             $user->new_password = 1;
-            $user->email_verified_at = now();
             $user->save();
 
             $user->syncRoles(Role::firstWhere('name', $request->jabatan));

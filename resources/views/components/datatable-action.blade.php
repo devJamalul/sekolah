@@ -3,7 +3,7 @@
     $tombolHapus = isset($delete_url) ? "<a class=\"dropdown-item\" data-url=\"$delete_url\" data-redirect=$redirect_url onclick=\"softDelete(this)\">Hapus</a>" : '';
 @endphp
 
-
+@if ($tombolUbah || $tombolHapus || isset($custom_links))
 <div class="btn-group">
     <div class="dropdown">
         <button class="btn btn-primary btn-sm dropdown-toggle shadow-sm" type="button" id="dropdownMenuButton"
@@ -44,3 +44,4 @@
     </div>
     @stack('opsi')
 </div>
+@endif
