@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Actions\User\NewUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\School;
@@ -72,12 +73,11 @@ class UsersController extends Controller
 
         DB::beginTransaction();
         try {
-            $password = fake()->word();
             $user = new User();
             $user->school_id = session('school_id');
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = bcrypt($password);
+            $user->password = fake()->word();
             $user->new_password = 1;
             $user->email_verified_at = now();
             $user->save();
@@ -92,7 +92,7 @@ class UsersController extends Controller
 
             DB::commit();
             // event(new Registered($user)); # aktifkan jika sudah menggunakan email verifikasi
-            $user->notify(new NewSchoolPICNotification($user, $password));
+            NewUser::createTokenFor($user);
         } catch (Throwable $th) {
             Log::error($th->getMessage(), [
                 'action' => 'Tambah pengguna',
