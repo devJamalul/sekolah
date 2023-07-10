@@ -29,7 +29,6 @@ class StudentTuitionImport implements ToCollection, WithHeadingRow, WithValidati
      */
     public function collection(Collection $collection)
     {
-        // dd($collection);
         try {
 
             DB::beginTransaction();

@@ -112,7 +112,6 @@ class UsersController extends Controller
     public function show(User $user)
     {
         $title = "Detail {$this->title}";
-        // dd($user->staff);
         return view('pages.users.detail', compact('title', 'user'));
     }
 
