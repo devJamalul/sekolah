@@ -208,7 +208,7 @@ class SchoolsController extends Controller
         }
     }
 
-    
+
     public function importSchool()
     {
         $data = [
@@ -225,19 +225,18 @@ class SchoolsController extends Controller
             if($request->hasFile('excel_file')){
                 $file = $request->file('excel_file');
                 $filePath = Storage::putFileAs('school_import', $file, $file->hashName());
-                
+
                 ImportSekolahJob::dispatch($filePath)->delay(now()->addSeconds(5));
             }
-                // Generate a URL for accessing the uploaded file      
+                // Generate a URL for accessing the uploaded file
 
             return redirect()->route('schools.index')->withToastSuccess('Berhasil mengimpor data all!');
-        } catch (ValidationExceptiononException $ex) {
+        } catch (ValidationException $ex) {
             DB::rollBack();
             return redirect()->back()->withInput()->withToastError($ex->errors());
         } catch (Exception $ex) {
-            dd($ex);
             DB::rollBack();
-            return redirect()->back()->withInput()->withToastError("Ops, ada kesalahan saat mengimpor data!");
+            return redirect()->back()->withInput()->withToastError("Ups! " . $ex->getMessage());
         }
     }
 }

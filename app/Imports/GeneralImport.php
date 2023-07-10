@@ -51,7 +51,6 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
 
             session(['import_school_id' => $school->getKey()]);
 
-            // dd(Carbon::now()->year($academicYear[0][1]));
             $academicYear = AcademicYear::firstOrCreate(
                 [
                     'school_id'            => $school->getKey(),
@@ -105,7 +104,7 @@ class GeneralImport implements ToCollection, WithStartRow, SkipsEmptyRows, Skips
                 // verification & notification
                 NewUser::createTokenFor($admin);
 
-                
+
                 session(['import_admin_id' => $admin->getKey()]);
             }
 

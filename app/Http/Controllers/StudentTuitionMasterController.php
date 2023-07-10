@@ -86,8 +86,7 @@ class StudentTuitionMasterController extends Controller
             $studentTuitionMaster->save();
             return redirect()->route('tuition-master.index', ['id' => $request->id])->withToastSuccess('Berhasil menambahkan Biaya Khusus Siswa!');
         } catch (\Throwable $th) {
-            dd($th);
-            return redirect()->back()->withInput()->withToastError('Ops, ada kesalahan saat menambahkan Biaya Khusus Siswa!');
+            return redirect()->back()->withInput()->withToastError('Ops! ' . $th->getMessage());
         }
     }
 

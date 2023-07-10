@@ -28,7 +28,6 @@ class SchoolSelectorController extends Controller
     protected function save(School $school): void
     {
         try {
-            info($school);
             $key = "school_id";
             session([$key => $school->getKey()]);
 

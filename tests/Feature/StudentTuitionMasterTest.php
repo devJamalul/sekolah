@@ -84,7 +84,6 @@ it('can render Student Tuition Master create page', function (User $user) {
     $student = Student::factory()->create([
         'school_id' => $school->getKey()
     ]);
-    dd(123);
 
     $response = $this
         ->actingAs($user)
