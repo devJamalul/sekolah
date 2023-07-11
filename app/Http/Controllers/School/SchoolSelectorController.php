@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AcademicYear;
 use App\Models\School;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SchoolSelectorController extends Controller
 {
@@ -16,12 +17,13 @@ class SchoolSelectorController extends Controller
     {
         try {
             $school = School::findOrFail($request->school_selector);
-            if (!$school) {
-                throw new \Exception('No school selected');
-            }
             $this->save($school);
         } catch (\Throwable $th) {
-            session()->forget(['academic_year_id', 'academic_year_name', 'ppdb_academic_year_id', 'ppdb_academic_year_name']);
+            Log::warning($th->getMessage(), [
+                'action' => 'Ubah selector sekolah',
+                'user' => auth()->user()->name,
+                'school_id' => $request->school_selector
+            ]);
         }
     }
 
@@ -49,7 +51,11 @@ class SchoolSelectorController extends Controller
                 session()->forget(['ppdb_academic_year_id', 'ppdb_academic_year_name']);
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            Log::warning($th->getMessage(), [
+                'action' => 'Simpan selector sekolah',
+                'user' => auth()->user()->name,
+                'school' => $school
+            ]);
         }
     }
 }
